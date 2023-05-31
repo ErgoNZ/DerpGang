@@ -9,7 +9,7 @@ public class PlayerControler : MonoBehaviour
     private float gravity = -9.81f;
     private Vector3 playerMovement;
     private float yVelocity = 0;
-    public float jumpPower = 0.3f;
+    public float jumpPower = 0.10f;
     CharacterController Cr;
     // Start is called before the first frame update
     void Start()
