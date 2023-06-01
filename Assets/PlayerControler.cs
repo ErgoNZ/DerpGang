@@ -5,11 +5,11 @@ using UnityEngine;
 public class PlayerControler : MonoBehaviour
 {
     public float speed = 7.00f;
-    public float gravityMultipler = 3f;
+    public float gravityMultipler = 2f;
     private float gravity = -9.81f;
     private Vector3 playerMovement;
     private float yVelocity = 0;
-    public float jumpPower = 0.10f;
+    public float jumpPower = 0.3f;
     CharacterController Cr;
     // Start is called before the first frame update
     void Start()
