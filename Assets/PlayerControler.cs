@@ -11,6 +11,8 @@ public class PlayerControler : MonoBehaviour
     private float yVelocity = 0;
     public float jumpPower = 0.3f;
     CharacterController Cr;
+    public bool isSliding;
+    private Vector3 slideMovement;
     // Start is called before the first frame update
     void Start()
     {       
@@ -21,20 +23,44 @@ public class PlayerControler : MonoBehaviour
     void Update()
     {
         bool grounded = GroundCheck();
-        if(grounded){
-            yVelocity = -0.05f;
-        }
-        else{
-            yVelocity += gravity * Time.deltaTime * Time.deltaTime * gravityMultipler;
-        }
-        playerMovement.y = yVelocity;
-
         float xMove = Input.GetAxisRaw("Horizontal"); // d key changes value to 1, a key changes value to -1
         float zMove = Input.GetAxisRaw("Vertical"); // w key changes value to 1, s key changes value to -1
         playerMovement.x = xMove * speed * Time.deltaTime;
         playerMovement.z = zMove * speed * Time.deltaTime;
-        Jump(grounded);
-        Cr.Move(playerMovement);
+
+        UpdateSlideMovement();
+
+        if (slideMovement == Vector3.zero)
+        {
+            isSliding = false;
+        }
+        else
+        {
+            isSliding = true;
+        }
+
+
+        if (grounded)
+        {
+            yVelocity = -0.05f;
+        }
+        else
+        {
+            yVelocity += gravity * Time.deltaTime * Time.deltaTime * gravityMultipler;
+        }
+        playerMovement.y = yVelocity;
+
+        if (isSliding == true)
+        {
+            Vector3 sliding = slideMovement;
+            sliding.y = yVelocity;
+            Cr.Move(sliding);
+        }
+        else
+        {
+            Jump(grounded);
+            Cr.Move(playerMovement);
+        }
     }
 
     bool GroundCheck(){
@@ -44,7 +70,23 @@ public class PlayerControler : MonoBehaviour
     void Jump(bool grounded){
         if(Input.GetKey(KeyCode.Space) && grounded){
             yVelocity = 1f * jumpPower;
-            playerMovement.y = yVelocity;
+            playerMovement.y = yVelocity * Time.deltaTime;
         }
+    }
+
+    void UpdateSlideMovement()
+    {
+        if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out RaycastHit hitInfo, 0.5f))
+        {
+            float angle = Vector3.Angle(hitInfo.normal, Vector3.up);
+
+            if(angle >= Cr.slopeLimit)
+            {
+                slideMovement = Vector3.ProjectOnPlane(new Vector3(0,yVelocity,0), hitInfo.normal);
+                return;
+            }
+        }
+
+        slideMovement = Vector3.zero;
     }
 }
