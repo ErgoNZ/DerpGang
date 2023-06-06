@@ -11,8 +11,6 @@ public class PlayerControler : MonoBehaviour
     private float yVelocity = 0;
     public float jumpPower = 0.3f;
     CharacterController Cr;
-    public bool isSliding;
-    private Vector3 slideMovement;
     // Start is called before the first frame update
     void Start()
     {       
@@ -28,17 +26,6 @@ public class PlayerControler : MonoBehaviour
         playerMovement.x = xMove * speed * Time.deltaTime;
         playerMovement.z = zMove * speed * Time.deltaTime;
 
-        UpdateSlideMovement();
-
-        if (slideMovement == Vector3.zero)
-        {
-            isSliding = false;
-        }
-        else
-        {
-            isSliding = true;
-        }
-
 
         if (grounded)
         {
@@ -50,17 +37,8 @@ public class PlayerControler : MonoBehaviour
         }
         playerMovement.y = yVelocity;
 
-        if (isSliding == true)
-        {
-            Vector3 sliding = slideMovement;
-            sliding.y = yVelocity;
-            Cr.Move(sliding);
-        }
-        else
-        {
-            Jump(grounded);
-            Cr.Move(playerMovement);
-        }
+        Jump(grounded);
+        Cr.Move(playerMovement);
     }
 
     bool GroundCheck(){
@@ -72,21 +50,5 @@ public class PlayerControler : MonoBehaviour
             yVelocity = 1f * jumpPower;
             playerMovement.y = yVelocity * Time.deltaTime;
         }
-    }
-
-    void UpdateSlideMovement()
-    {
-        if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out RaycastHit hitInfo, 0.5f))
-        {
-            float angle = Vector3.Angle(hitInfo.normal, Vector3.up);
-
-            if(angle >= Cr.slopeLimit)
-            {
-                slideMovement = Vector3.ProjectOnPlane(new Vector3(0,yVelocity,0), hitInfo.normal);
-                return;
-            }
-        }
-
-        slideMovement = Vector3.zero;
     }
 }
