@@ -51,4 +51,16 @@ public class PlayerControler : MonoBehaviour
             playerMovement.y = yVelocity * Time.deltaTime;
         }
     }
+
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.tag == "RoomTransition")
+        {
+            string Room;
+            string Direction;
+            Room = collider.gameObject.GetComponent<RoomTransitionLogic>().GoToRoom.ToString();
+            Direction = collider.gameObject.GetComponent<RoomTransitionLogic>().FaceDirection.ToString();
+            
+        }
+    }
 }
