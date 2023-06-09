@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerControler : MonoBehaviour
 {
@@ -59,8 +60,7 @@ public class PlayerControler : MonoBehaviour
             string Room;
             string Direction;
             Room = collider.gameObject.GetComponent<RoomTransitionLogic>().GoToRoom.ToString();
-            Direction = collider.gameObject.GetComponent<RoomTransitionLogic>().FaceDirection.ToString();
-            
+            Direction = collider.gameObject.GetComponent<RoomTransitionLogic>().FaceDirection.ToString();            
         }
     }
 }

@@ -13,6 +13,8 @@ public class RoomTransitionLogic : MonoBehaviour
 
     public GoTo GoToRoom;
     public Direction FaceDirection;
+    public Vector3 SpawnPosition;
+
 
     public enum Direction
     {
