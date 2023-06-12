@@ -11,6 +11,8 @@ public class PlayerControler : MonoBehaviour
     private Vector3 playerMovement;
     private float yVelocity = 0;
     public float jumpPower = 0.15f;
+    public string Room;
+    public string Direction;
     CharacterController Cr;
     // Start is called before the first frame update
     void Start()
@@ -53,14 +55,17 @@ public class PlayerControler : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider collider)
+    void OnTriggerEnter(Collider other)
     {
-        if (collider.tag == "RoomTransition")
+        if (other.tag == "RoomTransition")
         {
-            string Room;
-            string Direction;
-            Room = collider.gameObject.GetComponent<RoomTransitionLogic>().GoToRoom.ToString();
-            Direction = collider.gameObject.GetComponent<RoomTransitionLogic>().FaceDirection.ToString();            
+            RoomTransitionLogic roomTransitionLogic;
+            roomTransitionLogic = other.GetComponent<RoomTransitionLogic>();
+            Room = roomTransitionLogic.GoToRoom.ToString();
+            Direction = roomTransitionLogic.FaceDirection.ToString();
+            this.transform.position = roomTransitionLogic.SpawnPosition;
+            playerMovement = new Vector3(0, 0, 0);
+            SceneManager.LoadScene(Room);
         }
     }
 }

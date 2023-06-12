@@ -9,10 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 577652161495794022}
-  - component: {fileID: 2857432483440123705}
   m_Layer: 0
   m_Name: Scene Transition trigger
-  m_TagString: RoomTransition
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33,20 +32,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2857432483440123705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2658952714155566973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fad5c6897c10b34796ef4bfdc5979e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GoToRoom: 0
-  FaceDirection: 0
 --- !u!1 &7498076814734172236
 GameObject:
   m_ObjectHideFlags: 0
@@ -62,9 +47,10 @@ GameObject:
   - component: {fileID: 7271658520246004826}
   - component: {fileID: 9018383424208692913}
   - component: {fileID: 1180950894457700005}
+  - component: {fileID: 4673555457656108931}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: RoomTransition
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -421,3 +407,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4, y: 3, z: 2}
   m_Center: {x: 2, y: 1.0610327, z: -1}
+--- !u!114 &4673555457656108931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7498076814734172236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fad5c6897c10b34796ef4bfdc5979e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoToRoom: 1
+  FaceDirection: 0
+  SpawnPosition: {x: -11, y: 1, z: -1}

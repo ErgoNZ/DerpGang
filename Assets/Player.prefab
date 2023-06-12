@@ -9,6 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1405011836812763348}
+  - component: {fileID: 7169186966537527055}
+  - component: {fileID: 5983615015079786910}
+  - component: {fileID: 2480459441583515662}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -24,56 +27,21 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2144429262074541251}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2243312430967049194}
+  - {fileID: 6095794587854049689}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3724243075563633362
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2243312430967049194}
-  - component: {fileID: 8231826240265493990}
-  - component: {fileID: 7364955681465749020}
-  - component: {fileID: 6122048132830361986}
-  m_Layer: 0
-  m_Name: Player
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2243312430967049194
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3724243075563633362}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.78, z: -3.702}
-  m_LocalScale: {x: 1, y: 1, z: 0.99801}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6095794587854049689}
-  m_Father: {fileID: 1405011836812763348}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &8231826240265493990
+--- !u!212 &7169186966537527055
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3724243075563633362}
+  m_GameObject: {fileID: 2144429262074541251}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -119,13 +87,13 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!143 &7364955681465749020
+--- !u!143 &5983615015079786910
 CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3724243075563633362}
+  m_GameObject: {fileID: 2144429262074541251}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -145,21 +113,23 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6122048132830361986
+--- !u!114 &2480459441583515662
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3724243075563633362}
+  m_GameObject: {fileID: 2144429262074541251}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 17f8660c79c2ee4468f63824efc49209, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 7
-  gravityMultipler: 3
-  jumpPower: 0.3
+  gravityMultipler: 4
+  jumpPower: 0.15
+  Room: 
+  Direction: 
 --- !u!1 &8497208943960142860
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,12 +156,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8497208943960142860}
   m_LocalRotation: {x: 0.15028177, y: -0, z: -0, w: 0.9886432}
-  m_LocalPosition: {x: 0, y: 2.11, z: -5.98}
-  m_LocalScale: {x: 1, y: 0.87735003, z: 1.001994}
+  m_LocalPosition: {x: 0, y: 2, z: -6}
+  m_LocalScale: {x: 1, y: 0.87719584, z: 1.0001761}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2243312430967049194}
-  m_RootOrder: 0
+  m_Father: {fileID: 1405011836812763348}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 17.287, y: 0, z: 0}
 --- !u!20 &7784181950627710437
 Camera:
