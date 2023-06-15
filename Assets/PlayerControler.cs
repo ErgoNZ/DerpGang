@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Diagnostics;
 
 public class PlayerControler : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class PlayerControler : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         bool grounded = GroundCheck();
         float xMove = Input.GetAxisRaw("Horizontal"); // d key changes value to 1, a key changes value to -1
@@ -63,9 +64,10 @@ public class PlayerControler : MonoBehaviour
             roomTransitionLogic = other.GetComponent<RoomTransitionLogic>();
             Room = roomTransitionLogic.GoToRoom.ToString();
             Direction = roomTransitionLogic.FaceDirection.ToString();
-            this.transform.position = roomTransitionLogic.SpawnPosition;
             playerMovement = new Vector3(0, 0, 0);
             SceneManager.LoadScene(Room);
+            this.transform.localPosition = roomTransitionLogic.SpawnPosition;
+            print(transform.localPosition);
         }
     }
 }

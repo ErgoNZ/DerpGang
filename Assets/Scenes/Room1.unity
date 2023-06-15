@@ -129,7 +129,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-3240
+  m_Name: pb_Mesh-11542
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -473,6 +473,22 @@ PrefabInstance:
     - target: {fileID: 2857432483440123705, guid: 883d1ed0815e83947bbef28717926540, type: 3}
       propertyPath: SpawnPosition.z
       value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4673555457656108931, guid: 883d1ed0815e83947bbef28717926540, type: 3}
+      propertyPath: GoToRoom
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4673555457656108931, guid: 883d1ed0815e83947bbef28717926540, type: 3}
+      propertyPath: SpawnPosition.x
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 4673555457656108931, guid: 883d1ed0815e83947bbef28717926540, type: 3}
+      propertyPath: SpawnPosition.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4673555457656108931, guid: 883d1ed0815e83947bbef28717926540, type: 3}
+      propertyPath: SpawnPosition.z
+      value: -2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7271658520246004826, guid: 883d1ed0815e83947bbef28717926540, type: 3}
       propertyPath: m_Mesh
@@ -845,7 +861,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-2690
+  m_Name: pb_Mesh26174
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
