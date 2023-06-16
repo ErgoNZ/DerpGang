@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour
     public static GameController Instance;
     public GameObject PlayerPrefab;
     static GameObject Player;
+    public List<Item> ItemList;
+    public GameState State;
     public struct Item
     {
         int ID;
@@ -16,9 +18,11 @@ public class GameController : MonoBehaviour
         int Amount;
         string Description;
         DamageType Element;
-        int Hp;
-        int Mp;
+        Stats Stats;
         List<EffectData> Effects;
+        List<CharmData> CharmEffects;
+        List<DamageType> Resistance;
+        List<DamageType> Vulnerable;
     }
     public enum Catagory
     {
@@ -56,6 +60,35 @@ public class GameController : MonoBehaviour
         Electric
     }
 
+    public struct Stats
+    {
+        int Hp;
+        int Mp;
+        int Atk;
+        int Def;
+        int MAtk;
+        int MDef;
+        int Spd;
+    }
+
+    public struct CharmData
+    {
+        string Name;
+        string CheckingFor;
+        Trigger Trigger;
+        EffectData EffectData;
+    }
+
+    public enum Trigger
+    {
+        OnHit,
+        RoundStart,
+        HpCheck,
+        EnemyCheck,
+        StatusCheck,
+        CombatStart
+    }
+
     private void Awake()
     {
         if (Instance != null)
@@ -68,6 +101,13 @@ public class GameController : MonoBehaviour
         Player = Instantiate(PlayerPrefab);
         DontDestroyOnLoad(gameObject);
         DontDestroyOnLoad(Player);
+        State = GameState.LoadingItems;
+        LoadItems();
+    }
+
+    private void LoadItems()
+    {
+        
     }
 
     public enum GameState{
@@ -80,6 +120,7 @@ public class GameController : MonoBehaviour
         EnemyTurn,
         Defeat,
         Victory,
-        Cutscene
+        Cutscene,
+        LoadingItems
     }
 }
