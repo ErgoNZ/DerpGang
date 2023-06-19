@@ -2431,6 +2431,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerPrefab: {fileID: 2144429262074541251, guid: 4b93e84f33124fc48a811c12d7557812, type: 3}
+  State: 0
 --- !u!4 &1129673687
 Transform:
   m_ObjectHideFlags: 0

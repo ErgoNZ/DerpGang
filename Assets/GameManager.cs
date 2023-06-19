@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
+using UnityEngine.Diagnostics;
 
 public class GameController : MonoBehaviour
 {
     public static GameController Instance;
     public GameObject PlayerPrefab;
     static GameObject Player;
-    public List<Item> ItemList;
+    public List<Item> ItemList = new List<Item>();
     public GameState State;
     public struct Item
     {
@@ -20,10 +21,10 @@ public class GameController : MonoBehaviour
         public string Description;
         public Element Element;
         public Stats Stats;
-        public List<EffectData> Effects;
-        public List<CharmData> CharmEffects;
-        public List<Element> Resistance;
-        public List<Element> Vulnerable;
+        public List<EffectData> ?Effects;
+        public List<CharmData> ?CharmEffects;
+        public List<Element> ?Resistance;
+        public List<Element> ?Vulnerable;
         public List<Character> characters;
     }
     public enum Character
@@ -66,7 +67,8 @@ public class GameController : MonoBehaviour
         True,
         Earth,
         Restore,
-        Electric
+        Electric,
+        None
     }
 
     public struct Stats
@@ -85,7 +87,6 @@ public class GameController : MonoBehaviour
         string Name;
         string CheckingFor;
         Trigger Trigger;
-        EffectData EffectData;
     }
 
     public enum Trigger
@@ -110,13 +111,16 @@ public class GameController : MonoBehaviour
         Player = Instantiate(PlayerPrefab);
         DontDestroyOnLoad(gameObject);
         DontDestroyOnLoad(Player);
-        State = GameState.LoadingItems;
-        LoadItems();
+        State = GameState.LoadingItems;   
+        LoadItems("Assets/ItemData/Consumables.txt");
+        LoadItems("Assets/ItemData/Weapons.txt");
+        LoadItems("Assets/ItemData/Armour.txt");
+        LoadItems("Assets/ItemData/Charms.txt");
     }
 
-    private void LoadItems()
+    private void LoadItems(string path)
     {
-        StreamReader reader = new StreamReader("Assets/ItemData/Consumables.txt");
+        StreamReader reader = new StreamReader(path);
         string line;
         string[] itemData;
         string[] effData;
@@ -125,10 +129,12 @@ public class GameController : MonoBehaviour
         string[] vunlerabilities;
         string[] characters;
         string[] processingArray;
-        Item item;
+        Item item = new Item();
         EffectData effectData;
         CharmData charmData;
+        List<Character> characterList = new List<Character>();
         int ID = 0;
+        reader.ReadLine();
         while (!reader.EndOfStream)
         {
             line = reader.ReadLine();
@@ -145,15 +151,18 @@ public class GameController : MonoBehaviour
             item.Stats.MAtk = int.Parse(itemData[8]);
             item.Stats.MDef = int.Parse(itemData[9]);
             item.Stats.Spd = int.Parse(itemData[10]);
-            effData = itemData[11].Split('|');
+            /*effData = itemData[11].Split('|');
             chrmData = itemData[12].Split('|');
             resistance = itemData[13].Split('|');
-            vunlerabilities = itemData[14].Split('|');
+            vunlerabilities = itemData[14].Split('|');*/
             characters = itemData[15].Split('|');
             for (int i = 0; i < characters.Length; i++)
             {
-                item.characters.Add(ParseEnum<Character>(characters[i]));
+                characterList.Add(ParseEnum<Character>(characters[i]));
             }
+            item.characters = characterList;
+            ItemList.Add(item);
+            Debug.LogWarning("Item has been stored!");
         }
     }
 

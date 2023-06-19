@@ -1,0 +1,2 @@
+Name|         Type|       Description|                          Element| Stats|             Effect data|     Charm data|      Resistances|     Vunlerabilities| Character that can equip   
+Testing Item, Consumable, This is the test item for debug info!, None, 0, 0, 0, 0, 0, 0, 0, Not implemented, Not implemented, Not implemented, Not implemented, Seth|Susie|Shiana|Brody
