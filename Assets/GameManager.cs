@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     static GameObject Player;
     public List<Item> ItemList = new List<Item>();
     public GameState State;
+    int ID = 0;
     public struct Item
     {
         public int ID;
@@ -21,10 +22,10 @@ public class GameController : MonoBehaviour
         public string Description;
         public Element Element;
         public Stats Stats;
-        public List<EffectData> ?Effects;
-        public List<CharmData> ?CharmEffects;
-        public List<Element> ?Resistance;
-        public List<Element> ?Vulnerable;
+        public List<EffectData> Effects;
+        public List<CharmData> CharmEffects;
+        public List<Element> Resistance;
+        public List<Element> Vulnerable;
         public List<Character> characters;
     }
     public enum Character
@@ -43,12 +44,12 @@ public class GameController : MonoBehaviour
     }
     public struct EffectData
     {
-        EffectNames Name;
-        Element Element;
-        int Duration;
-        int Damage;
-        int MpDamage;
-        string Source;
+        public EffectNames Name;
+        public Element Element;
+        public int Duration;
+        public int Damage;
+        public int MpDamage;
+        public string Source;
     }
 
     public enum EffectNames
@@ -84,9 +85,9 @@ public class GameController : MonoBehaviour
 
     public struct CharmData
     {
-        string Name;
-        string CheckingFor;
-        Trigger Trigger;
+        public string Name;
+        public string CheckingFor;
+        public Trigger Trigger;
     }
 
     public enum Trigger
@@ -118,6 +119,10 @@ public class GameController : MonoBehaviour
         LoadItems("Assets/ItemData/Charms.txt");
     }
 
+    /// <summary>
+    /// Loads all items into memory from the requested path
+    /// </summary>
+    /// <param name="path"></param>
     private void LoadItems(string path)
     {
         StreamReader reader = new StreamReader(path);
@@ -133,7 +138,6 @@ public class GameController : MonoBehaviour
         EffectData effectData;
         CharmData charmData;
         List<Character> characterList = new List<Character>();
-        int ID = 0;
         reader.ReadLine();
         while (!reader.EndOfStream)
         {
@@ -151,10 +155,43 @@ public class GameController : MonoBehaviour
             item.Stats.MAtk = int.Parse(itemData[8]);
             item.Stats.MDef = int.Parse(itemData[9]);
             item.Stats.Spd = int.Parse(itemData[10]);
-            /*effData = itemData[11].Split('|');
+            effData = itemData[11].Split('|');
+            for (int i = 0; i < effData.Length; i++)
+            {
+                effectData = new EffectData();
+                processingArray = effData[i].Split('~');
+                effectData.Name = ParseEnum<EffectNames>(processingArray[0]);
+                effectData.Element = ParseEnum<Element>(processingArray[1]);
+                effectData.Duration = int.Parse(processingArray[2]);
+                effectData.Damage = int.Parse(processingArray[3]);
+                effectData.MpDamage = int.Parse(processingArray[4]);
+                effectData.Source = processingArray[5];
+                item.Effects.Add(effectData);
+            }
+
             chrmData = itemData[12].Split('|');
+            for (int i = 0; i < chrmData.Length; i++)
+            {
+                charmData = new CharmData();
+                processingArray = chrmData[i].Split('~');
+                charmData.Name = processingArray[0];
+                charmData.CheckingFor = processingArray[1];
+                charmData.Trigger = ParseEnum<Trigger>(processingArray[2]);
+                item.CharmEffects.Add(charmData);
+            }
+
             resistance = itemData[13].Split('|');
-            vunlerabilities = itemData[14].Split('|');*/
+            for (int i = 0; i < resistance.Length; i++)
+            {
+                item.Resistance.Add(ParseEnum<Element>(resistance[i]));
+            }
+
+            vunlerabilities = itemData[14].Split('|');
+            for (int i = 0; i < vunlerabilities.Length; i++)
+            {
+                item.Vulnerable.Add(ParseEnum<Element>(vunlerabilities[i]));
+            }
+
             characters = itemData[15].Split('|');
             for (int i = 0; i < characters.Length; i++)
             {
@@ -164,6 +201,7 @@ public class GameController : MonoBehaviour
             ItemList.Add(item);
             Debug.LogWarning("Item has been stored!");
         }
+        reader.Close();
     }
 
     public static T ParseEnum<T>(string value)
