@@ -11,7 +11,7 @@ public class PlayerControler : MonoBehaviour
     private float gravity = -9.81f;
     private Vector3 playerMovement;
     private float yVelocity = 0;
-    public float jumpPower = 0.15f;
+    public float jumpPower = 0.24f;
     public string Room;
     public string Direction;
     CharacterController Cr;

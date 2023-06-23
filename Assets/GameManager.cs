@@ -117,6 +117,10 @@ public class GameController : MonoBehaviour
         LoadItems("Assets/ItemData/Weapons.txt");
         LoadItems("Assets/ItemData/Armour.txt");
         LoadItems("Assets/ItemData/Charms.txt");
+        for (int i = 0; i < ItemList.Count; i++)
+        {
+            Debug.LogWarning("ID:" + ItemList[i].ID.ToString().PadRight(10) + "Name: " + ItemList[i].Name.ToString());
+        }
     }
 
     /// <summary>
@@ -135,6 +139,8 @@ public class GameController : MonoBehaviour
         string[] characters;
         string[] processingArray;
         Item item = new Item();
+        item.Resistance = new List<Element>();
+        item.Vulnerable = new List<Element>();
         EffectData effectData;
         CharmData charmData;
         List<Character> characterList = new List<Character>();
@@ -155,29 +161,36 @@ public class GameController : MonoBehaviour
             item.Stats.MAtk = int.Parse(itemData[8]);
             item.Stats.MDef = int.Parse(itemData[9]);
             item.Stats.Spd = int.Parse(itemData[10]);
-            effData = itemData[11].Split('|');
-            for (int i = 0; i < effData.Length; i++)
+
+            if(itemData[11] != "NULL")
             {
-                effectData = new EffectData();
-                processingArray = effData[i].Split('~');
-                effectData.Name = ParseEnum<EffectNames>(processingArray[0]);
-                effectData.Element = ParseEnum<Element>(processingArray[1]);
-                effectData.Duration = int.Parse(processingArray[2]);
-                effectData.Damage = int.Parse(processingArray[3]);
-                effectData.MpDamage = int.Parse(processingArray[4]);
-                effectData.Source = processingArray[5];
-                item.Effects.Add(effectData);
+                effData = itemData[11].Split('|');
+                for (int i = 0; i < effData.Length; i++)
+                {
+                    effectData = new EffectData();
+                    processingArray = effData[i].Split('~');
+                    effectData.Name = ParseEnum<EffectNames>(processingArray[0]);
+                    effectData.Element = ParseEnum<Element>(processingArray[1]);
+                    effectData.Duration = int.Parse(processingArray[2]);
+                    effectData.Damage = int.Parse(processingArray[3]);
+                    effectData.MpDamage = int.Parse(processingArray[4]);
+                    effectData.Source = processingArray[5];
+                    item.Effects.Add(effectData);
+                }
             }
 
-            chrmData = itemData[12].Split('|');
-            for (int i = 0; i < chrmData.Length; i++)
+            if (itemData[12] != "NULL")
             {
-                charmData = new CharmData();
-                processingArray = chrmData[i].Split('~');
-                charmData.Name = processingArray[0];
-                charmData.CheckingFor = processingArray[1];
-                charmData.Trigger = ParseEnum<Trigger>(processingArray[2]);
-                item.CharmEffects.Add(charmData);
+                chrmData = itemData[12].Split('|');
+                for (int i = 0; i < chrmData.Length; i++)
+                {
+                    charmData = new CharmData();
+                    processingArray = chrmData[i].Split('~');
+                    charmData.Name = processingArray[0];
+                    charmData.CheckingFor = processingArray[1];
+                    charmData.Trigger = ParseEnum<Trigger>(processingArray[2]);
+                    item.CharmEffects.Add(charmData);
+                }
             }
 
             resistance = itemData[13].Split('|');
