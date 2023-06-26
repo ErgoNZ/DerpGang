@@ -1,2 +1,3 @@
-Name|         Type|       Description|                          Element| Stats|           Effect|Charm|Resistances|Vunlerabilities|Character that can equip   
+Name|Type|Description|Element|Stats|Effect|Charm|Resistances|Vunlerabilities|Character that can equip   
 Testing Item,Consumable,This is the test item for debug info!,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Shiana|Brody
+Testing Item2,Consumable,This is a test item for debug info!,None,0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie
