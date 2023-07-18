@@ -14,6 +14,8 @@ public class GameController : MonoBehaviour
     public List<Item> ItemList = new List<Item>();
     public GameState State;
     int ID = 0;
+    bool MenuOpen = false;
+    PlayerControler PlayerControler;
     public struct Item
     {
         public int ID;
@@ -114,7 +116,9 @@ public class GameController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         DontDestroyOnLoad(Player);
         DontDestroyOnLoad(Menu);
-        State = GameState.LoadingItems;   
+        State = GameState.LoadingItems;
+        Menu.SetActive(false);
+        PlayerControler = Player.GetComponent<PlayerControler>();
         LoadItems("Assets/ItemData/Consumables.txt");
         LoadItems("Assets/ItemData/Weapons.txt");
         LoadItems("Assets/ItemData/Armour.txt");
@@ -122,6 +126,26 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < ItemList.Count; i++)
         {
             Debug.LogWarning("ID:" + ItemList[i].ID.ToString().PadRight(10) + "Name: " + ItemList[i].Name.ToString());
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            MenuOpen = !MenuOpen;
+            State = GameState.Overworld;
+            Menu.SetActive(MenuOpen);
+            if(MenuOpen == true)
+            {
+                State = GameState.Menu;
+            }
+        }
+        PlayerControler.enabled = true;
+
+        if (State == GameState.Menu)
+        {
+            PlayerControler.enabled = false;
         }
     }
 
@@ -235,6 +259,7 @@ public class GameController : MonoBehaviour
         Defeat,
         Victory,
         Cutscene,
-        LoadingItems
+        LoadingItems,
+        Menu
     }
 }
