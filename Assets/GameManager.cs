@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     public static GameController Instance;
     public GameObject PlayerPrefab;
     static GameObject Player;
+    public GameObject Menu;
     public List<Item> ItemList = new List<Item>();
     public GameState State;
     int ID = 0;
@@ -112,6 +113,7 @@ public class GameController : MonoBehaviour
         Player = Instantiate(PlayerPrefab);
         DontDestroyOnLoad(gameObject);
         DontDestroyOnLoad(Player);
+        DontDestroyOnLoad(Menu);
         State = GameState.LoadingItems;   
         LoadItems("Assets/ItemData/Consumables.txt");
         LoadItems("Assets/ItemData/Weapons.txt");
