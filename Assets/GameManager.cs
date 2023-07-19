@@ -117,7 +117,6 @@ public class GameController : MonoBehaviour
         DontDestroyOnLoad(Player);
         DontDestroyOnLoad(Menu);
         State = GameState.LoadingItems;
-        Menu.SetActive(false);
         PlayerControler = Player.GetComponent<PlayerControler>();
         LoadItems("Assets/ItemData/Consumables.txt");
         LoadItems("Assets/ItemData/Weapons.txt");
