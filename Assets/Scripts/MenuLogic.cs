@@ -20,7 +20,7 @@ public class MenuLogic : MonoBehaviour
         InvPos = Inventory.transform.localPosition;
         MapPos = Map.transform.localPosition;
         InsightsPos = Insights.transform.localPosition;
-        this.enabled = false;
+        Canvas.SetActive(false);
     }
     public void MenuSwitch(string Menu)
     {
