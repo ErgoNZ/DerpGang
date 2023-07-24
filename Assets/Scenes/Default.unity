@@ -3923,6 +3923,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1129673687}
   - component: {fileID: 1129673686}
+  - component: {fileID: 1129673689}
+  - component: {fileID: 1129673688}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3960,6 +3962,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1129673688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129673685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 706d8a63fae77ae469bfe6ac3a8e457c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1129673689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129673685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 883f8fb8085fc814bb3e193a0889a2e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1151868605
 GameObject:
   m_ObjectHideFlags: 0
@@ -9501,7 +9527,7 @@ MonoBehaviour:
   m_Content: {fileID: 1320034813}
   m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
@@ -9587,7 +9613,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh23116
+  m_Name: pb_Mesh23120
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2

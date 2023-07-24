@@ -3,19 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
-using UnityEngine.Diagnostics;
 
-public class GameController : MonoBehaviour
+public class ItemData : MonoBehaviour
 {
-    public static GameController Instance;
-    public GameObject PlayerPrefab;
-    static GameObject Player;
-    public GameObject Menu;
     public List<Item> ItemList = new List<Item>();
-    public GameState State;
     int ID = 0;
-    bool MenuOpen = false;
-    PlayerControler PlayerControler;
     public struct Item
     {
         public int ID;
@@ -47,19 +39,12 @@ public class GameController : MonoBehaviour
     }
     public struct EffectData
     {
-        public EffectNames Name;
+        public string Name;
         public Element Element;
         public int Duration;
         public int Damage;
         public int MpDamage;
         public string Source;
-    }
-
-    public enum EffectNames
-    {
-        Burn,
-        Flamable,
-        Soaked
     }
 
     public enum Element
@@ -102,49 +87,16 @@ public class GameController : MonoBehaviour
         StatusCheck,
         CombatStart
     }
-
-    private void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        Player = Instantiate(PlayerPrefab);
-        DontDestroyOnLoad(gameObject);
-        DontDestroyOnLoad(Player);
-        DontDestroyOnLoad(Menu);
-        State = GameState.LoadingItems;
-        PlayerControler = Player.GetComponent<PlayerControler>();
-        LoadItems("Assets/ItemData/Consumables.txt");
-        LoadItems("Assets/ItemData/Weapons.txt");
-        LoadItems("Assets/ItemData/Armour.txt");
-        LoadItems("Assets/ItemData/Charms.txt");
+        LoadItems("Assets/Data/Consumables.txt");
+        LoadItems("Assets/Data/Weapons.txt");
+        LoadItems("Assets/Data/Armour.txt");
+        LoadItems("Assets/Data/Charms.txt");
         for (int i = 0; i < ItemList.Count; i++)
         {
             Debug.LogWarning("ID:" + ItemList[i].ID.ToString().PadRight(10) + "Name: " + ItemList[i].Name.ToString());
-        }
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            MenuOpen = !MenuOpen;
-            State = GameState.Overworld;
-            Menu.SetActive(MenuOpen);
-            if(MenuOpen == true)
-            {
-                State = GameState.Menu;
-            }
-        }
-        PlayerControler.enabled = true;
-
-        if (State == GameState.Menu)
-        {
-            PlayerControler.enabled = false;
         }
     }
 
@@ -187,14 +139,14 @@ public class GameController : MonoBehaviour
             item.Stats.MDef = int.Parse(itemData[9]);
             item.Stats.Spd = int.Parse(itemData[10]);
 
-            if(itemData[11] != "NULL")
+            if (itemData[11] != "NULL")
             {
                 effData = itemData[11].Split('|');
                 for (int i = 0; i < effData.Length; i++)
                 {
                     effectData = new EffectData();
                     processingArray = effData[i].Split('~');
-                    effectData.Name = ParseEnum<EffectNames>(processingArray[0]);
+                    effectData.Name = processingArray[0];
                     effectData.Element = ParseEnum<Element>(processingArray[1]);
                     effectData.Duration = int.Parse(processingArray[2]);
                     effectData.Damage = int.Parse(processingArray[3]);
@@ -245,20 +197,5 @@ public class GameController : MonoBehaviour
     public static T ParseEnum<T>(string value)
     {
         return (T)Enum.Parse(typeof(T), value, true);
-    }
-
-    public enum GameState{
-        Overworld,
-        CombatStart,
-        CharacterTurn1,
-        CharacterTurn2,
-        CharacterTurn3,
-        CharacterTurn4,
-        EnemyTurn,
-        Defeat,
-        Victory,
-        Cutscene,
-        LoadingItems,
-        Menu
     }
 }
