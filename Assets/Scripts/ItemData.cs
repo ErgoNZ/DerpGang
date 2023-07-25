@@ -34,7 +34,9 @@ public class ItemData : MonoBehaviour
     {
         Consumable,
         Weapon,
-        Armour,
+        Chest,
+        Legs,
+        Boots,
         Charm
     }
     public struct EffectData
@@ -96,8 +98,9 @@ public class ItemData : MonoBehaviour
         LoadItems("Assets/Data/Charms.txt");
         for (int i = 0; i < ItemList.Count; i++)
         {
-            Debug.LogWarning("ID:" + ItemList[i].ID.ToString().PadRight(10) + "Name: " + ItemList[i].Name.ToString());
+            Debug.Log("ID:" + ItemList[i].ID.ToString().PadRight(10) + "Name: " + ItemList[i].Name.ToString());
         }
+        GetItem(0);
     }
 
     /// <summary>
@@ -197,5 +200,11 @@ public class ItemData : MonoBehaviour
     public static T ParseEnum<T>(string value)
     {
         return (T)Enum.Parse(typeof(T), value, true);
+    }
+
+    public Item GetItem(int ID)
+    {
+        Debug.Log(ItemList[ID].ID + " , " +ItemList[ID].Name);
+        return ItemList[ID];
     }
 }

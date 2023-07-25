@@ -66,7 +66,7 @@ public class PlayerControler : MonoBehaviour
             Direction = roomTransitionLogic.FaceDirection.ToString();
             playerMovement = new Vector3(0, 0, 0);
             SceneManager.LoadScene(Room);
-            this.transform.localPosition = roomTransitionLogic.SpawnPosition;
+            transform.localPosition = roomTransitionLogic.SpawnPosition;
             print(transform.localPosition);
         }
     }
