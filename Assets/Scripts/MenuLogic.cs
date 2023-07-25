@@ -9,7 +9,6 @@ public class MenuLogic : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        Debug.LogWarning("This activated!");
         Party = GameObject.Find("PartyBtn");
         Inventory = GameObject.Find("InvBtn");
         Map = GameObject.Find("MapBtn");

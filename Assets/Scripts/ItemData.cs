@@ -89,8 +89,8 @@ public class ItemData : MonoBehaviour
         StatusCheck,
         CombatStart
     }
-    // Start is called before the first frame update
-    void Start()
+
+    private void Awake()
     {
         LoadItems("Assets/Data/Consumables.txt");
         LoadItems("Assets/Data/Weapons.txt");
@@ -100,9 +100,7 @@ public class ItemData : MonoBehaviour
         {
             Debug.Log("ID:" + ItemList[i].ID.ToString().PadRight(10) + "Name: " + ItemList[i].Name.ToString());
         }
-        GetItem(0);
     }
-
     /// <summary>
     /// Loads all items into memory from the requested path
     /// </summary>
@@ -202,8 +200,9 @@ public class ItemData : MonoBehaviour
         return (T)Enum.Parse(typeof(T), value, true);
     }
 
-    public Item GetItem(int ID)
+    public Item GetItem(string IDstring)
     {
+        int ID = int.Parse(IDstring);
         Debug.Log(ItemList[ID].ID + " , " +ItemList[ID].Name);
         return ItemList[ID];
     }

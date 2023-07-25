@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
     public GameObject PlayerPrefab;
     static GameObject Player;
     public GameObject Menu;
+    public GameObject EventManager;
     public GameState State;
     bool MenuOpen = false;
     PlayerControler PlayerControler;
@@ -28,6 +29,7 @@ public class GameController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         DontDestroyOnLoad(Player);
         DontDestroyOnLoad(Menu);
+        DontDestroyOnLoad(EventManager);
         State = GameState.LoadingItems;
         PlayerControler = Player.GetComponent<PlayerControler>();
     }
