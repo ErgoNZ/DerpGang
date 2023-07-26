@@ -89,7 +89,9 @@ public class ItemData : MonoBehaviour
         StatusCheck,
         CombatStart
     }
-
+    /// <summary>
+    /// When this is awoken it loads all items into memory and list the items added
+    /// </summary>
     private void Awake()
     {
         LoadItems("Assets/Data/Consumables.txt");
@@ -101,6 +103,7 @@ public class ItemData : MonoBehaviour
             Debug.Log("ID:" + ItemList[i].ID.ToString().PadRight(10) + "Name: " + ItemList[i].Name.ToString());
         }
     }
+
     /// <summary>
     /// Loads all items into memory from the requested path
     /// </summary>
@@ -190,7 +193,6 @@ public class ItemData : MonoBehaviour
             }
             item.characters = characterList;
             ItemList.Add(item);
-            Debug.LogWarning("Item has been stored!");
         }
         reader.Close();
     }
@@ -203,7 +205,7 @@ public class ItemData : MonoBehaviour
     public Item GetItem(string IDstring)
     {
         int ID = int.Parse(IDstring);
-        Debug.Log(ItemList[ID].ID + " , " +ItemList[ID].Name);
+        //Debug.Log(ItemList[ID].ID + " , " +ItemList[ID].Name);
         return ItemList[ID];
     }
 }
