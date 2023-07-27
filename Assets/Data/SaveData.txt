@@ -44,3 +44,4 @@ Stats(H,M,A,D,MA,MD,S):20/10/8/8/3/15/10
 PouchItems:0/0/0/0/0
 Money:0
 Items:1/1/1
+Flags:0/0/0

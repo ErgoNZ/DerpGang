@@ -119,15 +119,15 @@ public class ItemData : MonoBehaviour
         string[] vunlerabilities;
         string[] characters;
         string[] processingArray;
-        Item item = new Item();
-        item.Resistance = new List<Element>();
-        item.Vulnerable = new List<Element>();
-        EffectData effectData;
-        CharmData charmData;
-        List<Character> characterList = new List<Character>();
         reader.ReadLine();
         while (!reader.EndOfStream)
         {
+            Item item = new Item();
+            item.Resistance = new List<Element>();
+            item.Vulnerable = new List<Element>();
+            EffectData effectData;
+            CharmData charmData;
+            List<Character> characterList = new List<Character>();
             line = reader.ReadLine();
             itemData = line.Split(',');
             item.ID = ID++;

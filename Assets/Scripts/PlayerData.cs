@@ -7,6 +7,7 @@ using System;
 public class PlayerData : MonoBehaviour
 {
     ItemData itemData;
+    int Money;
     struct CharacterData
     {
         public int position;
@@ -25,7 +26,7 @@ public class PlayerData : MonoBehaviour
         public ItemData.Item[] Pouch;
     }
 
-    List<int> Flags;
+    List<int> Flags = new List<int>();
     List<CharacterData> characters = new List<CharacterData>();
     List<ItemData.Item> Inventory = new List<ItemData.Item>();
 
@@ -35,16 +36,16 @@ public class PlayerData : MonoBehaviour
     /// <param name="Path"></param>
     void LoadPlayerData(string Path)
     {
+        StreamReader reader = new StreamReader(Path);
         try
         {
-            StreamReader reader = new StreamReader(Path);
             int lineCount = 0;
             string line;
             string[] Array;
             CharacterData characterData;
             while (!reader.EndOfStream)
             {
-                if (lineCount <= 44)
+                if (lineCount != 44)
                 {
                     if (lineCount % 11 == 0 || lineCount == 0)
                     {
@@ -76,17 +77,39 @@ public class PlayerData : MonoBehaviour
                         }
                         characters.Add(characterData);
                         Debug.Log("A characters data was loaded");
+                        lineCount += 11;
                     }
                 }
-
-                lineCount++;
+                else
+                {
+                    Debug.Log("Adding money");
+                    Money = int.Parse(SplitData(reader.ReadLine()));
+                    Debug.Log("Money added");
+                    line = SplitData(reader.ReadLine());
+                    Array = line.Split('/');
+                    for (int i = 0; i < Array.Length; i++)
+                    {
+                        Inventory.Add(itemData.GetItem(Array[i]));
+                        Debug.Log("Item added");
+                    }
+                    line = SplitData(reader.ReadLine());
+                    Array = line.Split('/');
+                    for (int i = 0; i < Array.Length; i++)
+                    {
+                        Flags.Add(int.Parse(Array[i]));
+                        Debug.Log("Flag added");
+                    }
+                }
             }
+            reader.Close();
         }
-        catch (Exception)
+        catch (Exception Ex)
         {
             //This will only ever trip if the player has done a glitch/bug or has modified their file in an illegal way.
             Debug.Log("ILLEGAL DATA: PLAYER DATA IS INVALID!");
-        }       
+            Debug.Log(Ex.Message);
+            reader.Close();
+        }    
     }
 
     private void Start()
