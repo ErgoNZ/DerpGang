@@ -78,6 +78,7 @@ public class PlayerData : MonoBehaviour
                         Debug.Log("A characters data was loaded");
                     }
                 }
+
                 lineCount++;
             }
         }
