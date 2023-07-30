@@ -30,6 +30,48 @@ public class PlayerData : MonoBehaviour
     List<CharacterData> characters = new List<CharacterData>();
     List<ItemData.Item> Inventory = new List<ItemData.Item>();
 
+    void AddItem(int ID, int Amount)
+    {
+        ItemData.Item Item;
+        for (int i = 0; i < Inventory.Count; i++)
+        {
+            if (Inventory[i].ID == ID)
+            {
+                Item = Inventory[i];
+                Item.Amount = Inventory[i].Amount + Amount;
+                Inventory[i] = Item;
+                return;
+            }
+        }
+        Item = itemData.GetItem(ID.ToString());
+        Item.Amount = Amount;
+        Inventory.Add(Item);
+    }
+
+    void DelItem(int ID, int Amount)
+    {
+        ItemData.Item Item;
+        for (int i = 0; i < Inventory.Count; i++)
+        {
+            if (Inventory[i].ID == ID)
+            {
+                Item = Inventory[i];
+                if(Item.Amount - Amount < 0)
+                {
+                    return;
+                }
+                else
+                {
+                    Item.Amount -= Amount;
+                    if(Item.Amount == 0)
+                    {
+                        Inventory.RemoveAt(i);
+                    }
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// This loads in all of the player data from their save file
     /// </summary>
@@ -76,28 +118,27 @@ public class PlayerData : MonoBehaviour
                             characterData.Pouch[i] = itemData.GetItem(Array[i]);
                         }
                         characters.Add(characterData);
-                        Debug.Log("A characters data was loaded");
+                        Debug.Log("A character's data was loaded");
                         lineCount += 11;
                     }
                 }
                 else
                 {
-                    Debug.Log("Adding money");
                     Money = int.Parse(SplitData(reader.ReadLine()));
-                    Debug.Log("Money added");
                     line = SplitData(reader.ReadLine());
                     Array = line.Split('/');
                     for (int i = 0; i < Array.Length; i++)
                     {
-                        Inventory.Add(itemData.GetItem(Array[i]));
-                        Debug.Log("Item added");
+                        string[] Array1;
+                        Array1 = Array[i].Split('|');
+                        AddItem(int.Parse(Array1[0]), int.Parse(Array1[1]));
+                        Debug.Log("Item from Inventory loaded");
                     }
                     line = SplitData(reader.ReadLine());
                     Array = line.Split('/');
                     for (int i = 0; i < Array.Length; i++)
                     {
                         Flags.Add(int.Parse(Array[i]));
-                        Debug.Log("Flag added");
                     }
                 }
             }
