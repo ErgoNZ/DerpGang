@@ -6,6 +6,7 @@ public class MenuLogic : MonoBehaviour
 {
     GameObject Party, Inventory, Map, Insights, Journal, Canvas;
     Vector3 PartyPos, InvPos, MapPos, InsightsPos;
+    PlayerData PlayerData;
     // Start is called before the first frame update
     private void Start()
     {
@@ -21,6 +22,11 @@ public class MenuLogic : MonoBehaviour
         InsightsPos = Insights.transform.localPosition;
         Canvas.SetActive(false);
     }
+
+    private void Awake()
+    {
+        PlayerData = GetComponent<PlayerData>();
+    }
     public void MenuSwitch(string Menu)
     {
         switch (Menu)
@@ -34,31 +40,43 @@ public class MenuLogic : MonoBehaviour
                 break;
             case "Inventory":
                 Debug.LogWarning("Inventory");
-                Party.transform.localPosition = new Vector3(PartyPos.x - (float)172.80, PartyPos.y);
+                Party.transform.localPosition = new Vector3(PartyPos.x - 172.80f, PartyPos.y);
                 Inventory.transform.localPosition = InvPos;
                 Map.transform.localPosition = MapPos;
                 Insights.transform.localPosition = InsightsPos;
                 break;
             case "Map":
                 Debug.LogWarning("Map");
-                Party.transform.localPosition = new Vector3(PartyPos.x - (float)172.80, PartyPos.y);
-                Inventory.transform.localPosition = new Vector3(InvPos.x - (float)172.80 * 3, InvPos.y);
+                Party.transform.localPosition = new Vector3(PartyPos.x - 172.80f, PartyPos.y);
+                Inventory.transform.localPosition = new Vector3(InvPos.x - 172.80f * 3, InvPos.y);
                 Map.transform.localPosition = MapPos;
                 Insights.transform.localPosition = InsightsPos;
                 break;
             case "Insights":
                 Debug.LogWarning("Insights");
-                Party.transform.localPosition = new Vector3(PartyPos.x - (float)172.80, PartyPos.y);
-                Inventory.transform.localPosition = new Vector3(InvPos.x - (float)172.80 * 3, InvPos.y);
-                Map.transform.localPosition = new Vector3(MapPos.x - (float)172.80 * 5, MapPos.y);
+                Party.transform.localPosition = new Vector3(PartyPos.x - 172.80f, PartyPos.y);
+                Inventory.transform.localPosition = new Vector3(InvPos.x - 172.80f * 3, InvPos.y);
+                Map.transform.localPosition = new Vector3(MapPos.x - 172.80f * 5, MapPos.y);
                 Insights.transform.localPosition = InsightsPos;
                 break;
             case "Journal":
                 Debug.LogWarning("Journal");
-                Party.transform.localPosition = new Vector3(PartyPos.x - (float)172.80, PartyPos.y);
-                Inventory.transform.localPosition = new Vector3(InvPos.x - (float)172.80 * 3, InvPos.y);
-                Map.transform.localPosition = new Vector3(MapPos.x - (float)172.80 * 5, MapPos.y);
-                Insights.transform.localPosition = new Vector3(InsightsPos.x - (float)172.80 * 7, InsightsPos.y);
+                Party.transform.localPosition = new Vector3(PartyPos.x - 172.80f, PartyPos.y);
+                Inventory.transform.localPosition = new Vector3(InvPos.x - 172.80f * 3, InvPos.y);
+                Map.transform.localPosition = new Vector3(MapPos.x - 172.80f * 5, MapPos.y);
+                Insights.transform.localPosition = new Vector3(InsightsPos.x - 172.80f * 7, InsightsPos.y);
+                break;
+            case "Item":
+
+                break;
+            case "Gear":
+
+                break;
+            case "Charms":
+
+                break;
+            case "Key":
+
                 break;
             default:
                 Debug.LogWarning("Default");

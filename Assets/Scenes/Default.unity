@@ -616,7 +616,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh23414
+  m_Name: pb_Mesh23474
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -960,7 +960,7 @@ GameObject:
   - component: {fileID: 268297932}
   - component: {fileID: 268297931}
   m_Layer: 5
-  m_Name: Button (3)
+  m_Name: ItemBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1030,7 +1030,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 268297932}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1129673690}
+        m_TargetAssemblyTypeName: MenuLogic, Assembly-CSharp
+        m_MethodName: MenuSwitch
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Item
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &268297932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1203,7 +1215,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Journal
+  m_text: Gear
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -1499,7 +1511,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 485709506}
+      - m_Target: {fileID: 1129673690}
         m_TargetAssemblyTypeName: MenuLogic, Assembly-CSharp
         m_MethodName: MenuSwitch
         m_Mode: 5
@@ -1633,7 +1645,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 485709506}
+      - m_Target: {fileID: 1129673690}
         m_TargetAssemblyTypeName: MenuLogic, Assembly-CSharp
         m_MethodName: MenuSwitch
         m_Mode: 5
@@ -2047,7 +2059,6 @@ GameObject:
   - component: {fileID: 485709504}
   - component: {fileID: 485709503}
   - component: {fileID: 485709502}
-  - component: {fileID: 485709506}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2144,18 +2155,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &485709506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485709501}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a585238d82090245b33b8b80952958b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &511296882
 GameObject:
   m_ObjectHideFlags: 0
@@ -2297,7 +2296,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh23238
+  m_Name: pb_Mesh23256
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -2462,7 +2461,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh23338
+  m_Name: pb_Mesh23392
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -3619,7 +3618,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 485709506}
+      - m_Target: {fileID: 1129673690}
         m_TargetAssemblyTypeName: MenuLogic, Assembly-CSharp
         m_MethodName: MenuSwitch
         m_Mode: 5
@@ -3753,7 +3752,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 485709506}
+      - m_Target: {fileID: 1129673690}
         m_TargetAssemblyTypeName: MenuLogic, Assembly-CSharp
         m_MethodName: MenuSwitch
         m_Mode: 5
@@ -3861,7 +3860,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Journal
+  m_text: Key
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -3944,7 +3943,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh23372
+  m_Name: pb_Mesh23434
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -4187,7 +4186,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 485709506}
+      - m_Target: {fileID: 1129673690}
         m_TargetAssemblyTypeName: MenuLogic, Assembly-CSharp
         m_MethodName: MenuSwitch
         m_Mode: 5
@@ -4295,7 +4294,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Journal
+  m_text: Charm
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -4378,7 +4377,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh23320
+  m_Name: pb_Mesh23364
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -4604,7 +4603,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1004834413
 MonoBehaviour:
@@ -4630,6 +4629,7 @@ GameObject:
   - component: {fileID: 1129673686}
   - component: {fileID: 1129673689}
   - component: {fileID: 1129673688}
+  - component: {fileID: 1129673690}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -4666,7 +4666,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1129673688
 MonoBehaviour:
@@ -4692,6 +4692,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 883f8fb8085fc814bb3e193a0889a2e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1129673690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129673685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a585238d82090245b33b8b80952958b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1129685356
 GameObject:
   m_ObjectHideFlags: 0
@@ -4705,7 +4717,7 @@ GameObject:
   - component: {fileID: 1129685359}
   - component: {fileID: 1129685358}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: GearBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4775,7 +4787,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1129685359}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1129673690}
+        m_TargetAssemblyTypeName: MenuLogic, Assembly-CSharp
+        m_MethodName: MenuSwitch
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Gear
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1129685359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6157,7 +6181,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh23202
+  m_Name: pb_Mesh23218
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -6329,7 +6353,7 @@ GameObject:
   - component: {fileID: 1298144183}
   - component: {fileID: 1298144182}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: KeyBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6399,7 +6423,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1298144183}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1129673690}
+        m_TargetAssemblyTypeName: MenuLogic, Assembly-CSharp
+        m_MethodName: MenuSwitch
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Key
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1298144183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8203,7 +8239,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1282
+  m_Name: pb_Mesh-1270
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -8375,7 +8411,7 @@ GameObject:
   - component: {fileID: 1423028072}
   - component: {fileID: 1423028071}
   m_Layer: 5
-  m_Name: Button
+  m_Name: CharmBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8445,7 +8481,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1423028072}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1129673690}
+        m_TargetAssemblyTypeName: MenuLogic, Assembly-CSharp
+        m_MethodName: MenuSwitch
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Charm
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1423028072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11565,7 +11613,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh23130
+  m_Name: pb_Mesh23128
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -11993,7 +12041,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Journal
+  m_text: Item
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}

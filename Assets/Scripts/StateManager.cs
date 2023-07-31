@@ -54,6 +54,8 @@ public class GameController : MonoBehaviour
         }
     }
 
+    
+
     public enum GameState{
         Overworld,
         CombatStart,

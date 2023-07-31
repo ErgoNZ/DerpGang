@@ -7,7 +7,7 @@ using System;
 public class PlayerData : MonoBehaviour
 {
     ItemData itemData;
-    int Money;
+    int Money = 0;
     struct CharacterData
     {
         public int position;
