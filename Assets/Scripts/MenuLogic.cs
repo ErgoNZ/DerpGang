@@ -6,7 +6,7 @@ public class MenuLogic : MonoBehaviour
 {
     GameObject Party, Inventory, Map, Insights, Journal, Canvas;
     Vector3 PartyPos, InvPos, MapPos, InsightsPos;
-    PlayerData PlayerData;
+    PlayerData PData;
     // Start is called before the first frame update
     private void Start()
     {
@@ -16,6 +16,7 @@ public class MenuLogic : MonoBehaviour
         Insights = GameObject.Find("InsightBtn");
         Journal = GameObject.Find("JournalBtn");
         Canvas = GameObject.Find("Canvas");
+        PData = GetComponent<PlayerData>();
         PartyPos = Party.transform.localPosition;
         InvPos = Inventory.transform.localPosition;
         MapPos = Map.transform.localPosition;
@@ -25,7 +26,7 @@ public class MenuLogic : MonoBehaviour
 
     private void Awake()
     {
-        PlayerData = GetComponent<PlayerData>();
+        PData = GetComponent<PlayerData>();
     }
     public void MenuSwitch(string Menu)
     {
@@ -44,6 +45,11 @@ public class MenuLogic : MonoBehaviour
                 Inventory.transform.localPosition = InvPos;
                 Map.transform.localPosition = MapPos;
                 Insights.transform.localPosition = InsightsPos;
+                for (int i = 0; i < PData.Inventory.Count; i++)
+                {
+                    string line;
+                    line = PData.Inventory[i].Name + " : " + PData.Inventory[i].Amount;
+                }
                 break;
             case "Map":
                 Debug.LogWarning("Map");

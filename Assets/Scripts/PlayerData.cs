@@ -8,7 +8,7 @@ public class PlayerData : MonoBehaviour
 {
     ItemData itemData;
     int Money = 0;
-    struct CharacterData
+    public struct CharacterData
     {
         public int position;
         public ItemData.Character Name;
@@ -26,11 +26,11 @@ public class PlayerData : MonoBehaviour
         public ItemData.Item[] Pouch;
     }
 
-    List<int> Flags = new List<int>();
-    List<CharacterData> characters = new List<CharacterData>();
-    List<ItemData.Item> Inventory = new List<ItemData.Item>();
+    public List<int> Flags = new List<int>();
+    public List<CharacterData> characters = new List<CharacterData>();
+    public List<ItemData.Item> Inventory = new List<ItemData.Item>();
 
-    void AddItem(int ID, int Amount)
+    public void AddItem(int ID, int Amount)
     {
         ItemData.Item Item;
         for (int i = 0; i < Inventory.Count; i++)
@@ -48,7 +48,7 @@ public class PlayerData : MonoBehaviour
         Inventory.Add(Item);
     }
 
-    void DelItem(int ID, int Amount)
+    public void DelItem(int ID, int Amount)
     {
         ItemData.Item Item;
         for (int i = 0; i < Inventory.Count; i++)

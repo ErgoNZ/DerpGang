@@ -28,7 +28,6 @@ public class GameController : MonoBehaviour
         Player = Instantiate(PlayerPrefab);
         DontDestroyOnLoad(gameObject);
         DontDestroyOnLoad(Player);
-        DontDestroyOnLoad(Menu);
         DontDestroyOnLoad(EventManager);
         State = GameState.LoadingItems;
         PlayerControler = Player.GetComponent<PlayerControler>();
