@@ -37,7 +37,9 @@ public class ItemData : MonoBehaviour
         Chest,
         Legs,
         Boots,
-        Charm
+        Charm,
+        Gear,
+        Key
     }
     public struct EffectData
     {
