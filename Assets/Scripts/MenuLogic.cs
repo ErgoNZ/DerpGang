@@ -5,11 +5,13 @@ using UnityEngine;
 public class MenuLogic : MonoBehaviour
 {
     GameObject Party, Inv, Map, Insights, Journal, Canvas, InvContent;
+    RectTransform InvRect;
     Vector3 PartyPos, InvPos, MapPos, InsightsPos;
     PlayerData PData;
     ItemData.Catagory InvFilter = ItemData.Catagory.Consumable;
     List<ItemData.Item> SortedInv = new();
     public GameObject InventoryItemPrefab;
+    List<GameObject> ItemPrefabList = new();
     // Start is called before the first frame update
     private void Start()
     {
@@ -21,6 +23,7 @@ public class MenuLogic : MonoBehaviour
         Canvas = GameObject.Find("Canvas");
         InvContent = GameObject.Find("Content");
         PData = GetComponent<PlayerData>();
+        InvRect = InvContent.GetComponent<RectTransform>();
         PartyPos = Party.transform.localPosition;
         InvPos = Inv.transform.localPosition;
         MapPos = Map.transform.localPosition;
@@ -73,13 +76,10 @@ public class MenuLogic : MonoBehaviour
 
     void DrawSortInv()
     {
-        while (InvContent.transform.childCount > 0)
-        {
-            DestroyImmediate(transform.GetChild(0).gameObject);
-        }
+        ItemPrefabList.Clear();
         for (int i = 0; i < GetSortedSize(); i++)
         {
-            
+            ItemPrefabList.Add(Instantiate(InventoryItemPrefab));
         }
     }
 
@@ -127,22 +127,22 @@ public class MenuLogic : MonoBehaviour
             case "Item":
                 InvFilter = ItemData.Catagory.Consumable;
                 SortInv(InvFilter);
-                InvContent.transform.localScale = new(InvContent.transform.localScale.x, 50 * GetSortedSize());
+                InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
                 break;
             case "Gear":
                 InvFilter = ItemData.Catagory.Gear;
                 SortInv(InvFilter);
-                InvContent.transform.localScale = new(InvContent.transform.localScale.x, 50 * GetSortedSize());
+                InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
                 break;
             case "Charms":
                 InvFilter = ItemData.Catagory.Charm;
                 SortInv(InvFilter);
-                InvContent.transform.localScale = new(InvContent.transform.localScale.x, 50 * GetSortedSize());
+                InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
                 break;
             case "Key":
                 InvFilter = ItemData.Catagory.Key;
                 SortInv(InvFilter);
-                InvContent.transform.localScale = new(InvContent.transform.localScale.x, 50 * GetSortedSize());
+                InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
                 break;
             default:
                 Debug.LogWarning("Default");
