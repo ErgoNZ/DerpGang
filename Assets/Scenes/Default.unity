@@ -4706,7 +4706,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a585238d82090245b33b8b80952958b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InventoryItemPrefab: {fileID: 0}
+  InventoryItemPrefab: {fileID: 7020256287229499062, guid: 181a470d3eea87240b90a28ad4129a33, type: 3}
 --- !u!1 &1129685356
 GameObject:
   m_ObjectHideFlags: 0
@@ -10542,7 +10542,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 269698033}
   m_HandleRect: {fileID: 269698032}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

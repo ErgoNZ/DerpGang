@@ -80,6 +80,9 @@ public class MenuLogic : MonoBehaviour
         for (int i = 0; i < GetSortedSize(); i++)
         {
             ItemPrefabList.Add(Instantiate(InventoryItemPrefab));
+            ItemPrefabList[i].transform.SetParent(InvContent.transform);
+            ItemPrefabList[i].transform.localPosition = new(0, -InvRect.sizeDelta.y / 2 + (50 * i) - 25);
+            ItemPrefabList[i].transform.localScale = new(1, 1, 1);
         }
     }
 
@@ -128,21 +131,25 @@ public class MenuLogic : MonoBehaviour
                 InvFilter = ItemData.Catagory.Consumable;
                 SortInv(InvFilter);
                 InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
+                DrawSortInv();
                 break;
             case "Gear":
                 InvFilter = ItemData.Catagory.Gear;
                 SortInv(InvFilter);
                 InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
+                DrawSortInv();
                 break;
             case "Charms":
                 InvFilter = ItemData.Catagory.Charm;
                 SortInv(InvFilter);
                 InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
+                DrawSortInv();
                 break;
             case "Key":
                 InvFilter = ItemData.Catagory.Key;
                 SortInv(InvFilter);
                 InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
+                DrawSortInv();
                 break;
             default:
                 Debug.LogWarning("Default");
