@@ -76,13 +76,20 @@ public class MenuLogic : MonoBehaviour
 
     void DrawSortInv()
     {
+        for (int i = 0; i < ItemPrefabList.Count; i++)
+        {
+            Destroy(ItemPrefabList[i]);
+        }
         ItemPrefabList.Clear();
         for (int i = 0; i < GetSortedSize(); i++)
         {
             ItemPrefabList.Add(Instantiate(InventoryItemPrefab));
             ItemPrefabList[i].transform.SetParent(InvContent.transform);
-            ItemPrefabList[i].transform.localPosition = new(0, -InvRect.sizeDelta.y / 2 + (50 * i) - 25);
+            ItemPrefabList[i].transform.localPosition = new(0, InvRect.rect.yMax - (50 * i) -25);
             ItemPrefabList[i].transform.localScale = new(1, 1, 1);
+            ItemPrefabList[i].GetComponent<ItemBtnLogic>().txtName = SortedInv[i].Name;
+            ItemPrefabList[i].GetComponent<ItemBtnLogic>().txtAmount = SortedInv[i].Amount.ToString();
+            ItemPrefabList[i].SetActive(true);
         }
     }
 
