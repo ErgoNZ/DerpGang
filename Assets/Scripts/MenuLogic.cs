@@ -87,9 +87,8 @@ public class MenuLogic : MonoBehaviour
             ItemPrefabList[i].transform.SetParent(InvContent.transform);
             ItemPrefabList[i].transform.localPosition = new(0, InvRect.rect.yMax - (50 * i) -25);
             ItemPrefabList[i].transform.localScale = new(1, 1, 1);
-            ItemPrefabList[i].GetComponent<ItemBtnLogic>().txtName = SortedInv[i].Name;
-            ItemPrefabList[i].GetComponent<ItemBtnLogic>().txtAmount = SortedInv[i].Amount.ToString();
-            ItemPrefabList[i].SetActive(true);
+            ItemBtnLogic itemBtnLogic = ItemPrefabList[i].GetComponent<ItemBtnLogic>();
+            itemBtnLogic.FillInfo(SortedInv[i].Amount.ToString(), SortedInv[i].Name, SortedInv[i]);
         }
     }
 

@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class ItemBtnLogic : MonoBehaviour
 {
-    public string txtAmount, txtName;
     public ItemData.Item item;
     public GameObject Name, Amount, Icon;
-    private void Awake()
-    {
-        Name.GetComponent<TMPro.TextMeshProUGUI>().text = txtName;
-        Amount.GetComponent<TMPro.TextMeshProUGUI>().text = txtAmount;
-    }
+
     public void clicked()
     {
 
+    }
+    public void FillInfo(string ItemAmount, string ItemName, ItemData.Item itemInfo)
+    {
+        Name.GetComponent<TMPro.TextMeshProUGUI>().SetText(ItemName);
+        Amount.GetComponent<TMPro.TextMeshProUGUI>().SetText(ItemAmount);
+        item = itemInfo;
     }
 }
