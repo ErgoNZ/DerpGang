@@ -207,7 +207,6 @@ public class ItemData : MonoBehaviour
     public Item GetItem(string IDstring)
     {
         int ID = int.Parse(IDstring);
-        //Debug.Log(ItemList[ID].ID + " , " +ItemList[ID].Name);
         return ItemList[ID];
     }
 }

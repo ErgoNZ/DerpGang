@@ -22,8 +22,8 @@ public class MenuLogic : MonoBehaviour
         Journal = GameObject.Find("JournalBtn");
         Canvas = GameObject.Find("Canvas");
         InvContent = GameObject.Find("Content");
-        PData = GetComponent<PlayerData>();
         InvRect = InvContent.GetComponent<RectTransform>();
+        PData = GetComponent<PlayerData>();
         PartyPos = Party.transform.localPosition;
         InvPos = Inv.transform.localPosition;
         MapPos = Map.transform.localPosition;
@@ -145,7 +145,7 @@ public class MenuLogic : MonoBehaviour
                 InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
                 DrawSortInv();
                 break;
-            case "Charms":
+            case "Charm":
                 InvFilter = ItemData.Catagory.Charm;
                 SortInv(InvFilter);
                 InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
