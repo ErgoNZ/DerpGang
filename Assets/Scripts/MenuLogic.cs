@@ -110,7 +110,7 @@ public class MenuLogic : MonoBehaviour
                 Map.transform.localPosition = MapPos;
                 Insights.transform.localPosition = InsightsPos;
                 SortInv(InvFilter);
-                InvContent.transform.localScale = new(InvContent.transform.localScale.x, 50 * GetSortedSize());
+                InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
                 break;
             case "Map":
                 Debug.LogWarning("Map");
