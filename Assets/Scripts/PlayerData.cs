@@ -72,6 +72,11 @@ public class PlayerData : MonoBehaviour
         }
     }
 
+    public void SwapItems(ItemData.Item PouchItem, ItemData.Item SelectedItem)
+    {
+
+    }
+
     /// <summary>
     /// This loads in all of the player data from their save file
     /// </summary>

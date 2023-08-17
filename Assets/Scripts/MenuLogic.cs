@@ -12,6 +12,7 @@ public class MenuLogic : MonoBehaviour
     List<ItemData.Item> SortedInv = new();
     public GameObject InventoryItemPrefab;
     List<GameObject> ItemPrefabList = new();
+    List<GameObject> CharQuickInfoList = new();
     // Start is called before the first frame update
     private void Start()
     {
@@ -29,6 +30,10 @@ public class MenuLogic : MonoBehaviour
         MapPos = Map.transform.localPosition;
         InsightsPos = Insights.transform.localPosition;
         Canvas.SetActive(false);
+        CharQuickInfoList.Add(GameObject.Find("CharQuickInfo1"));
+        CharQuickInfoList.Add(GameObject.Find("CharQuickInfo2"));
+        CharQuickInfoList.Add(GameObject.Find("CharQuickInfo3"));
+        CharQuickInfoList.Add(GameObject.Find("CharQuickInfo4"));
     }
 
     private void Awake()
@@ -161,5 +166,10 @@ public class MenuLogic : MonoBehaviour
                 Debug.LogWarning("Default");
                 break;
         }
+    }
+
+    void QuickInfoShow()
+    {
+
     }
 }
