@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MenuLogic : MonoBehaviour
 {
-    GameObject Party, Inv, Map, Insights, Journal, Canvas, InvContent;
+    public GameObject Party, Inv, Map, Insights, Journal, Canvas, InvContent, QuickCharInfo, Member1, Member2, Member3, Member4;
     RectTransform InvRect;
     Vector3 PartyPos, InvPos, MapPos, InsightsPos;
     PlayerData PData;
@@ -12,17 +12,16 @@ public class MenuLogic : MonoBehaviour
     List<ItemData.Item> SortedInv = new();
     public GameObject InventoryItemPrefab;
     List<GameObject> ItemPrefabList = new();
-    List<GameObject> CharQuickInfoList = new();
     // Start is called before the first frame update
     private void Start()
     {
-        Party = GameObject.Find("PartyBtn");
+        /*Party = GameObject.Find("PartyBtn");
         Inv = GameObject.Find("InvBtn");
         Map = GameObject.Find("MapBtn");
         Insights = GameObject.Find("InsightBtn");
         Journal = GameObject.Find("JournalBtn");
         Canvas = GameObject.Find("Canvas");
-        InvContent = GameObject.Find("Content");
+        InvContent = GameObject.Find("Content");*/
         InvRect = InvContent.GetComponent<RectTransform>();
         PData = GetComponent<PlayerData>();
         PartyPos = Party.transform.localPosition;
@@ -30,10 +29,6 @@ public class MenuLogic : MonoBehaviour
         MapPos = Map.transform.localPosition;
         InsightsPos = Insights.transform.localPosition;
         Canvas.SetActive(false);
-        CharQuickInfoList.Add(GameObject.Find("CharQuickInfo1"));
-        CharQuickInfoList.Add(GameObject.Find("CharQuickInfo2"));
-        CharQuickInfoList.Add(GameObject.Find("CharQuickInfo3"));
-        CharQuickInfoList.Add(GameObject.Find("CharQuickInfo4"));
     }
 
     private void Awake()
@@ -81,6 +76,7 @@ public class MenuLogic : MonoBehaviour
 
     void DrawSortInv()
     {
+        QuickCharInfo.SetActive(false);
         for (int i = 0; i < ItemPrefabList.Count; i++)
         {
             Destroy(ItemPrefabList[i]);
@@ -107,6 +103,7 @@ public class MenuLogic : MonoBehaviour
                 Inv.transform.localPosition = InvPos;
                 Map.transform.localPosition = MapPos;
                 Insights.transform.localPosition = InsightsPos;
+                QuickCharInfo.SetActive(false);
                 break;
             case "Inventory":
                 Debug.LogWarning("Inventory");
@@ -116,6 +113,7 @@ public class MenuLogic : MonoBehaviour
                 Insights.transform.localPosition = InsightsPos;
                 SortInv(InvFilter);
                 InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
+                QuickCharInfo.SetActive(false);
                 break;
             case "Map":
                 Debug.LogWarning("Map");
@@ -123,6 +121,7 @@ public class MenuLogic : MonoBehaviour
                 Inv.transform.localPosition = new Vector3(InvPos.x - 172.80f * 3, InvPos.y);
                 Map.transform.localPosition = MapPos;
                 Insights.transform.localPosition = InsightsPos;
+                QuickCharInfo.SetActive(false);
                 break;
             case "Insights":
                 Debug.LogWarning("Insights");
@@ -130,6 +129,7 @@ public class MenuLogic : MonoBehaviour
                 Inv.transform.localPosition = new Vector3(InvPos.x - 172.80f * 3, InvPos.y);
                 Map.transform.localPosition = new Vector3(MapPos.x - 172.80f * 5, MapPos.y);
                 Insights.transform.localPosition = InsightsPos;
+                QuickCharInfo.SetActive(false);
                 break;
             case "Journal":
                 Debug.LogWarning("Journal");
@@ -137,6 +137,7 @@ public class MenuLogic : MonoBehaviour
                 Inv.transform.localPosition = new Vector3(InvPos.x - 172.80f * 3, InvPos.y);
                 Map.transform.localPosition = new Vector3(MapPos.x - 172.80f * 5, MapPos.y);
                 Insights.transform.localPosition = new Vector3(InsightsPos.x - 172.80f * 7, InsightsPos.y);
+                QuickCharInfo.SetActive(false);
                 break;
             case "Item":
                 InvFilter = ItemData.Catagory.Consumable;
@@ -161,6 +162,9 @@ public class MenuLogic : MonoBehaviour
                 SortInv(InvFilter);
                 InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
                 DrawSortInv();
+                break;
+            case "EquipItem":
+                QuickCharInfo.SetActive(true);
                 break;
             default:
                 Debug.LogWarning("Default");
