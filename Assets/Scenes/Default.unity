@@ -15044,7 +15044,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.8301887, g: 0.05090782, b: 0.05090782, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -16076,7 +16076,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.18396229, g: 0.40485707, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -16801,7 +16801,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1795014798489468585}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1129673690}
+        m_TargetAssemblyTypeName: MenuLogic, Assembly-CSharp
+        m_MethodName: QuickInfoShow
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &6520854301023471032
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -16871,7 +16883,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5117246086265937404}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1129673690}
+        m_TargetAssemblyTypeName: MenuLogic, Assembly-CSharp
+        m_MethodName: QuickInfoShow
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6702007128626358666
 GameObject:
   m_ObjectHideFlags: 0
@@ -17932,7 +17956,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2137652402121248655}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1129673690}
+        m_TargetAssemblyTypeName: MenuLogic, Assembly-CSharp
+        m_MethodName: QuickInfoShow
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &8931177284984249072
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -18110,4 +18146,16 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5704417306509717389}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1129673690}
+        m_TargetAssemblyTypeName: MenuLogic, Assembly-CSharp
+        m_MethodName: QuickInfoShow
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

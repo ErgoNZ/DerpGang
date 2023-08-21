@@ -172,8 +172,30 @@ public class MenuLogic : MonoBehaviour
         }
     }
 
-    void QuickInfoShow()
+    public void QuickInfoShow(int CharPos)
     {
+        GameObject CharIcon, HpTxt, MpTxt, Pouch1, Pouch2, Pouch3, Pouch4, Pouch5, WeaponTxt, ChestTxt, LegsTxt, BootsTxt, Charm1, Charm2;
+        CharIcon = GameObject.Find("CharIcon");
+        Pouch1 = GameObject.Find("PItem1");
+        Pouch2 = GameObject.Find("PItem2");
+        Pouch3 = GameObject.Find("PItem3");
+        Pouch4 = GameObject.Find("PItem4");
+        Pouch5 = GameObject.Find("PItem5");
+        WeaponTxt = GameObject.Find("EquippedWeapon");
+        ChestTxt = GameObject.Find("EquippedChest");
+        LegsTxt = GameObject.Find("EquippedLegs");
+        BootsTxt = GameObject.Find("EquippedBoots");
+        Charm1 = GameObject.Find("EquippedCharm1");
+        Charm2 = GameObject.Find("EquippedCharm2");
+        HpTxt = GameObject.Find("TxtHp");
+        MpTxt = GameObject.Find("TxtMp");
+        Debug.Log("Clicked!");
+        for (int i = 0; i < 4; i++)
+        {
+            if(PData.characters[i].position == CharPos)
+            {
 
+            }
+        }
     }
 }
