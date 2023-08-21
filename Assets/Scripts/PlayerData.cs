@@ -14,6 +14,7 @@ public class PlayerData : MonoBehaviour
         public ItemData.Character Name;
         public int Level;
         public ItemData.Stats Stats;
+        public int CurrentHp, CurrentMp;
         public List<ItemData.Element> Resistance;
         public List<ItemData.Element> Vulnerable;
         public List<ItemData.EffectData> Effects;
@@ -92,9 +93,9 @@ public class PlayerData : MonoBehaviour
             CharacterData characterData;
             while (!reader.EndOfStream)
             {
-                if (lineCount != 44)
+                if (lineCount != 52)
                 {
-                    if (lineCount % 11 == 0 || lineCount == 0)
+                    if (lineCount % 13 == 0 || lineCount == 0)
                     {
                         characterData = new CharacterData();
                         characterData.Name = ItemData.ParseEnum<ItemData.Character>(SplitData(reader.ReadLine()));
@@ -115,6 +116,8 @@ public class PlayerData : MonoBehaviour
                         characterData.Stats.Def = int.Parse(Array[4]);
                         characterData.Stats.MDef = int.Parse(Array[5]);
                         characterData.Stats.Spd = int.Parse(Array[6]);
+                        characterData.CurrentHp = int.Parse(SplitData(reader.ReadLine()));
+                        characterData.CurrentMp = int.Parse(SplitData(reader.ReadLine()));
                         characterData.Pouch = new ItemData.Item[5];
                         line = SplitData(reader.ReadLine());
                         Array = line.Split('/');
@@ -124,7 +127,7 @@ public class PlayerData : MonoBehaviour
                         }
                         characters.Add(characterData);
                         Debug.Log("A character's data was loaded");
-                        lineCount += 11;
+                        lineCount += 13;
                     }
                 }
                 else

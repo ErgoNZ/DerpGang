@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuLogic : MonoBehaviour
 {
@@ -15,13 +16,6 @@ public class MenuLogic : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        /*Party = GameObject.Find("PartyBtn");
-        Inv = GameObject.Find("InvBtn");
-        Map = GameObject.Find("MapBtn");
-        Insights = GameObject.Find("InsightBtn");
-        Journal = GameObject.Find("JournalBtn");
-        Canvas = GameObject.Find("Canvas");
-        InvContent = GameObject.Find("Content");*/
         InvRect = InvContent.GetComponent<RectTransform>();
         PData = GetComponent<PlayerData>();
         PartyPos = Party.transform.localPosition;
@@ -174,27 +168,47 @@ public class MenuLogic : MonoBehaviour
 
     public void QuickInfoShow(int CharPos)
     {
-        GameObject CharIcon, HpTxt, MpTxt, Pouch1, Pouch2, Pouch3, Pouch4, Pouch5, WeaponTxt, ChestTxt, LegsTxt, BootsTxt, Charm1, Charm2;
-        CharIcon = GameObject.Find("CharIcon");
-        Pouch1 = GameObject.Find("PItem1");
-        Pouch2 = GameObject.Find("PItem2");
-        Pouch3 = GameObject.Find("PItem3");
-        Pouch4 = GameObject.Find("PItem4");
-        Pouch5 = GameObject.Find("PItem5");
-        WeaponTxt = GameObject.Find("EquippedWeapon");
-        ChestTxt = GameObject.Find("EquippedChest");
-        LegsTxt = GameObject.Find("EquippedLegs");
-        BootsTxt = GameObject.Find("EquippedBoots");
-        Charm1 = GameObject.Find("EquippedCharm1");
-        Charm2 = GameObject.Find("EquippedCharm2");
-        HpTxt = GameObject.Find("TxtHp");
-        MpTxt = GameObject.Find("TxtMp");
-        Debug.Log("Clicked!");
+        TMPro.TextMeshProUGUI CharIcon, HpTxt, MpTxt, Pouch1, Pouch2, Pouch3, Pouch4, Pouch5, WeaponTxt, ChestTxt, LegsTxt, BootsTxt, Charm1Txt, Charm2Txt;
+        GameObject HpBar, MpBar;
+        CharIcon = GameObject.Find("CharIcon").GetComponent<TMPro.TextMeshProUGUI>();
+        Pouch1 = GameObject.Find("PItem1").GetComponent<TMPro.TextMeshProUGUI>();
+        Pouch2 = GameObject.Find("PItem2").GetComponent<TMPro.TextMeshProUGUI>();
+        Pouch3 = GameObject.Find("PItem3").GetComponent<TMPro.TextMeshProUGUI>();
+        Pouch4 = GameObject.Find("PItem4").GetComponent<TMPro.TextMeshProUGUI>();
+        Pouch5 = GameObject.Find("PItem5").GetComponent<TMPro.TextMeshProUGUI>();
+        WeaponTxt = GameObject.Find("EquippedWeapon").GetComponent<TMPro.TextMeshProUGUI>();
+        ChestTxt = GameObject.Find("EquippedChest").GetComponent<TMPro.TextMeshProUGUI>();
+        LegsTxt = GameObject.Find("EquippedLegs").GetComponent<TMPro.TextMeshProUGUI>();
+        BootsTxt = GameObject.Find("EquippedBoots").GetComponent<TMPro.TextMeshProUGUI>();
+        Charm1Txt = GameObject.Find("EquippedCharm1").GetComponent<TMPro.TextMeshProUGUI>();
+        Charm2Txt = GameObject.Find("EquippedCharm2").GetComponent<TMPro.TextMeshProUGUI>();
+        HpTxt = GameObject.Find("HpNum").GetComponent<TMPro.TextMeshProUGUI>();
+        MpTxt = GameObject.Find("MpNum").GetComponent<TMPro.TextMeshProUGUI>();
+        HpBar = GameObject.Find("HpBarCasing");
+        MpBar = GameObject.Find("MpBarCasing");
+
         for (int i = 0; i < 4; i++)
         {
             if(PData.characters[i].position == CharPos)
             {
-
+                Pouch1.SetText(PData.characters[i].Pouch[0].Name);
+                Pouch2.SetText(PData.characters[i].Pouch[1].Name);
+                Pouch3.SetText(PData.characters[i].Pouch[2].Name);
+                Pouch4.SetText(PData.characters[i].Pouch[3].Name);
+                Pouch5.SetText(PData.characters[i].Pouch[4].Name);
+                WeaponTxt.SetText(PData.characters[i].Weapon.Name);
+                ChestTxt.SetText(PData.characters[i].Chest.Name);
+                LegsTxt.SetText(PData.characters[i].Legs.Name);
+                BootsTxt.SetText(PData.characters[i].Boots.Name);
+                Charm1Txt.SetText(PData.characters[i].Charm1.Name);
+                Charm2Txt.SetText(PData.characters[i].Charm2.Name);
+                HpTxt.SetText(PData.characters[i].CurrentHp + "/" + PData.characters[i].Stats.Hp);
+                MpTxt.SetText(PData.characters[i].CurrentMp + "/" + PData.characters[i].Stats.Mp);
+                float percentageFilled;
+                percentageFilled = (float)PData.characters[i].CurrentHp / (float)PData.characters[i].Stats.Hp;
+                HpBar.GetComponent<Slider>().value = percentageFilled;
+                percentageFilled = (float)PData.characters[i].CurrentMp / (float)PData.characters[i].Stats.Mp;
+                MpBar.GetComponent<Slider>().value = percentageFilled;
             }
         }
     }
