@@ -13,6 +13,7 @@ public class MenuLogic : MonoBehaviour
     List<ItemData.Item> SortedInv = new();
     public GameObject InventoryItemPrefab;
     List<GameObject> ItemPrefabList = new();
+    public ItemData.Item ?SelectedItem = null;
     // Start is called before the first frame update
     private void Start()
     {

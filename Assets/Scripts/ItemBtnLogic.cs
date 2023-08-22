@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemBtnLogic : MonoBehaviour
@@ -8,9 +6,11 @@ public class ItemBtnLogic : MonoBehaviour
     public GameObject Name, Amount, Icon;
     GameObject ItemDesc, ItemHp, ItemAtk, ItemMp, ItemSpd, ItemMAtk, ItemMDef, ItemUseable, ItemAmount, ItemAtkEffect, ItemDefEffect, ItemDef, ItemType, ItemName;
     string content;
+    MenuLogic MenuLogic;
 
     public void clicked()
     {
+        MenuLogic = GameObject.Find("GameManager").GetComponent<MenuLogic>();
         ItemDesc = GameObject.Find("Description");
         ItemHp = GameObject.Find("HpStat");
         ItemMp = GameObject.Find("MpStat");
@@ -47,6 +47,7 @@ public class ItemBtnLogic : MonoBehaviour
         ItemUseable.GetComponent<TMPro.TextMeshProUGUI>().SetText(content);
         ItemType.GetComponent<TMPro.TextMeshProUGUI>().SetText("Type: " + item.Type);
         ItemName.GetComponent<TMPro.TextMeshProUGUI>().SetText(item.Name);
+        MenuLogic.SelectedItem = item;
     }
     public void FillInfo(string ItemAmount, string ItemName, ItemData.Item itemInfo)
     {

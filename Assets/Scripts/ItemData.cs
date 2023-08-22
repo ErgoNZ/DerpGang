@@ -17,6 +17,7 @@ public class ItemData : MonoBehaviour
         public string Description;
         public Element Element;
         public Stats Stats;
+        public Range Range;
         public List<EffectData> Effects;
         public List<CharmData> CharmEffects;
         public List<Element> Resistance;
@@ -41,6 +42,14 @@ public class ItemData : MonoBehaviour
         Gear,
         Key
     }
+
+    public enum Range
+    {
+        Single,
+        Wide,
+        All
+    }
+
     public struct EffectData
     {
         public string Name;
