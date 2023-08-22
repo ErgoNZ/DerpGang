@@ -14,7 +14,7 @@ public class RoomTransitionLogic : MonoBehaviour
     public GoTo GoToRoom;
     public Direction FaceDirection;
     public Vector3 SpawnPosition;
-
+    public Area CurrentArea;
 
     public enum Direction
     {
@@ -26,5 +26,11 @@ public class RoomTransitionLogic : MonoBehaviour
         NorthEast,
         SouthWest,
         SouthEast
+    }
+
+    public enum Area
+    {
+        WindWispWoods,
+        ManaCrystalMines
     }
 }

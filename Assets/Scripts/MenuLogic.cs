@@ -66,6 +66,8 @@ public class MenuLogic : MonoBehaviour
                 }
             }
         }
+        InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
+        DrawSortInv();
     }
 
     void DrawSortInv()
@@ -136,26 +138,18 @@ public class MenuLogic : MonoBehaviour
             case "Item":
                 InvFilter = ItemData.Catagory.Consumable;
                 SortInv(InvFilter);
-                InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
-                DrawSortInv();
                 break;
             case "Gear":
                 InvFilter = ItemData.Catagory.Gear;
                 SortInv(InvFilter);
-                InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
-                DrawSortInv();
                 break;
             case "Charm":
                 InvFilter = ItemData.Catagory.Charm;
                 SortInv(InvFilter);
-                InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
-                DrawSortInv();
                 break;
             case "Key":
                 InvFilter = ItemData.Catagory.Key;
                 SortInv(InvFilter);
-                InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
-                DrawSortInv();
                 break;
             case "EquipItem":
                 QuickCharInfo.SetActive(true);
