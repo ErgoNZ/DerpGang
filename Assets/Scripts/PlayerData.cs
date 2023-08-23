@@ -73,7 +73,7 @@ public class PlayerData : MonoBehaviour
         }
     }
 
-    public void SwapItems(ItemData.Item PouchItem, ItemData.Item SelectedItem)
+    public void SwapItems(int pouchSlot, ItemData.Item SelectedItem)
     {
 
     }

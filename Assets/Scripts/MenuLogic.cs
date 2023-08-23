@@ -5,15 +5,40 @@ using UnityEngine.UI;
 
 public class MenuLogic : MonoBehaviour
 {
-    public GameObject Party, Inv, Map, Insights, Journal, Canvas, InvContent, QuickCharInfo, Member1, Member2, Member3, Member4;
+    [Header("General GUI")]
+    public GameObject Party;
+    public GameObject Inv;
+    public GameObject Map;
+    public GameObject Insights;
+    public GameObject Journal;
+    public GameObject Canvas;
+    [Header("InventoryGUI")]
+    public GameObject InvContent;
+    public GameObject QuickCharInfo;
+    public GameObject Member1;
+    public GameObject Member2;
+    public GameObject Member3;
+    public GameObject Member4;
+    public GameObject InvPanel;
+    public GameObject ItemPanel;
+    [Header("QuickInfoMenu")]
+    public GameObject Charm1;
+    public GameObject Charm2;
+    public GameObject Pouch1;
+    public GameObject Pouch2;
+    public GameObject Pouch3;
+    public GameObject Pouch4;
+    public GameObject Pouch5;
     RectTransform InvRect;
     Vector3 PartyPos, InvPos, MapPos, InsightsPos;
     PlayerData PData;
     ItemData.Catagory InvFilter = ItemData.Catagory.Consumable;
     List<ItemData.Item> SortedInv = new();
+    [Header("Prefab stuff")]
     public GameObject InventoryItemPrefab;
     List<GameObject> ItemPrefabList = new();
-    public ItemData.Item ?SelectedItem = null;
+    [Header("Item Stuff")]
+    public ItemData.Item SelectedItem;
     // Start is called before the first frame update
     private void Start()
     {
@@ -101,6 +126,8 @@ public class MenuLogic : MonoBehaviour
                 Map.transform.localPosition = MapPos;
                 Insights.transform.localPosition = InsightsPos;
                 QuickCharInfo.SetActive(false);
+                InvPanel.SetActive(false);
+                ItemPanel.SetActive(false);
                 break;
             case "Inventory":
                 Debug.LogWarning("Inventory");
@@ -111,6 +138,8 @@ public class MenuLogic : MonoBehaviour
                 SortInv(InvFilter);
                 InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
                 QuickCharInfo.SetActive(false);
+                InvPanel.SetActive(true);
+                ItemPanel.SetActive(true);
                 break;
             case "Map":
                 Debug.LogWarning("Map");
@@ -119,6 +148,8 @@ public class MenuLogic : MonoBehaviour
                 Map.transform.localPosition = MapPos;
                 Insights.transform.localPosition = InsightsPos;
                 QuickCharInfo.SetActive(false);
+                InvPanel.SetActive(false);
+                ItemPanel.SetActive(false);
                 break;
             case "Insights":
                 Debug.LogWarning("Insights");
@@ -127,6 +158,8 @@ public class MenuLogic : MonoBehaviour
                 Map.transform.localPosition = new Vector3(MapPos.x - 172.80f * 5, MapPos.y);
                 Insights.transform.localPosition = InsightsPos;
                 QuickCharInfo.SetActive(false);
+                InvPanel.SetActive(false);
+                ItemPanel.SetActive(false);
                 break;
             case "Journal":
                 Debug.LogWarning("Journal");
@@ -135,6 +168,8 @@ public class MenuLogic : MonoBehaviour
                 Map.transform.localPosition = new Vector3(MapPos.x - 172.80f * 5, MapPos.y);
                 Insights.transform.localPosition = new Vector3(InsightsPos.x - 172.80f * 7, InsightsPos.y);
                 QuickCharInfo.SetActive(false);
+                InvPanel.SetActive(false);
+                ItemPanel.SetActive(false);
                 break;
             case "Item":
                 InvFilter = ItemData.Catagory.Consumable;
@@ -205,6 +240,56 @@ public class MenuLogic : MonoBehaviour
                 percentageFilled = (float)PData.characters[i].CurrentMp / (float)PData.characters[i].Stats.Mp;
                 MpBar.GetComponent<Slider>().value = percentageFilled;
             }
+        }
+    }
+
+    public void EnableEquipBtns()
+    {
+        ItemData.Catagory Type = SelectedItem.Type;
+        switch (Type)
+        {
+            case ItemData.Catagory.Charm:
+                Charm1.GetComponent<Button>().enabled = true;
+                Charm2.GetComponent<Button>().enabled = true;
+                break;
+            case ItemData.Catagory.Consumable:
+                Pouch1.GetComponent<Button>().enabled = true;
+                Pouch2.GetComponent<Button>().enabled = true;
+                Pouch3.GetComponent<Button>().enabled = true;
+                Pouch4.GetComponent<Button>().enabled = true;
+                Pouch5.GetComponent<Button>().enabled = true;
+                break;
+            default:
+                EquipItem(0);
+                break;
+        }
+    }
+
+    public void EquipItem(int Slot)
+    {
+        if(SelectedItem.Type == ItemData.Catagory.Charm)
+        {
+            PData.SwapItems(Slot, SelectedItem);
+        }
+        if(SelectedItem.Type == ItemData.Catagory.Consumable)
+        {
+            PData.SwapItems(Slot, SelectedItem);
+        }
+        if (SelectedItem.Type == ItemData.Catagory.Boots)
+        {
+
+        }
+        if (SelectedItem.Type == ItemData.Catagory.Legs)
+        {
+
+        }
+        if (SelectedItem.Type == ItemData.Catagory.Chest)
+        {
+
+        }
+        if (SelectedItem.Type == ItemData.Catagory.Weapon)
+        {
+
         }
     }
 }
