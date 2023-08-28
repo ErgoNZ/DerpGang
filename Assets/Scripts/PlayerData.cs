@@ -8,7 +8,7 @@ public class PlayerData : MonoBehaviour
 {
     ItemData itemData;
     int Money = 0;
-    public struct CharacterData
+    public class CharacterData
     {
         public int position;
         public ItemData.Character Name;
@@ -28,8 +28,8 @@ public class PlayerData : MonoBehaviour
     }
 
     public List<int> Flags = new List<int>();
-    public List<CharacterData> characters = new List<CharacterData>();
-    public List<ItemData.Item> Inventory = new List<ItemData.Item>();
+    public List<CharacterData> characters = new();
+    public List<ItemData.Item> Inventory = new();
 
     public void AddItem(int ID, int Amount)
     {
@@ -73,9 +73,83 @@ public class PlayerData : MonoBehaviour
         }
     }
 
-    public void SwapItems(int pouchSlot, ItemData.Item SelectedItem)
+    public void PouchSwapItems(int pouchSlot, ItemData.Item SelectedItem, int CharPos)
     {
+        ItemData.Item TempItem;
+        for (int i = 0; i < characters.Count; i++)
+        {
+            if(characters[i].position == CharPos)
+            {
+                TempItem = characters[i].Pouch[pouchSlot];
+                characters[i].Pouch[pouchSlot] = SelectedItem;
+                AddItem(TempItem.ID, 1);
+                DelItem(SelectedItem.ID, 1);
+            }
+        }
+    }
 
+    public void CharmSwap(int Slot, ItemData.Item SelectedItem, int CharPos)
+    {
+        ItemData.Item TempItem;
+        for (int i = 0; i < characters.Count; i++)
+        {
+            if (characters[i].position == CharPos)
+            {
+                if (Slot == 1)
+                {
+                    TempItem = characters[i].Charm1;
+                    characters[i].Charm1 = SelectedItem;
+                    AddItem(TempItem.ID, 1);
+                    DelItem(SelectedItem.ID, 1);
+                }
+                else
+                {
+                    TempItem = characters[i].Charm2;
+                    characters[i].Charm1 = SelectedItem;
+                    AddItem(TempItem.ID, 1);
+                    DelItem(SelectedItem.ID, 1);
+                }
+            }
+        }
+    }
+
+    public void GearSwap(ItemData.Item SelectedItem, int CharPos)
+    {
+        ItemData.Item TempItem;
+        for (int i = 0; i < characters.Count; i++)
+        {
+            if (characters[i].position == CharPos)
+            {
+                if(SelectedItem.Type == ItemData.Catagory.Weapon)
+                {
+                    TempItem = characters[i].Weapon;
+                    characters[i].Weapon = SelectedItem;
+                    AddItem(TempItem.ID, 1);
+                    DelItem(SelectedItem.ID, 1);
+                }
+                if (SelectedItem.Type == ItemData.Catagory.Chest)
+                {
+                    TempItem = characters[i].Chest;
+                    characters[i].Chest = SelectedItem;
+                    AddItem(TempItem.ID, 1);
+                    DelItem(SelectedItem.ID, 1);
+                }
+                if (SelectedItem.Type == ItemData.Catagory.Legs)
+                {
+                    TempItem = characters[i].Legs;
+                    characters[i].Legs = SelectedItem;
+                    AddItem(TempItem.ID, 1);
+                    DelItem(SelectedItem.ID, 1);
+                }
+                if (SelectedItem.Type == ItemData.Catagory.Boots)
+                {
+                    TempItem = characters[i].Boots;
+                    characters[i].Boots = SelectedItem;
+                    AddItem(TempItem.ID, 1);
+                    DelItem(SelectedItem.ID, 1);
+                }
+            }
+        }
     }
 
     /// <summary>

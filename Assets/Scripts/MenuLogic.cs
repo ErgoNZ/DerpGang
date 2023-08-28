@@ -21,6 +21,7 @@ public class MenuLogic : MonoBehaviour
     public GameObject Member4;
     public GameObject InvPanel;
     public GameObject ItemPanel;
+    public GameObject UseItem;
     [Header("QuickInfoMenu")]
     public GameObject Charm1;
     public GameObject Charm2;
@@ -39,6 +40,7 @@ public class MenuLogic : MonoBehaviour
     List<GameObject> ItemPrefabList = new();
     [Header("Item Stuff")]
     public ItemData.Item SelectedItem;
+    public int SelectedChar = 1;
     // Start is called before the first frame update
     private void Start()
     {
@@ -65,6 +67,8 @@ public class MenuLogic : MonoBehaviour
     {
         Filter = InvFilter;
         SortedInv.Clear();
+        UseItem.SetActive(true);
+        UseItem.GetComponent<Button>().interactable = false;
         for (int i = 0; i < PData.Inventory.Count; i++)
         {
             if(PData.Inventory[i].Type == Filter)
@@ -117,6 +121,7 @@ public class MenuLogic : MonoBehaviour
 
     public void MenuSwitch(string Menu)
     {
+        UseItem.SetActive(false);
         switch (Menu)
         {
             case "Party":
@@ -140,6 +145,8 @@ public class MenuLogic : MonoBehaviour
                 QuickCharInfo.SetActive(false);
                 InvPanel.SetActive(true);
                 ItemPanel.SetActive(true);
+                UseItem.SetActive(true);
+                UseItem.GetComponent<Button>().interactable = false;
                 break;
             case "Map":
                 Debug.LogWarning("Map");
@@ -189,6 +196,7 @@ public class MenuLogic : MonoBehaviour
                 break;
             case "EquipItem":
                 QuickCharInfo.SetActive(true);
+                QuickInfoShow(0);
                 break;
             default:
                 Debug.LogWarning("Default");
@@ -198,6 +206,7 @@ public class MenuLogic : MonoBehaviour
 
     public void QuickInfoShow(int CharPos)
     {
+        SelectedChar = CharPos;
         TMPro.TextMeshProUGUI CharIcon, HpTxt, MpTxt, Pouch1, Pouch2, Pouch3, Pouch4, Pouch5, WeaponTxt, ChestTxt, LegsTxt, BootsTxt, Charm1Txt, Charm2Txt;
         GameObject HpBar, MpBar;
         CharIcon = GameObject.Find("CharIcon").GetComponent<TMPro.TextMeshProUGUI>();
@@ -269,27 +278,27 @@ public class MenuLogic : MonoBehaviour
     {
         if(SelectedItem.Type == ItemData.Catagory.Charm)
         {
-            PData.SwapItems(Slot, SelectedItem);
+            PData.CharmSwap(Slot, SelectedItem, SelectedChar);
         }
         if(SelectedItem.Type == ItemData.Catagory.Consumable)
         {
-            PData.SwapItems(Slot, SelectedItem);
+            PData.PouchSwapItems(Slot, SelectedItem, SelectedChar);
         }
         if (SelectedItem.Type == ItemData.Catagory.Boots)
         {
-
+            PData.GearSwap(SelectedItem, SelectedChar);
         }
         if (SelectedItem.Type == ItemData.Catagory.Legs)
         {
-
+            PData.GearSwap(SelectedItem, SelectedChar);
         }
         if (SelectedItem.Type == ItemData.Catagory.Chest)
         {
-
+            PData.GearSwap(SelectedItem, SelectedChar);
         }
         if (SelectedItem.Type == ItemData.Catagory.Weapon)
         {
-
+            PData.GearSwap(SelectedItem, SelectedChar);
         }
     }
 }

@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemBtnLogic : MonoBehaviour
 {
     public ItemData.Item item;
     public GameObject Name, Amount, Icon;
-    GameObject ItemDesc, ItemHp, ItemAtk, ItemMp, ItemSpd, ItemMAtk, ItemMDef, ItemUseable, ItemAmount, ItemAtkEffect, ItemDefEffect, ItemDef, ItemType, ItemName;
+    GameObject ItemDesc, ItemHp, ItemAtk, ItemMp, ItemSpd, ItemMAtk, ItemMDef, ItemUseable, ItemAmount, ItemAtkEffect, ItemDefEffect, ItemDef, ItemType, ItemName, UseItem;
     string content;
     MenuLogic MenuLogic;
 
@@ -48,6 +49,8 @@ public class ItemBtnLogic : MonoBehaviour
         ItemType.GetComponent<TMPro.TextMeshProUGUI>().SetText("Type: " + item.Type);
         ItemName.GetComponent<TMPro.TextMeshProUGUI>().SetText(item.Name);
         MenuLogic.SelectedItem = item;
+        UseItem = GameObject.Find("UseItemBtn");
+        UseItem.GetComponent<Button>().interactable = true;
     }
     public void FillInfo(string ItemAmount, string ItemName, ItemData.Item itemInfo)
     {
