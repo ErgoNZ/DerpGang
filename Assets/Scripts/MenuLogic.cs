@@ -41,6 +41,7 @@ public class MenuLogic : MonoBehaviour
     [Header("Item Stuff")]
     public ItemData.Item SelectedItem;
     public int SelectedChar = 1;
+    ItemData.Item Placeholder = new();
     // Start is called before the first frame update
     private void Start()
     {
@@ -300,5 +301,37 @@ public class MenuLogic : MonoBehaviour
         {
             PData.GearSwap(SelectedItem, SelectedChar);
         }
+        QuickInfoShow(SelectedChar);
+        SelectedItem = PData.SearchInventory(SelectedItem);
+        GameObject ItemAmount;
+        ItemAmount = GameObject.Find("ItemAmount");
+        if (SelectedItem.Amount > 0)
+        {
+            ItemAmount.GetComponent<TMPro.TextMeshProUGUI>().SetText("Quantity: " + SelectedItem.Amount);
+        }
+        else
+        {
+            SelectedItem = Placeholder;
+            GameObject.Find("Description").GetComponent<TMPro.TextMeshProUGUI>().SetText("");
+            GameObject.Find("HpStat").GetComponent<TMPro.TextMeshProUGUI>().SetText("Hp: ");
+            GameObject.Find("MpStat").GetComponent<TMPro.TextMeshProUGUI>().SetText("Mp: ");
+            GameObject.Find("AtkStat").GetComponent<TMPro.TextMeshProUGUI>().SetText("Atk: ");
+            GameObject.Find("M.AtkStat").GetComponent<TMPro.TextMeshProUGUI>().SetText("M.Atk: ");
+            GameObject.Find("DefStat").GetComponent<TMPro.TextMeshProUGUI>().SetText("Def: " );
+            GameObject.Find("M.DefStat").GetComponent<TMPro.TextMeshProUGUI>().SetText("M.Def: ");
+            GameObject.Find("SpdStat").GetComponent<TMPro.TextMeshProUGUI>().SetText("Spd: ");
+            ItemAmount.GetComponent<TMPro.TextMeshProUGUI>().SetText("Quantity: ");
+            GameObject.Find("ItemCharacters").GetComponent<TMPro.TextMeshProUGUI>().SetText("Used By: ");
+            GameObject.Find("ItemType").GetComponent<TMPro.TextMeshProUGUI>().SetText("Type: ");
+            GameObject.Find("ItemName").GetComponent<TMPro.TextMeshProUGUI>().SetText("");
+        }
+        Pouch1.GetComponent<Button>().enabled = false;
+        Pouch2.GetComponent<Button>().enabled = false;
+        Pouch3.GetComponent<Button>().enabled = false;
+        Pouch4.GetComponent<Button>().enabled = false;
+        Pouch5.GetComponent<Button>().enabled = false;
+        Charm1.GetComponent<Button>().enabled = false;
+        Charm2.GetComponent<Button>().enabled = false;
+        SortInv(InvFilter);
     }
 }

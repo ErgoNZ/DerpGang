@@ -12,6 +12,7 @@ public class ItemBtnLogic : MonoBehaviour
     public void clicked()
     {
         MenuLogic = GameObject.Find("GameManager").GetComponent<MenuLogic>();
+        //The description can hold ~400 characters worth of text.
         ItemDesc = GameObject.Find("Description");
         ItemHp = GameObject.Find("HpStat");
         ItemMp = GameObject.Find("MpStat");
@@ -34,6 +35,7 @@ public class ItemBtnLogic : MonoBehaviour
         ItemSpd.GetComponent<TMPro.TextMeshProUGUI>().SetText("Spd: " + item.Stats.Spd);
         ItemAmount.GetComponent<TMPro.TextMeshProUGUI>().SetText("Quantity: " + item.Amount);
         content = "Used By: ";
+        //This just adds all of the characters to the list for who can use them
         for (int i = 0; i < item.characters.Count; i++)
         {
             if(i == item.characters.Count - 1)

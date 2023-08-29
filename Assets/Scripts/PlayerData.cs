@@ -31,6 +31,25 @@ public class PlayerData : MonoBehaviour
     public List<CharacterData> characters = new();
     public List<ItemData.Item> Inventory = new();
 
+    /// <summary>
+    /// THIS IS A METHOD USED BY THE UI!
+    /// NEVER USE IT IN ANY OTHER CASE FOR RIGHT NOW!
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    public ItemData.Item SearchInventory(ItemData.Item item)
+    {
+        for (int i = 0; i < Inventory.Count; i++)
+        {
+            if (Inventory[i].ID == item.ID)
+            {
+                return Inventory[i];
+            }
+        }
+        item.Amount = 0;
+        return item;
+    }
+
     public void AddItem(int ID, int Amount)
     {
         ItemData.Item Item;
@@ -51,23 +70,17 @@ public class PlayerData : MonoBehaviour
 
     public void DelItem(int ID, int Amount)
     {
-        ItemData.Item Item;
         for (int i = 0; i < Inventory.Count; i++)
         {
             if (Inventory[i].ID == ID)
             {
-                Item = Inventory[i];
-                if(Item.Amount - Amount < 0)
+                if(Inventory[i].Amount - Amount > 0)
                 {
-                    return;
+                    Inventory[i].Amount -= Amount;
                 }
-                else
+                else if(Inventory[i].Amount - Amount <= 0)
                 {
-                    Item.Amount -= Amount;
-                    if(Item.Amount == 0)
-                    {
-                        Inventory.RemoveAt(i);
-                    }
+                    Inventory.RemoveAt(i);
                 }
             }
         }

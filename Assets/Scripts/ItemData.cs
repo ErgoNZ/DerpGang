@@ -8,7 +8,8 @@ public class ItemData : MonoBehaviour
 {
     public List<Item> ItemList = new List<Item>();
     int ID = 0;
-    public struct Item
+
+    public class Item
     {
         public int ID;
         public string Name;
