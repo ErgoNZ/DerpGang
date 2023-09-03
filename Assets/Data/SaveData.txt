@@ -8,8 +8,8 @@ Boots:0
 Charm1:0
 Charm2:0
 Stats(H,M,A,D,MA,MD,S):10/5/7/7/7/7/5
-CurrentHp:10
-CurrentMp:5
+CurrentHp:7
+CurrentMp:1
 PouchItems:0/0/0/0/0
 Name:Susie
 Level:1

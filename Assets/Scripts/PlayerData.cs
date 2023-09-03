@@ -6,6 +6,7 @@ using System;
 
 public class PlayerData : MonoBehaviour
 {
+    StateManager StateManager;
     ItemData itemData;
     int Money = 0;
     public class CharacterData
@@ -165,6 +166,33 @@ public class PlayerData : MonoBehaviour
         }
     }
 
+    public void UseHealingItem(ItemData.Item HealingItem, int Target)
+    {
+        for (int i = 0; i < characters.Count; i++)
+        {
+            if(characters[i].position == Target)
+            {
+                characters[i].CurrentHp += HealingItem.Stats.Hp;
+                characters[i].CurrentMp += HealingItem.Stats.Mp;
+                if(characters[i].CurrentHp > characters[i].Stats.Hp)
+                {
+                    characters[i].CurrentHp = characters[i].Stats.Hp;
+                }
+
+                if (characters[i].CurrentMp > characters[i].Stats.Mp)
+                {
+                    characters[i].CurrentMp = characters[i].Stats.Mp;
+                }
+
+                if (StateManager.InCombat)
+                {
+                    //Combat specific stuff goes here
+                }
+                DelItem(HealingItem.ID, 1);
+            }
+        }
+    }
+
     /// <summary>
     /// This loads in all of the player data from their save file
     /// </summary>
@@ -199,8 +227,8 @@ public class PlayerData : MonoBehaviour
                         characterData.Stats.Hp = int.Parse(Array[0]);
                         characterData.Stats.Mp = int.Parse(Array[1]);
                         characterData.Stats.Atk = int.Parse(Array[2]);
-                        characterData.Stats.MAtk = int.Parse(Array[3]);
-                        characterData.Stats.Def = int.Parse(Array[4]);
+                        characterData.Stats.Def = int.Parse(Array[3]);
+                        characterData.Stats.MAtk = int.Parse(Array[4]);
                         characterData.Stats.MDef = int.Parse(Array[5]);
                         characterData.Stats.Spd = int.Parse(Array[6]);
                         characterData.CurrentHp = int.Parse(SplitData(reader.ReadLine()));
@@ -251,6 +279,7 @@ public class PlayerData : MonoBehaviour
     private void Start()
     {
         itemData = GetComponent<ItemData>();
+        StateManager = GetComponent<StateManager>();
         LoadPlayerData("Assets/Data/SaveData.txt");
     }
 

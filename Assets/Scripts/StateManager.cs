@@ -5,15 +5,16 @@ using System.IO;
 using System;
 using UnityEngine.Diagnostics;
 
-public class GameController : MonoBehaviour
+public class StateManager : MonoBehaviour
 {
-    public static GameController Instance;
+    public static StateManager Instance;
     public GameObject PlayerPrefab;
     static GameObject Player;
     public GameObject Menu;
     public GameObject EventManager;
     public GameState State;
     bool MenuOpen = false;
+    public bool InCombat = false;
     PlayerControler PlayerControler;
 
     private void Awake()

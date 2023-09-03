@@ -1,3 +1,3 @@
 Name|Type|Description|Element|Stats|Effect|Charm|Resistances|Vunlerabilities|Character that can equip   
-None,Consumable,You shouldn't be able to see this. Are you looking through my code?s,None,0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie
-Testing Item,Consumable,This is a test item for debug info!,None,0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie
+None,Consumable,You shouldn't be able to see this. Are you looking through my code?,None,0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie
+Testing Item,Consumable,This is a test item for debug info!,Restore,5, 2, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie
