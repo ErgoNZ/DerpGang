@@ -147,6 +147,7 @@ public class MenuLogic : MonoBehaviour
                 PartyPanel.SetActive(true);
                 CharacterInfoPanel.SetActive(true);
                 SetupPartyInfo();
+                SetupCharInfo(1);
                 break;
             case "Inventory":
                 Debug.LogWarning("Inventory");
@@ -408,11 +409,19 @@ public class MenuLogic : MonoBehaviour
     {
         for (int i = 0; i < PData.characters.Count; i++)
         {
+            int itemsInPouch = 0;
             if(PData.characters[i].position == 1)
             {
                 QuickMemberinfo1.transform.GetChild(7).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Name + "");
                 QuickMemberinfo1.transform.GetChild(8).GetComponent<TMPro.TextMeshProUGUI>().SetText("LVL: " + PData.characters[i].Level);
-                QuickMemberinfo1.transform.GetChild(10).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch.Count + " / 5");
+                for (int p = 0; p < PData.characters[i].Pouch.Count; p++)
+                {
+                    if(PData.characters[i].Pouch[p].ID != 0)
+                    {
+                        itemsInPouch++;
+                    }
+                }
+                QuickMemberinfo1.transform.GetChild(10).GetComponent<TMPro.TextMeshProUGUI>().SetText(itemsInPouch + " / 5");
                 QuickMemberinfo1.transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentMp + " / " + PData.characters[i].Stats.Mp);
                 QuickMemberinfo1.transform.GetChild(6).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentHp + " / " + PData.characters[i].Stats.Hp);
                 QuickMemberinfo1.transform.GetChild(1).GetComponent<Slider>().value = (float)PData.characters[i].CurrentHp / (float)PData.characters[i].Stats.Hp;
@@ -424,7 +433,14 @@ public class MenuLogic : MonoBehaviour
             {
                 QuickMemberinfo2.transform.GetChild(7).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Name + "");
                 QuickMemberinfo2.transform.GetChild(8).GetComponent<TMPro.TextMeshProUGUI>().SetText("LVL: " + PData.characters[i].Level);
-                QuickMemberinfo2.transform.GetChild(10).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch.Count + " / 5");
+                for (int p = 0; p < PData.characters[i].Pouch.Count; p++)
+                {
+                    if (PData.characters[i].Pouch[p].ID != 0)
+                    {
+                        itemsInPouch++;
+                    }
+                }
+                QuickMemberinfo2.transform.GetChild(10).GetComponent<TMPro.TextMeshProUGUI>().SetText(itemsInPouch + " / 5");
                 QuickMemberinfo2.transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentMp + " / " + PData.characters[i].Stats.Mp);
                 QuickMemberinfo2.transform.GetChild(6).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentHp + " / " + PData.characters[i].Stats.Hp);
                 QuickMemberinfo2.transform.GetChild(1).GetComponent<Slider>().value = (float)PData.characters[i].CurrentHp / (float)PData.characters[i].Stats.Hp;
@@ -436,7 +452,14 @@ public class MenuLogic : MonoBehaviour
             {
                 QuickMemberinfo3.transform.GetChild(7).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Name + "");
                 QuickMemberinfo3.transform.GetChild(8).GetComponent<TMPro.TextMeshProUGUI>().SetText("LVL: " + PData.characters[i].Level);
-                QuickMemberinfo3.transform.GetChild(10).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch.Count + " / 5");
+                for (int p = 0; p < PData.characters[i].Pouch.Count; p++)
+                {
+                    if (PData.characters[i].Pouch[p].ID != 0)
+                    {
+                        itemsInPouch++;
+                    }
+                }
+                QuickMemberinfo3.transform.GetChild(10).GetComponent<TMPro.TextMeshProUGUI>().SetText(itemsInPouch + " / 5");
                 QuickMemberinfo3.transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentMp + " / " + PData.characters[i].Stats.Mp);
                 QuickMemberinfo3.transform.GetChild(6).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentHp + " / " + PData.characters[i].Stats.Hp);
                 QuickMemberinfo3.transform.GetChild(1).GetComponent<Slider>().value = (float)PData.characters[i].CurrentHp / (float)PData.characters[i].Stats.Hp;
@@ -448,7 +471,14 @@ public class MenuLogic : MonoBehaviour
             {
                 QuickMemberinfo4.transform.GetChild(7).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Name + "");
                 QuickMemberinfo4.transform.GetChild(8).GetComponent<TMPro.TextMeshProUGUI>().SetText("LVL: " + PData.characters[i].Level);
-                QuickMemberinfo4.transform.GetChild(10).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch.Count + " / 5");
+                for (int p = 0; p < PData.characters[i].Pouch.Count; p++)
+                {
+                    if (PData.characters[i].Pouch[p].ID != 0)
+                    {
+                        itemsInPouch++;
+                    }
+                }
+                QuickMemberinfo4.transform.GetChild(10).GetComponent<TMPro.TextMeshProUGUI>().SetText(itemsInPouch + " / 5");
                 QuickMemberinfo4.transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentMp + " / " + PData.characters[i].Stats.Mp);
                 QuickMemberinfo4.transform.GetChild(6).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentHp + " / " + PData.characters[i].Stats.Hp);
                 QuickMemberinfo4.transform.GetChild(1).GetComponent<Slider>().value = (float)PData.characters[i].CurrentHp / (float)PData.characters[i].Stats.Hp;
