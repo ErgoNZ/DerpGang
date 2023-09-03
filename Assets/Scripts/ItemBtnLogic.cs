@@ -36,23 +36,33 @@ public class ItemBtnLogic : MonoBehaviour
         ItemAmount.GetComponent<TMPro.TextMeshProUGUI>().SetText("Quantity: " + item.Amount);
         content = "Used By: ";
         //This just adds all of the characters to the list for who can use them
-        for (int i = 0; i < item.characters.Count; i++)
+        if(item.characters.Count != 4)
         {
-            if(i == item.characters.Count - 1)
+            for (int i = 0; i < item.characters.Count; i++)
             {
-                content += item.characters[i].ToString();
+                if (i == item.characters.Count - 1)
+                {
+                    content += item.characters[i].ToString();
+                }
+                else
+                {
+                    content += item.characters[i] + ", ";
+                }
             }
-            else
-            {
-                content += item.characters[i] + ", ";
-            }
+        }
+        else
+        {
+            content = "Used by: Everyone";
         }
         ItemUseable.GetComponent<TMPro.TextMeshProUGUI>().SetText(content);
         ItemType.GetComponent<TMPro.TextMeshProUGUI>().SetText("Type: " + item.Type);
         ItemName.GetComponent<TMPro.TextMeshProUGUI>().SetText(item.Name);
         MenuLogic.SelectedItem = item;
-        UseItem = GameObject.Find("UseItemBtn");
-        UseItem.GetComponent<Button>().interactable = true;
+        if(item.Type != ItemData.Catagory.Key)
+        {
+            UseItem = GameObject.Find("UseItemBtn");
+            UseItem.GetComponent<Button>().interactable = true;
+        }
     }
     public void FillInfo(string ItemAmount, string ItemName, ItemData.Item itemInfo)
     {

@@ -24,7 +24,7 @@ public class PlayerData : MonoBehaviour
         public ItemData.Item Weapon;
         public ItemData.Item Charm1;
         public ItemData.Item Charm2;
-        public ItemData.Item[] Pouch;
+        public List<ItemData.Item> Pouch;
     }
 
     public List<int> Flags = new List<int>();
@@ -205,12 +205,12 @@ public class PlayerData : MonoBehaviour
                         characterData.Stats.Spd = int.Parse(Array[6]);
                         characterData.CurrentHp = int.Parse(SplitData(reader.ReadLine()));
                         characterData.CurrentMp = int.Parse(SplitData(reader.ReadLine()));
-                        characterData.Pouch = new ItemData.Item[5];
+                        characterData.Pouch = new();
                         line = SplitData(reader.ReadLine());
                         Array = line.Split('/');
                         for (int i = 0; i < Array.Length; i++)
                         {
-                            characterData.Pouch[i] = itemData.GetItem(Array[i]);
+                            characterData.Pouch.Add(itemData.GetItem(Array[i]));
                         }
                         characters.Add(characterData);
                         Debug.Log("A character's data was loaded");

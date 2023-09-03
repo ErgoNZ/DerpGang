@@ -1,0 +1,2 @@
+Name|Type|Description|Element|Stats|Effect|Charm|Resistances|Vunlerabilities|Character that can equip   
+Odd Orb,Key,This orb glimmers with a purple aura.<br><br>"Is this made out of pure magic?" -Seth,None,0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,None

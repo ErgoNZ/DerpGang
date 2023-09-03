@@ -22,6 +22,13 @@ public class MenuLogic : MonoBehaviour
     public GameObject InvPanel;
     public GameObject ItemPanel;
     public GameObject UseItem;
+    [Header("PartyGUI")]
+    public GameObject CharacterInfoPanel;
+    public GameObject PartyPanel;
+    public GameObject QuickMemberinfo1;
+    public GameObject QuickMemberinfo2;
+    public GameObject QuickMemberinfo3;
+    public GameObject QuickMemberinfo4;
     [Header("QuickInfoMenu")]
     public GameObject Charm1;
     public GameObject Charm2;
@@ -51,6 +58,7 @@ public class MenuLogic : MonoBehaviour
         InvPos = Inv.transform.localPosition;
         MapPos = Map.transform.localPosition;
         InsightsPos = Insights.transform.localPosition;
+        MenuSwitch("Party");
         Canvas.SetActive(false);
     }
 
@@ -72,7 +80,7 @@ public class MenuLogic : MonoBehaviour
         UseItem.GetComponent<Button>().interactable = false;
         for (int i = 0; i < PData.Inventory.Count; i++)
         {
-            if(PData.Inventory[i].Type == Filter)
+            if(PData.Inventory[i].Type == Filter && PData.Inventory[i].ID != 0)
             {
                 SortedInv.Add(PData.Inventory[i]);
             }
@@ -123,6 +131,11 @@ public class MenuLogic : MonoBehaviour
     public void MenuSwitch(string Menu)
     {
         UseItem.SetActive(false);
+        QuickCharInfo.SetActive(false);
+        InvPanel.SetActive(false);
+        ItemPanel.SetActive(false);
+        PartyPanel.SetActive(false);
+        CharacterInfoPanel.SetActive(false);
         switch (Menu)
         {
             case "Party":
@@ -131,9 +144,9 @@ public class MenuLogic : MonoBehaviour
                 Inv.transform.localPosition = InvPos;
                 Map.transform.localPosition = MapPos;
                 Insights.transform.localPosition = InsightsPos;
-                QuickCharInfo.SetActive(false);
-                InvPanel.SetActive(false);
-                ItemPanel.SetActive(false);
+                PartyPanel.SetActive(true);
+                CharacterInfoPanel.SetActive(true);
+                SetupPartyInfo();
                 break;
             case "Inventory":
                 Debug.LogWarning("Inventory");
@@ -143,7 +156,6 @@ public class MenuLogic : MonoBehaviour
                 Insights.transform.localPosition = InsightsPos;
                 SortInv(InvFilter);
                 InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
-                QuickCharInfo.SetActive(false);
                 InvPanel.SetActive(true);
                 ItemPanel.SetActive(true);
                 UseItem.SetActive(true);
@@ -155,9 +167,6 @@ public class MenuLogic : MonoBehaviour
                 Inv.transform.localPosition = new Vector3(InvPos.x - 172.80f * 3, InvPos.y);
                 Map.transform.localPosition = MapPos;
                 Insights.transform.localPosition = InsightsPos;
-                QuickCharInfo.SetActive(false);
-                InvPanel.SetActive(false);
-                ItemPanel.SetActive(false);
                 break;
             case "Insights":
                 Debug.LogWarning("Insights");
@@ -165,9 +174,6 @@ public class MenuLogic : MonoBehaviour
                 Inv.transform.localPosition = new Vector3(InvPos.x - 172.80f * 3, InvPos.y);
                 Map.transform.localPosition = new Vector3(MapPos.x - 172.80f * 5, MapPos.y);
                 Insights.transform.localPosition = InsightsPos;
-                QuickCharInfo.SetActive(false);
-                InvPanel.SetActive(false);
-                ItemPanel.SetActive(false);
                 break;
             case "Journal":
                 Debug.LogWarning("Journal");
@@ -175,28 +181,35 @@ public class MenuLogic : MonoBehaviour
                 Inv.transform.localPosition = new Vector3(InvPos.x - 172.80f * 3, InvPos.y);
                 Map.transform.localPosition = new Vector3(MapPos.x - 172.80f * 5, MapPos.y);
                 Insights.transform.localPosition = new Vector3(InsightsPos.x - 172.80f * 7, InsightsPos.y);
-                QuickCharInfo.SetActive(false);
-                InvPanel.SetActive(false);
-                ItemPanel.SetActive(false);
                 break;
             case "Item":
                 InvFilter = ItemData.Catagory.Consumable;
                 SortInv(InvFilter);
+                InvPanel.SetActive(true);
+                ItemPanel.SetActive(true);
                 break;
             case "Gear":
                 InvFilter = ItemData.Catagory.Gear;
                 SortInv(InvFilter);
+                InvPanel.SetActive(true);
+                ItemPanel.SetActive(true);
                 break;
             case "Charm":
                 InvFilter = ItemData.Catagory.Charm;
                 SortInv(InvFilter);
+                InvPanel.SetActive(true);
+                ItemPanel.SetActive(true);
                 break;
             case "Key":
                 InvFilter = ItemData.Catagory.Key;
                 SortInv(InvFilter);
+                InvPanel.SetActive(true);
+                ItemPanel.SetActive(true);
                 break;
             case "EquipItem":
                 QuickCharInfo.SetActive(true);
+                InvPanel.SetActive(true);
+                ItemPanel.SetActive(true);
                 QuickInfoShow(0);
                 break;
             default:
@@ -209,7 +222,8 @@ public class MenuLogic : MonoBehaviour
     {
         SelectedChar = CharPos;
         TMPro.TextMeshProUGUI CharIcon, HpTxt, MpTxt, Pouch1, Pouch2, Pouch3, Pouch4, Pouch5, WeaponTxt, ChestTxt, LegsTxt, BootsTxt, Charm1Txt, Charm2Txt;
-        GameObject HpBar, MpBar;
+        TMPro.TextMeshProUGUI[] CharBtnTxt = new TMPro.TextMeshProUGUI[4];
+        GameObject HpBar, MpBar, UseItemBtn, EquipItemBtn;
         CharIcon = GameObject.Find("CharIcon").GetComponent<TMPro.TextMeshProUGUI>();
         Pouch1 = GameObject.Find("PItem1").GetComponent<TMPro.TextMeshProUGUI>();
         Pouch2 = GameObject.Find("PItem2").GetComponent<TMPro.TextMeshProUGUI>();
@@ -226,6 +240,28 @@ public class MenuLogic : MonoBehaviour
         MpTxt = GameObject.Find("MpNum").GetComponent<TMPro.TextMeshProUGUI>();
         HpBar = GameObject.Find("HpBarCasing");
         MpBar = GameObject.Find("MpBarCasing");
+        CharBtnTxt[0] = GameObject.Find("MemberTxt1").GetComponent<TMPro.TextMeshProUGUI>();
+        CharBtnTxt[1] = GameObject.Find("MemberTxt2").GetComponent<TMPro.TextMeshProUGUI>();
+        CharBtnTxt[2] = GameObject.Find("MemberTxt3").GetComponent<TMPro.TextMeshProUGUI>();
+        CharBtnTxt[3] = GameObject.Find("MemberTxt4").GetComponent<TMPro.TextMeshProUGUI>();
+        UseItemBtn = GameObject.Find("UseItemOnChar");
+        UseItemBtn.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("Equip Item on character");
+        EquipItemBtn = GameObject.Find("EquipItemOnChar");
+
+        if (SelectedItem.Element == ItemData.Element.Restore)
+        {
+            UseItemBtn.GetComponent<Button>().interactable = true;
+        }
+        else
+        {
+            UseItemBtn.GetComponent<Button>().interactable = false;
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            int pos = PData.characters[i].position;
+            CharBtnTxt[(pos - 1)].SetText(PData.characters[i].Name + "");
+        }
 
         for (int i = 0; i < 4; i++)
         {
@@ -249,6 +285,12 @@ public class MenuLogic : MonoBehaviour
                 HpBar.GetComponent<Slider>().value = percentageFilled;
                 percentageFilled = (float)PData.characters[i].CurrentMp / (float)PData.characters[i].Stats.Mp;
                 MpBar.GetComponent<Slider>().value = percentageFilled;
+
+                EquipItemBtn.GetComponent<Button>().interactable = true;
+                if (!SelectedItem.characters.Contains(PData.characters[i].Name))
+                {
+                    EquipItemBtn.GetComponent<Button>().interactable = false;
+                }
             }
         }
     }
@@ -259,10 +301,12 @@ public class MenuLogic : MonoBehaviour
         switch (Type)
         {
             case ItemData.Catagory.Charm:
+                GameObject.Find("EquipItemOnChar").transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("Which charm slot?");
                 Charm1.GetComponent<Button>().enabled = true;
                 Charm2.GetComponent<Button>().enabled = true;
                 break;
             case ItemData.Catagory.Consumable:
+                GameObject.Find("EquipItemOnChar").transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("Which pouch slot?");
                 Pouch1.GetComponent<Button>().enabled = true;
                 Pouch2.GetComponent<Button>().enabled = true;
                 Pouch3.GetComponent<Button>().enabled = true;
@@ -332,6 +376,110 @@ public class MenuLogic : MonoBehaviour
         Pouch5.GetComponent<Button>().enabled = false;
         Charm1.GetComponent<Button>().enabled = false;
         Charm2.GetComponent<Button>().enabled = false;
+        GameObject.Find("EquipItemOnChar").transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("Equip Item on character");
         SortInv(InvFilter);
+    }
+
+    public void SetupPartyInfo()
+    {
+        for (int i = 0; i < PData.characters.Count; i++)
+        {
+            if(PData.characters[i].position == 1)
+            {
+                QuickMemberinfo1.transform.GetChild(7).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Name + "");
+                QuickMemberinfo1.transform.GetChild(8).GetComponent<TMPro.TextMeshProUGUI>().SetText("LVL: " + PData.characters[i].Level);
+                QuickMemberinfo1.transform.GetChild(10).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch.Count + " / 5");
+                QuickMemberinfo1.transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentMp + " / " + PData.characters[i].Stats.Mp);
+                QuickMemberinfo1.transform.GetChild(6).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentHp + " / " + PData.characters[i].Stats.Hp);
+                QuickMemberinfo1.transform.GetChild(1).GetComponent<Slider>().value = (float)PData.characters[i].CurrentHp / (float)PData.characters[i].Stats.Hp;
+                QuickMemberinfo1.transform.GetChild(2).GetComponent<Slider>().value = (float)PData.characters[i].CurrentMp / (float)PData.characters[i].Stats.Mp;
+                QuickMemberinfo1.GetComponent<Image>().color = GetPartyMemberColor(PData.characters[i].Name);
+            }
+
+            if (PData.characters[i].position == 2)
+            {
+                QuickMemberinfo2.transform.GetChild(7).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Name + "");
+                QuickMemberinfo2.transform.GetChild(8).GetComponent<TMPro.TextMeshProUGUI>().SetText("LVL: " + PData.characters[i].Level);
+                QuickMemberinfo2.transform.GetChild(10).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch.Count + " / 5");
+                QuickMemberinfo2.transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentMp + " / " + PData.characters[i].Stats.Mp);
+                QuickMemberinfo2.transform.GetChild(6).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentHp + " / " + PData.characters[i].Stats.Hp);
+                QuickMemberinfo2.transform.GetChild(1).GetComponent<Slider>().value = (float)PData.characters[i].CurrentHp / (float)PData.characters[i].Stats.Hp;
+                QuickMemberinfo2.transform.GetChild(2).GetComponent<Slider>().value = (float)PData.characters[i].CurrentMp / (float)PData.characters[i].Stats.Mp;
+                QuickMemberinfo2.GetComponent<Image>().color = GetPartyMemberColor(PData.characters[i].Name);
+            }
+
+            if (PData.characters[i].position == 3)
+            {
+                QuickMemberinfo3.transform.GetChild(7).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Name + "");
+                QuickMemberinfo3.transform.GetChild(8).GetComponent<TMPro.TextMeshProUGUI>().SetText("LVL: " + PData.characters[i].Level);
+                QuickMemberinfo3.transform.GetChild(10).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch.Count + " / 5");
+                QuickMemberinfo3.transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentMp + " / " + PData.characters[i].Stats.Mp);
+                QuickMemberinfo3.transform.GetChild(6).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentHp + " / " + PData.characters[i].Stats.Hp);
+                QuickMemberinfo3.transform.GetChild(1).GetComponent<Slider>().value = (float)PData.characters[i].CurrentHp / (float)PData.characters[i].Stats.Hp;
+                QuickMemberinfo3.transform.GetChild(2).GetComponent<Slider>().value = (float)PData.characters[i].CurrentMp / (float)PData.characters[i].Stats.Mp;
+                QuickMemberinfo3.GetComponent<Image>().color = GetPartyMemberColor(PData.characters[i].Name);
+            }
+
+            if (PData.characters[i].position == 4)
+            {
+                QuickMemberinfo4.transform.GetChild(7).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Name + "");
+                QuickMemberinfo4.transform.GetChild(8).GetComponent<TMPro.TextMeshProUGUI>().SetText("LVL: " + PData.characters[i].Level);
+                QuickMemberinfo4.transform.GetChild(10).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch.Count + " / 5");
+                QuickMemberinfo4.transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentMp + " / " + PData.characters[i].Stats.Mp);
+                QuickMemberinfo4.transform.GetChild(6).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].CurrentHp + " / " + PData.characters[i].Stats.Hp);
+                QuickMemberinfo4.transform.GetChild(1).GetComponent<Slider>().value = (float)PData.characters[i].CurrentHp / (float)PData.characters[i].Stats.Hp;
+                QuickMemberinfo4.transform.GetChild(2).GetComponent<Slider>().value = (float)PData.characters[i].CurrentMp / (float)PData.characters[i].Stats.Mp;
+                QuickMemberinfo4.GetComponent<Image>().color = GetPartyMemberColor(PData.characters[i].Name);
+            }
+        }
+    }
+
+    public Color32 GetPartyMemberColor(ItemData.Character character)
+    {
+        switch (character)
+        {
+            case ItemData.Character.Seth:
+                return new Color32(0, 133, 79, 255);
+            case ItemData.Character.Susie:
+                return new Color32(0, 70, 191, 255);
+            case ItemData.Character.Shiana:
+                return new Color32(191, 19, 0, 255);
+            case ItemData.Character.Brody:
+                return new Color32(131, 0, 191, 255);
+            default:
+                return new Color32(145, 145, 145, 255);
+        }
+    }
+
+    public void SetupCharInfo(int position)
+    {
+        for (int i = 0; i < PData.characters.Count; i++)
+        {
+            if(PData.characters[i].position == position)
+            {
+                CharacterInfoPanel.transform.GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().SetText("Level: " + PData.characters[i].Level);
+                CharacterInfoPanel.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Name + "");
+                CharacterInfoPanel.transform.GetChild(3).transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Weapon.Name + "");
+                CharacterInfoPanel.transform.GetChild(3).transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Charm1.Name + "");
+                CharacterInfoPanel.transform.GetChild(3).transform.GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Charm2.Name + "");
+                CharacterInfoPanel.transform.GetChild(3).transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Chest.Name + "");
+                CharacterInfoPanel.transform.GetChild(3).transform.GetChild(4).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Legs.Name + "");
+                CharacterInfoPanel.transform.GetChild(3).transform.GetChild(5).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Boots.Name + "");
+                CharacterInfoPanel.transform.GetChild(4).transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("Hp: " + PData.characters[i].Stats.Hp);
+                CharacterInfoPanel.transform.GetChild(4).transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText("Mp: " + PData.characters[i].Stats.Mp);
+                CharacterInfoPanel.transform.GetChild(4).transform.GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().SetText("Atk: " + PData.characters[i].Stats.Atk);
+                CharacterInfoPanel.transform.GetChild(4).transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().SetText("M.Atk: " + PData.characters[i].Stats.MAtk);
+                CharacterInfoPanel.transform.GetChild(4).transform.GetChild(4).GetComponent<TMPro.TextMeshProUGUI>().SetText("Def: " + PData.characters[i].Stats.Def);
+                CharacterInfoPanel.transform.GetChild(4).transform.GetChild(5).GetComponent<TMPro.TextMeshProUGUI>().SetText("M.Def: " + PData.characters[i].Stats.MDef);
+                CharacterInfoPanel.transform.GetChild(4).transform.GetChild(6).GetComponent<TMPro.TextMeshProUGUI>().SetText("Spd: " + PData.characters[i].Stats.Spd);
+                CharacterInfoPanel.transform.GetChild(5).transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch[0].Name);
+                CharacterInfoPanel.transform.GetChild(5).transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch[1].Name);
+                CharacterInfoPanel.transform.GetChild(5).transform.GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch[2].Name);
+                CharacterInfoPanel.transform.GetChild(5).transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch[3].Name);
+                CharacterInfoPanel.transform.GetChild(5).transform.GetChild(4).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch[4].Name);
+                CharacterInfoPanel.transform.GetChild(6).GetComponent<TMPro.TextMeshProUGUI>().SetText("Hp: " + PData.characters[i].CurrentHp + " / " + PData.characters[i].Stats.Hp);
+                CharacterInfoPanel.transform.GetChild(7).GetComponent<TMPro.TextMeshProUGUI>().SetText("Mp: " + PData.characters[i].CurrentMp + " / " + PData.characters[i].Stats.Mp);
+            }
+        }
     }
 }

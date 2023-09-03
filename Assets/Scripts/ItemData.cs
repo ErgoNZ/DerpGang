@@ -30,7 +30,8 @@ public class ItemData : MonoBehaviour
         Seth,
         Susie,
         Shiana,
-        Brody
+        Brody,
+        None
     }
     public enum Catagory
     {
@@ -110,6 +111,7 @@ public class ItemData : MonoBehaviour
         LoadItems("Assets/Data/Weapons.txt");
         LoadItems("Assets/Data/Armour.txt");
         LoadItems("Assets/Data/Charms.txt");
+        LoadItems("Assets/Data/Key.txt");
         for (int i = 0; i < ItemList.Count; i++)
         {
             Debug.Log("ID:" + ItemList[i].ID.ToString().PadRight(10) + "Name: " + ItemList[i].Name.ToString());

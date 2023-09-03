@@ -1,0 +1,2 @@
+Name|Type|Description|Element|Stats|Effect|Charm|Resistances|Vunlerabilities|Character that can equip   
+Charm,Charm,Placeholder item,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Shiana|Brody
