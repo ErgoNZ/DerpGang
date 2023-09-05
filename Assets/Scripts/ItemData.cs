@@ -7,6 +7,7 @@ using System;
 public class ItemData : MonoBehaviour
 {
     public List<Item> ItemList = new List<Item>();
+    public TextAsset Consumables, Weapons, Armour, Charms, Key;
     int ID = 0;
 
     public class Item
@@ -107,11 +108,11 @@ public class ItemData : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        LoadItems("Assets/Data/Consumables.txt");
-        LoadItems("Assets/Data/Weapons.txt");
-        LoadItems("Assets/Data/Armour.txt");
-        LoadItems("Assets/Data/Charms.txt");
-        LoadItems("Assets/Data/Key.txt");
+        LoadItems(Consumables);
+        LoadItems(Weapons);
+        LoadItems(Armour);
+        LoadItems(Charms);
+        LoadItems(Key);
         for (int i = 0; i < ItemList.Count; i++)
         {
             Debug.Log("ID:" + ItemList[i].ID.ToString().PadRight(10) + "Name: " + ItemList[i].Name.ToString());
@@ -122,9 +123,9 @@ public class ItemData : MonoBehaviour
     /// Loads all items into memory from the requested path
     /// </summary>
     /// <param name="path"></param>
-    private void LoadItems(string path)
+    private void LoadItems(TextAsset data)
     {
-        StreamReader reader = new StreamReader(path);
+        string[] linesFromFile = data.text.Split(Environment.NewLine);
         string line;
         string[] itemData;
         string[] effData;
@@ -133,8 +134,8 @@ public class ItemData : MonoBehaviour
         string[] vunlerabilities;
         string[] characters;
         string[] processingArray;
-        reader.ReadLine();
-        while (!reader.EndOfStream)
+        int lineNum = 1;
+        while (lineNum < linesFromFile.Length)
         {
             Item item = new Item();
             item.Resistance = new List<Element>();
@@ -142,7 +143,7 @@ public class ItemData : MonoBehaviour
             EffectData effectData;
             CharmData charmData;
             List<Character> characterList = new List<Character>();
-            line = reader.ReadLine();
+            line = linesFromFile[lineNum];
             itemData = line.Split(',');
             item.ID = ID++;
             item.Name = itemData[0];
@@ -207,8 +208,8 @@ public class ItemData : MonoBehaviour
             }
             item.characters = characterList;
             ItemList.Add(item);
+            lineNum++;
         }
-        reader.Close();
     }
 
     public static T ParseEnum<T>(string value)

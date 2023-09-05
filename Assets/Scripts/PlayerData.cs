@@ -9,6 +9,7 @@ public class PlayerData : MonoBehaviour
     StateManager StateManager;
     ItemData itemData;
     int Money = 0;
+    public TextAsset playerData;
     public class CharacterData
     {
         public int position;
@@ -18,7 +19,7 @@ public class PlayerData : MonoBehaviour
         public int CurrentHp, CurrentMp;
         public List<ItemData.Element> Resistance;
         public List<ItemData.Element> Vulnerable;
-        public List<ItemData.EffectData> Effects;
+        public List<ItemData.EffectData> StatusEffects;
         public ItemData.Item Chest;
         public ItemData.Item Legs;
         public ItemData.Item Boots;
@@ -26,6 +27,7 @@ public class PlayerData : MonoBehaviour
         public ItemData.Item Charm1;
         public ItemData.Item Charm2;
         public List<ItemData.Item> Pouch;
+        public bool InParty;
     }
 
     public List<int> Flags = new List<int>();
@@ -197,82 +199,70 @@ public class PlayerData : MonoBehaviour
     /// This loads in all of the player data from their save file
     /// </summary>
     /// <param name="Path"></param>
-    void LoadPlayerData(string Path)
+    void LoadPlayerData(TextAsset Data)
     {
-        StreamReader reader = new StreamReader(Path);
         try
         {
+            string[] saveData = Data.text.Split(Environment.NewLine);
             int lineCount = 0;
             string line;
             string[] Array;
-            CharacterData characterData;
-            while (!reader.EndOfStream)
+            for (int i = 0; i < 4; i++)
             {
-                if (lineCount != 52)
+                CharacterData characterData;
+                characterData = new CharacterData();
+                characterData.Name = ItemData.ParseEnum<ItemData.Character>(SplitData(saveData[lineCount++]));
+                characterData.Level = int.Parse(SplitData(saveData[lineCount++]));
+                characterData.position = int.Parse(SplitData(saveData[lineCount++]));
+                characterData.Chest = itemData.GetItem(SplitData(saveData[lineCount++]));
+                characterData.Legs = itemData.GetItem(SplitData(saveData[lineCount++]));
+                characterData.Boots = itemData.GetItem(SplitData(saveData[lineCount++]));
+                characterData.Weapon = itemData.GetItem(SplitData(saveData[lineCount++]));
+                characterData.Charm1 = itemData.GetItem(SplitData(saveData[lineCount++]));
+                characterData.Charm2 = itemData.GetItem(SplitData(saveData[lineCount++]));
+                line = SplitData(saveData[lineCount++]);
+                Array = line.Split('/');
+                characterData.Stats.Hp = int.Parse(Array[0]);
+                characterData.Stats.Mp = int.Parse(Array[1]);
+                characterData.Stats.Atk = int.Parse(Array[2]);
+                characterData.Stats.Def = int.Parse(Array[3]);
+                characterData.Stats.MAtk = int.Parse(Array[4]);
+                characterData.Stats.MDef = int.Parse(Array[5]);
+                characterData.Stats.Spd = int.Parse(Array[6]);
+                characterData.CurrentHp = int.Parse(SplitData(saveData[lineCount++]));
+                characterData.CurrentMp = int.Parse(SplitData(saveData[lineCount++]));
+                characterData.Pouch = new();
+                line = SplitData(saveData[lineCount++]);
+                Array = line.Split('/');
+                for (int p = 0; p < Array.Length; p++)
                 {
-                    if (lineCount % 13 == 0 || lineCount == 0)
-                    {
-                        characterData = new CharacterData();
-                        characterData.Name = ItemData.ParseEnum<ItemData.Character>(SplitData(reader.ReadLine()));
-                        characterData.Level = int.Parse(SplitData(reader.ReadLine()));
-                        characterData.position = int.Parse(SplitData(reader.ReadLine()));
-                        characterData.Chest = itemData.GetItem(SplitData(reader.ReadLine()));
-                        characterData.Legs = itemData.GetItem(SplitData(reader.ReadLine()));
-                        characterData.Boots = itemData.GetItem(SplitData(reader.ReadLine()));
-                        characterData.Weapon = itemData.GetItem(SplitData(reader.ReadLine()));
-                        characterData.Charm1 = itemData.GetItem(SplitData(reader.ReadLine()));
-                        characterData.Charm2 = itemData.GetItem(SplitData(reader.ReadLine()));
-                        line = SplitData(reader.ReadLine());
-                        Array = line.Split('/');
-                        characterData.Stats.Hp = int.Parse(Array[0]);
-                        characterData.Stats.Mp = int.Parse(Array[1]);
-                        characterData.Stats.Atk = int.Parse(Array[2]);
-                        characterData.Stats.Def = int.Parse(Array[3]);
-                        characterData.Stats.MAtk = int.Parse(Array[4]);
-                        characterData.Stats.MDef = int.Parse(Array[5]);
-                        characterData.Stats.Spd = int.Parse(Array[6]);
-                        characterData.CurrentHp = int.Parse(SplitData(reader.ReadLine()));
-                        characterData.CurrentMp = int.Parse(SplitData(reader.ReadLine()));
-                        characterData.Pouch = new();
-                        line = SplitData(reader.ReadLine());
-                        Array = line.Split('/');
-                        for (int i = 0; i < Array.Length; i++)
-                        {
-                            characterData.Pouch.Add(itemData.GetItem(Array[i]));
-                        }
-                        characters.Add(characterData);
-                        Debug.Log("A character's data was loaded");
-                        lineCount += 13;
-                    }
+                    characterData.Pouch.Add(itemData.GetItem(Array[i]));
                 }
-                else
-                {
-                    Money = int.Parse(SplitData(reader.ReadLine()));
-                    line = SplitData(reader.ReadLine());
-                    Array = line.Split('/');
-                    for (int i = 0; i < Array.Length; i++)
-                    {
-                        string[] Array1;
-                        Array1 = Array[i].Split('|');
-                        AddItem(int.Parse(Array1[0]), int.Parse(Array1[1]));
-                        Debug.Log("Item from Inventory loaded");
-                    }
-                    line = SplitData(reader.ReadLine());
-                    Array = line.Split('/');
-                    for (int i = 0; i < Array.Length; i++)
-                    {
-                        Flags.Add(int.Parse(Array[i]));
-                    }
-                }
+                characters.Add(characterData);
+                Debug.Log("A character's data was loaded");
             }
-            reader.Close();
+            Money = int.Parse(SplitData(saveData[lineCount++]));
+            line = SplitData(saveData[lineCount++]);
+            Array = line.Split('/');
+            for (int i = 0; i < Array.Length; i++)
+            {
+                string[] Array1;
+                Array1 = Array[i].Split('|');
+                AddItem(int.Parse(Array1[0]), int.Parse(Array1[1]));
+                Debug.Log("Item from Inventory loaded");
+            }
+            line = SplitData(saveData[lineCount++]);
+            Array = line.Split('/');
+            for (int i = 0; i < Array.Length; i++)
+            {
+                Flags.Add(int.Parse(Array[i]));
+            }
         }
         catch (Exception Ex)
         {
             //This will only ever trip if the player has done a glitch/bug or has modified their file in an illegal way.
             Debug.Log("ILLEGAL DATA: PLAYER DATA IS INVALID!");
             Debug.Log(Ex.Message);
-            reader.Close();
         }    
     }
 
@@ -280,7 +270,7 @@ public class PlayerData : MonoBehaviour
     {
         itemData = GetComponent<ItemData>();
         StateManager = GetComponent<StateManager>();
-        LoadPlayerData("Assets/Data/SaveData.txt");
+        LoadPlayerData(playerData);
     }
 
     /// <summary>

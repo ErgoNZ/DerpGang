@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - RoomTransition
+  - Enemy
   layers:
   - Default
   - TransparentFX

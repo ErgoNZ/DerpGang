@@ -41,7 +41,7 @@ public class StateManager : MonoBehaviour
             MenuOpen = !MenuOpen;
             State = GameState.Overworld;
             Menu.SetActive(MenuOpen);
-            if(MenuOpen == true)
+            if (MenuOpen == true)
             {
                 State = GameState.Menu;
             }

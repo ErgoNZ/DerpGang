@@ -3,7 +3,12 @@ guid: 706d8a63fae77ae469bfe6ac3a8e457c
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - Consumables: {fileID: 4900000, guid: e0cf963f53d7f604f82ee668e367c709, type: 3}
+  - Weapons: {fileID: 4900000, guid: 8e72fa001fbf88e478a31d818a00ecb2, type: 3}
+  - Armour: {fileID: 4900000, guid: 54b4a34fdd75af54fb3594f9ed9e9edb, type: 3}
+  - Charms: {fileID: 4900000, guid: 3596e3b9dd88dce41a205423c06e1a43, type: 3}
+  - Key: {fileID: 4900000, guid: 39de1551f3dbc154bac0f947e24ef9de, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
