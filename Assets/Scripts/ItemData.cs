@@ -26,6 +26,7 @@ public class ItemData : MonoBehaviour
         public List<Element> Vulnerable;
         public List<Character> characters;
     }
+
     public enum Character
     {
         Seth,
@@ -60,7 +61,7 @@ public class ItemData : MonoBehaviour
         public int Duration;
         public int Damage;
         public int MpDamage;
-        public string Source;
+        public int Chance;
     }
 
     public enum Element
@@ -160,6 +161,10 @@ public class ItemData : MonoBehaviour
 
             if (itemData[11] != "NULL")
             {
+                //This is confusing to visualize so an example is given below
+                //Name~Element~Duration~Damage~MpDamage~Chance|Name~Element~Duration~Damage etc
+                //When a '|' character is used it signifies a new effect and the '~' character is what splits the data for that effect
+                //This could probably be implemented better but I'm not really going to do much about it unless it annoys me
                 effData = itemData[11].Split('|');
                 for (int i = 0; i < effData.Length; i++)
                 {
@@ -170,7 +175,7 @@ public class ItemData : MonoBehaviour
                     effectData.Duration = int.Parse(processingArray[2]);
                     effectData.Damage = int.Parse(processingArray[3]);
                     effectData.MpDamage = int.Parse(processingArray[4]);
-                    effectData.Source = processingArray[5];
+                    effectData.Chance = int.Parse(processingArray[5]);
                     item.Effects.Add(effectData);
                 }
             }

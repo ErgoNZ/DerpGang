@@ -10,6 +10,9 @@ public class CombatLogic : MonoBehaviour
     GameObject[] CharacterActions = new GameObject[4];
     public List<Enemy> enemies = new();
     public List<SpeedInfo> TurnOrder;
+    int CurrentActionBeingPicked = 0;
+    public Sprite AttackIco, DefendIco, FleeIco, PouchIco, SkillIco, TActIco;
+    public GameObject InfoArea;
 
     public struct SpeedInfo
     {
@@ -18,11 +21,11 @@ public class CombatLogic : MonoBehaviour
     }
     public struct CharacterAction
     {
-        Action action;
-        List<ItemData.Character> neededCharacters;
-        SkillData.Skill Skill;
-        int target;
-        ItemData.Item Item;
+        public Action action;
+        public List<ItemData.Character> neededCharacters;
+        public SkillData.Skill Skill;
+        public int target;
+        public ItemData.Item Item;
     }
     public enum Action
     {
@@ -55,17 +58,90 @@ public class CombatLogic : MonoBehaviour
         CharacterActions[3] = GameObject.Find("CharacterChoices4");
         GetTurnOrder();
     }
-
-    private void Update()
+    public void PickAction(string Action)
     {
+        switch (Action)
+        {
+            case "Attack":
+                
+                break;
+            case "Magic":
 
+                break;
+            case "Defend":
+
+                break;
+            case "TAct":
+
+                break;
+            case "Pouch":
+
+                break;
+            case "Flee":
+                if (CanFlee())
+                {
+                    ConfirmAction("Flee");
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    public bool CanFlee()
+    {
+        int alivePartyMembers = 0;
+        for (int i = 0; i < PData.characters.Count; i++)
+        {
+            if(PData.characters[i].CurrentHp > 0)
+            {
+                alivePartyMembers++;
+            }
+        }
+
+        if(alivePartyMembers < 2)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    public void DisableFlee()
+    {
+        for (int i = 0; i < CharacterActions.Length; i++)
+        {
+            CharacterActions[i].transform.GetChild(6).GetComponent<Button>().interactable = false;
+        }
+    }
+    public void ConfirmAction(string Action)
+    {
+        if(Action == "Flee")
+        {
+            int collectiveSpeed = 0;
+            for (int i = 0; i < PData.characters.Count; i++)
+            {
+                if(PData.characters[i].CurrentHp > 0)
+                {
+                    collectiveSpeed += PData.characters[i].Stats.Spd;
+                }
+            }
+        }
+
+        if(Action == "Attack")
+        {
+            DisableFlee();
+        }
     }
     public void StartCombat()
     {
         FillCharacterInfo();
         GetTurnOrder();
     }
+    public void RoundStart()
+    {
 
+    }
     public void RoundEnd()
     {
         GetTurnOrder();
@@ -107,5 +183,22 @@ public class CombatLogic : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ButtonHover(string button)
+    {
+        if(button == "Flee" && CanFlee() == false)
+        {
+            InfoArea.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("I can't just leave everyone here! There has to be something I can do!");
+        }
+        if(button == "TAct")
+        {
+            InfoArea.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("Do we even have the coordination to do this?");
+        }
+    }
+
+    public void ButtonLeave()
+    {
+        InfoArea.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("");
     }
 }
