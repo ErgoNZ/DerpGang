@@ -61,7 +61,9 @@ public class ItemData : MonoBehaviour
         public int Duration;
         public int Damage;
         public int MpDamage;
+        //In percentages eg 25% being shown as 25
         public int Chance;
+        //public Stats StatChanges;
     }
 
     public enum Element

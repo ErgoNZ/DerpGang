@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,12 +8,14 @@ public class CombatLogic : MonoBehaviour
     PlayerData PData;
     SkillData SkillData;
     StateManager StateManager;
-    GameObject[] CharacterActions = new GameObject[4];
+    public GameObject[] CharacterActions = new GameObject[4];
     public List<Enemy> enemies = new();
     public List<SpeedInfo> TurnOrder;
     int CurrentActionBeingPicked = 0;
-    public Sprite AttackIco, DefendIco, FleeIco, PouchIco, SkillIco, TActIco;
+    public Sprite AttackIco, DefendIco, FleeIco, PouchIco, SkillIco, TActIco, EmptyIco;
     public GameObject InfoArea;
+    CharacterAction ActionData = new();
+    List<CharacterAction> CharacterActionList = new();
 
     public struct SpeedInfo
     {
@@ -52,24 +55,21 @@ public class CombatLogic : MonoBehaviour
     {
         PData = GetComponent<PlayerData>();
         StateManager = GetComponent<StateManager>();
-        CharacterActions[0] = GameObject.Find("CharacterChoices1");
-        CharacterActions[1] = GameObject.Find("CharacterChoices2");
-        CharacterActions[2] = GameObject.Find("CharacterChoices3");
-        CharacterActions[3] = GameObject.Find("CharacterChoices4");
         GetTurnOrder();
+        NextCharacterAction();
     }
     public void PickAction(string Action)
     {
         switch (Action)
         {
             case "Attack":
-                
+                ToggleAttackMenu(true);
                 break;
             case "Magic":
 
                 break;
             case "Defend":
-
+                ConfirmAction("Defend");
                 break;
             case "TAct":
 
@@ -119,6 +119,8 @@ public class CombatLogic : MonoBehaviour
         if(Action == "Flee")
         {
             int collectiveSpeed = 0;
+            int enemySpeed = 0;
+            double fleeChance;
             for (int i = 0; i < PData.characters.Count; i++)
             {
                 if(PData.characters[i].CurrentHp > 0)
@@ -126,12 +128,35 @@ public class CombatLogic : MonoBehaviour
                     collectiveSpeed += PData.characters[i].Stats.Spd;
                 }
             }
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                if(enemies[i].CurrentHp > 0)
+                {
+                    enemySpeed += enemies[i].Stats.Spd;
+                }
+            }
+            fleeChance = collectiveSpeed / enemySpeed;
+            double roll = Random.Range(0, 100);
+            if(roll <= fleeChance)
+            {
+                EndCombat(true);
+            }
         }
 
         if(Action == "Attack")
         {
             DisableFlee();
+            CurrentActionBeingPicked++;
+            NextCharacterAction();
         }
+
+        if(Action == "Defend")
+        {
+            CharacterActions[CurrentActionBeingPicked].transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = DefendIco;
+            CurrentActionBeingPicked++;
+            NextCharacterAction();
+        }
+        CharacterActionList.Add(ActionData);
     }
     public void StartCombat()
     {
@@ -146,7 +171,94 @@ public class CombatLogic : MonoBehaviour
     {
         GetTurnOrder();
     }
+    public void NextCharacterAction()
+    {
+        if(CurrentActionBeingPicked < 4)
+        {
+            StartCoroutine(ActionBoxShow(CurrentActionBeingPicked));
+        }
+        if(CurrentActionBeingPicked > 0)
+        {
+            StartCoroutine(ActionBoxHide(CurrentActionBeingPicked - 1));
+        }
+    }
+    IEnumerator ActionBoxShow(int ActionBox)
+    {
+        float timeElapsed = 0;
+        float yPosition = CharacterActions[ActionBox].transform.localPosition.y;
+        float xPosition = CharacterActions[ActionBox].transform.localPosition.x;
+        float lerpDuration = 0.2f;
+        float currentYPos = -740f;
+        float targetYPos = -340f;
+        while (timeElapsed < lerpDuration)
+        {
+            yPosition = Mathf.Lerp(currentYPos, targetYPos, timeElapsed / lerpDuration);
+            CharacterActions[ActionBox].transform.localPosition = new Vector3(xPosition, yPosition);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        CharacterActions[ActionBox].transform.localPosition = new Vector3(xPosition, targetYPos);
+        yield break;
+    }
 
+    IEnumerator ActionBoxHide(int ActionBox)
+    {
+        float timeElapsed = 0;
+        float yPosition = CharacterActions[ActionBox].transform.localPosition.y;
+        float xPosition = CharacterActions[ActionBox].transform.localPosition.x;
+        float lerpDuration = 0.2f;
+        float targetYPos = -740f;
+        float currentYPos = -340f;
+        while (timeElapsed < lerpDuration)
+        {
+            yPosition = Mathf.Lerp(currentYPos, targetYPos, timeElapsed / lerpDuration);
+            CharacterActions[ActionBox].transform.localPosition = new Vector3(xPosition, yPosition);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        CharacterActions[ActionBox].transform.localPosition = new Vector3(xPosition, targetYPos);
+        yield break;
+    }
+    public void EndCombat(bool fledFromCombat)
+    {
+        if(fledFromCombat == false)
+        {
+
+        }
+    }
+    public void ToggleAttackMenu(bool toggle)
+    {
+        GameObject AttackBtn, DefendBtn, FleeBtn, PouchBtn, TActBtn, SkillBtn, AttackMenu;
+        AttackBtn = CharacterActions[CurrentActionBeingPicked].transform.GetChild(1).gameObject;
+        SkillBtn = CharacterActions[CurrentActionBeingPicked].transform.GetChild(2).gameObject;
+        DefendBtn = CharacterActions[CurrentActionBeingPicked].transform.GetChild(3).gameObject;
+        TActBtn = CharacterActions[CurrentActionBeingPicked].transform.GetChild(4).gameObject;
+        PouchBtn = CharacterActions[CurrentActionBeingPicked].transform.GetChild(5).gameObject;
+        FleeBtn = CharacterActions[CurrentActionBeingPicked].transform.GetChild(6).gameObject;
+        AttackMenu = CharacterActions[CurrentActionBeingPicked].transform.GetChild(7).gameObject;
+        AttackBtn.SetActive(!toggle);
+        SkillBtn.SetActive(!toggle);
+        DefendBtn.SetActive(!toggle);
+        TActBtn.SetActive(!toggle);
+        PouchBtn.SetActive(!toggle);
+        FleeBtn.SetActive(!toggle);
+        AttackMenu.SetActive(toggle);
+    }
+
+    public void TargetPicked(int target)
+    {
+        ActionData = new();
+        ActionData.action = Action.Attack;
+        ActionData.target = target;
+        for (int i = 0; i < PData.characters.Count; i++)
+        {
+            if (PData.characters[i].position == CurrentActionBeingPicked)
+            {
+                ActionData.neededCharacters.Add(PData.characters[i].Name);
+            }
+        }
+        ConfirmAction("Attack");
+    }
     public void GetTurnOrder()
     {
         TurnOrder = new();
