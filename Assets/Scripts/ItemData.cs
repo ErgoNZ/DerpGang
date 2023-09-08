@@ -6,7 +6,7 @@ using System;
 
 public class ItemData : MonoBehaviour
 {
-    public List<Item> ItemList = new List<Item>();
+    public List<Item> ItemList = new();
     public TextAsset Consumables, Weapons, Armour, Charms, Key;
     int ID = 0;
 
@@ -140,12 +140,12 @@ public class ItemData : MonoBehaviour
         int lineNum = 1;
         while (lineNum < linesFromFile.Length)
         {
-            Item item = new Item();
+            Item item = new();
             item.Resistance = new List<Element>();
             item.Vulnerable = new List<Element>();
             EffectData effectData;
             CharmData charmData;
-            List<Character> characterList = new List<Character>();
+            List<Character> characterList = new();
             line = linesFromFile[lineNum];
             itemData = line.Split(',');
             item.ID = ID++;

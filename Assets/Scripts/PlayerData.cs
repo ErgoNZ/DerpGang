@@ -30,7 +30,7 @@ public class PlayerData : MonoBehaviour
         public bool InParty;
     }
 
-    public List<int> Flags = new List<int>();
+    public List<int> Flags = new();
     public List<CharacterData> characters = new();
     public List<ItemData.Item> Inventory = new();
 
@@ -236,7 +236,7 @@ public class PlayerData : MonoBehaviour
                 Array = line.Split('/');
                 for (int p = 0; p < Array.Length; p++)
                 {
-                    characterData.Pouch.Add(itemData.GetItem(Array[i]));
+                    characterData.Pouch.Add(itemData.GetItem(Array[p]));
                 }
                 characters.Add(characterData);
                 Debug.Log("A character's data was loaded");

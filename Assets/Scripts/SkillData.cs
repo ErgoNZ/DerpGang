@@ -19,6 +19,7 @@ public class SkillData : MonoBehaviour
         public List<ItemData.EffectData> effects;
         public ItemData.Range range;
         public int multihit;
+        public string description;
     }
     public enum CostMode
     {
@@ -68,6 +69,7 @@ public class SkillData : MonoBehaviour
             }
             skill.range = ParseEnum<ItemData.Range>(dataArray[7]);
             skill.multihit = int.Parse(dataArray[8]);
+            skill.description = dataArray[9];
             skillList.Add(skill);
             lineNum++;
         }

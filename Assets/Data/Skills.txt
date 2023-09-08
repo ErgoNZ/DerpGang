@@ -1,3 +1,3 @@
-Name|Mp Cost|Hp Cost|Cost Mode|Physical Power|Magical Power|Effect data (Name|Element|Duration|Damage|MpDamage)|Range|Multihit
-Dual-Slash,3,0,Interger,80,0,NULL,Single,2
-Tri-Slash,8,0,Interger,60,0,NULL,Single,3
+Name|Mp Cost|Hp Cost|Cost Mode|Physical Power|Magical Power|Effect data (Name|Element|Duration|Damage|MpDamage)|Range|Multihit|Description
+Dual-Slash,3,0,Interger,80,0,NULL,Single,2, A quick double slash towards a target at the sacrifice of some power.
+Tri-Slash,8,0,Interger,60,0,NULL,Single,3, A lightning quick triple slash at a target for nearly half the power behind each swing.

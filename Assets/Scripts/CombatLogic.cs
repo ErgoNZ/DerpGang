@@ -16,6 +16,7 @@ public class CombatLogic : MonoBehaviour
     public GameObject InfoArea;
     CharacterAction ActionData = new();
     List<CharacterAction> CharacterActionList = new();
+    string actionType;
 
     public struct SpeedInfo
     {
@@ -29,6 +30,7 @@ public class CombatLogic : MonoBehaviour
         public SkillData.Skill Skill;
         public int target;
         public ItemData.Item Item;
+        public int itemSlot;
     }
     public enum Action
     {
@@ -57,25 +59,30 @@ public class CombatLogic : MonoBehaviour
         StateManager = GetComponent<StateManager>();
         GetTurnOrder();
         NextCharacterAction();
+        FillCharacterInfo();
     }
     public void PickAction(string Action)
     {
         switch (Action)
         {
             case "Attack":
-                ToggleAttackMenu(true);
+                actionType = "Attack";
+                ToggleTargetMenu(true);
                 break;
             case "Magic":
-
+                actionType = "Magic";
                 break;
             case "Defend":
+                actionType = "Defend";
                 ConfirmAction("Defend");
                 break;
             case "TAct":
-
+                actionType = "TAct";
                 break;
             case "Pouch":
-
+                actionType = "Pouch";
+                ToggleItemMenu(true);
+                
                 break;
             case "Flee":
                 if (CanFlee())
@@ -127,6 +134,7 @@ public class CombatLogic : MonoBehaviour
                 {
                     collectiveSpeed += PData.characters[i].Stats.Spd;
                 }
+                StartCoroutine(ActionBoxHide(0));
             }
             for (int i = 0; i < enemies.Count; i++)
             {
@@ -141,22 +149,30 @@ public class CombatLogic : MonoBehaviour
             {
                 EndCombat(true);
             }
+
+        }
+
+        if(Action == "Pouch")
+        {
+            CharacterActions[CurrentActionBeingPicked].transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = PouchIco;
         }
 
         if(Action == "Attack")
         {
-            DisableFlee();
-            CurrentActionBeingPicked++;
-            NextCharacterAction();
+            CharacterActions[CurrentActionBeingPicked].transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = AttackIco;
         }
 
         if(Action == "Defend")
         {
+            ActionData.action = CombatLogic.Action.Defend;
+            ActionData.target = CurrentActionBeingPicked + 1;
+            AddCharacterToNeeded();
             CharacterActions[CurrentActionBeingPicked].transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = DefendIco;
-            CurrentActionBeingPicked++;
-            NextCharacterAction();
         }
+        DisableFlee();
         CharacterActionList.Add(ActionData);
+        CurrentActionBeingPicked++;
+        NextCharacterAction();
     }
     public void StartCombat()
     {
@@ -165,7 +181,11 @@ public class CombatLogic : MonoBehaviour
     }
     public void RoundStart()
     {
-
+        CharacterActionList.Clear();
+        for (int i = 0; i < PData.characters.Count; i++)
+        {
+            CharacterActions[i].transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = EmptyIco;
+        }
     }
     public void RoundEnd()
     {
@@ -173,7 +193,8 @@ public class CombatLogic : MonoBehaviour
     }
     public void NextCharacterAction()
     {
-        if(CurrentActionBeingPicked < 4)
+        ActionData = new();
+        if (CurrentActionBeingPicked < 4)
         {
             StartCoroutine(ActionBoxShow(CurrentActionBeingPicked));
         }
@@ -185,7 +206,7 @@ public class CombatLogic : MonoBehaviour
     IEnumerator ActionBoxShow(int ActionBox)
     {
         float timeElapsed = 0;
-        float yPosition = CharacterActions[ActionBox].transform.localPosition.y;
+        float yPosition;
         float xPosition = CharacterActions[ActionBox].transform.localPosition.x;
         float lerpDuration = 0.2f;
         float currentYPos = -740f;
@@ -204,7 +225,7 @@ public class CombatLogic : MonoBehaviour
     IEnumerator ActionBoxHide(int ActionBox)
     {
         float timeElapsed = 0;
-        float yPosition = CharacterActions[ActionBox].transform.localPosition.y;
+        float yPosition;
         float xPosition = CharacterActions[ActionBox].transform.localPosition.x;
         float lerpDuration = 0.2f;
         float targetYPos = -740f;
@@ -219,6 +240,30 @@ public class CombatLogic : MonoBehaviour
         CharacterActions[ActionBox].transform.localPosition = new Vector3(xPosition, targetYPos);
         yield break;
     }
+
+    IEnumerator InfoBoxToggle(bool toggle)
+    {
+        float timeElapsed = 0;
+        float yPosition;
+        float xPosition = InfoArea.transform.localPosition.x;
+        float lerpDuration = 0.2f;
+        float currentYPos = -740f;
+        float targetYPos = -340f;
+        if (!toggle)
+        {
+            currentYPos = -340f;
+            targetYPos = -740f;
+        }
+        while (timeElapsed < lerpDuration)
+        {
+            yPosition = Mathf.Lerp(currentYPos, targetYPos, timeElapsed / lerpDuration);
+            InfoArea.transform.localPosition = new Vector3(xPosition, yPosition);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        InfoArea.transform.localPosition = new Vector3(xPosition, targetYPos);
+        yield break;
+    }
     public void EndCombat(bool fledFromCombat)
     {
         if(fledFromCombat == false)
@@ -226,7 +271,7 @@ public class CombatLogic : MonoBehaviour
 
         }
     }
-    public void ToggleAttackMenu(bool toggle)
+    public void ToggleTargetMenu(bool toggle)
     {
         GameObject AttackBtn, DefendBtn, FleeBtn, PouchBtn, TActBtn, SkillBtn, AttackMenu;
         AttackBtn = CharacterActions[CurrentActionBeingPicked].transform.GetChild(1).gameObject;
@@ -243,21 +288,115 @@ public class CombatLogic : MonoBehaviour
         PouchBtn.SetActive(!toggle);
         FleeBtn.SetActive(!toggle);
         AttackMenu.SetActive(toggle);
+        if (toggle)
+        {
+            if (actionType == "Pouch" && ActionData.Item.Element == ItemData.Element.Restore)
+            {
+                for (int i = 0; i < PData.characters.Count; i++)
+                {
+                    for (int p = 0; p < PData.characters.Count; p++)
+                    {
+                        if (PData.characters[p].position == i + 1)
+                        {
+                            //Replaces enemy names with party members names to show it targets party members
+                            AttackMenu.transform.GetChild(i).transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Name + "");
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public void ToggleItemMenu(bool toggle)
+    {
+        GameObject AttackBtn, DefendBtn, FleeBtn, PouchBtn, TActBtn, SkillBtn, ItemMenu;
+        AttackBtn = CharacterActions[CurrentActionBeingPicked].transform.GetChild(1).gameObject;
+        SkillBtn = CharacterActions[CurrentActionBeingPicked].transform.GetChild(2).gameObject;
+        DefendBtn = CharacterActions[CurrentActionBeingPicked].transform.GetChild(3).gameObject;
+        TActBtn = CharacterActions[CurrentActionBeingPicked].transform.GetChild(4).gameObject;
+        PouchBtn = CharacterActions[CurrentActionBeingPicked].transform.GetChild(5).gameObject;
+        FleeBtn = CharacterActions[CurrentActionBeingPicked].transform.GetChild(6).gameObject;
+        ItemMenu = CharacterActions[CurrentActionBeingPicked].transform.GetChild(8).gameObject;
+        AttackBtn.SetActive(!toggle);
+        SkillBtn.SetActive(!toggle);
+        DefendBtn.SetActive(!toggle);
+        TActBtn.SetActive(!toggle);
+        PouchBtn.SetActive(!toggle);
+        FleeBtn.SetActive(!toggle);
+        ItemMenu.SetActive(toggle);
+        ItemMenuSetup(ItemMenu);
+        StartCoroutine(InfoBoxToggle(toggle));
     }
 
-    public void TargetPicked(int target)
+    public void ItemMenuSetup(GameObject ItemMenu)
     {
-        ActionData = new();
-        ActionData.action = Action.Attack;
-        ActionData.target = target;
+        GameObject[] ItemBtns = new GameObject[5];
+        ItemBtns[0] = ItemMenu.transform.GetChild(0).gameObject;
+        ItemBtns[1] = ItemMenu.transform.GetChild(1).gameObject;
+        ItemBtns[2] = ItemMenu.transform.GetChild(2).gameObject;
+        ItemBtns[3] = ItemMenu.transform.GetChild(3).gameObject;
+        ItemBtns[4] = ItemMenu.transform.GetChild(4).gameObject;
+
         for (int i = 0; i < PData.characters.Count; i++)
         {
-            if (PData.characters[i].position == CurrentActionBeingPicked)
+            if(PData.characters[i].position == CurrentActionBeingPicked + 1)
+            {
+                ItemBtns[0].transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch[0].Name);
+                ItemBtns[1].transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch[1].Name);
+                ItemBtns[2].transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch[2].Name);
+                ItemBtns[3].transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch[3].Name);
+                ItemBtns[4].transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Pouch[4].Name);
+                for (int b = 0; b < ItemBtns.Length; b++)
+                {
+                    ItemBtns[b].GetComponent<Button>().interactable = true;
+                    if (PData.characters[i].Pouch[b].ID == 0)
+                    {
+                        ItemBtns[b].GetComponent<Button>().interactable = false;
+                    }
+                }
+            }
+        }
+    }
+    public void ItemPicked(int slot)
+    {
+        for (int i = 0; i < PData.characters.Count; i++)
+        {
+            if (PData.characters[i].position == CurrentActionBeingPicked + 1)
+            {
+                ActionData.neededCharacters = new();
+                ActionData.Item = PData.characters[i].Pouch[slot];
+                ActionData.neededCharacters.Add(PData.characters[i].Name);
+                ToggleTargetMenu(true);
+                ToggleItemMenu(false);
+            }
+        }
+    }
+    public void TargetPicked(int target)
+    {
+        ActionData.target = target;
+        AddCharacterToNeeded();
+        if(actionType == "Pouch")
+        {
+            ActionData.action = Action.Pouch;
+            ToggleTargetMenu(false);
+            ConfirmAction("Pouch");
+        }
+        else
+        {
+            ActionData.action = Action.Attack;
+            ConfirmAction("Attack");
+        }
+    }
+
+    public void AddCharacterToNeeded()
+    {
+        ActionData.neededCharacters = new();
+        for (int i = 0; i < PData.characters.Count; i++)
+        {
+            if (PData.characters[i].position == CurrentActionBeingPicked + 1)
             {
                 ActionData.neededCharacters.Add(PData.characters[i].Name);
             }
         }
-        ConfirmAction("Attack");
     }
     public void GetTurnOrder()
     {
