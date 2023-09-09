@@ -48,7 +48,7 @@ public class StateManager : MonoBehaviour
         }
         PlayerControler.enabled = true;
 
-        if (State == GameState.Menu)
+        if (State == GameState.Menu || State == GameState.Combat)
         {
             PlayerControler.enabled = false;
         }
@@ -58,12 +58,7 @@ public class StateManager : MonoBehaviour
 
     public enum GameState{
         Overworld,
-        CombatStart,
-        CharacterTurn1,
-        CharacterTurn2,
-        CharacterTurn3,
-        CharacterTurn4,
-        EnemyTurn,
+        Combat,
         Defeat,
         Victory,
         Cutscene,

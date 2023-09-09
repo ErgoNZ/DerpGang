@@ -60,16 +60,6 @@ public class EnemyData : MonoBehaviour
         enemies = new();
         CreateEnemies();
     }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if(collision.transform.tag == "Player")
-        {
-            CombatLogic.enemies = enemies;
-            CombatLogic.StartCombat();
-        }
-    }
-
     public void CreateEnemies()
     {
         string[] Name = { Name1, Name2, Name3, Name4 }; 

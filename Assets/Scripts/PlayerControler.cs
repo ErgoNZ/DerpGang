@@ -15,10 +15,12 @@ public class PlayerControler : MonoBehaviour
     public string Room;
     public string Direction;
     CharacterController Cr;
+    CombatLogic CombatLogic;
     // Start is called before the first frame update
     void Start()
     {       
         Cr = GetComponent<CharacterController>();
+        CombatLogic = GameObject.Find("GameManager").GetComponent<CombatLogic>();
     }
 
     // Update is called once per frame
@@ -58,6 +60,7 @@ public class PlayerControler : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        Debug.Log("collided!");
         if (other.tag == "RoomTransition")
         {
             RoomTransitionLogic roomTransitionLogic;
@@ -68,6 +71,13 @@ public class PlayerControler : MonoBehaviour
             SceneManager.LoadScene(Room);
             transform.localPosition = roomTransitionLogic.SpawnPosition;
             print(transform.localPosition);
+        }
+        if(other.tag == "Enemy")
+        {
+            other.GetComponent<Rigidbody>().useGravity = false;
+            other.GetComponent<BoxCollider>().enabled = false;
+            CombatLogic.enemies = other.gameObject.GetComponent<EnemyData>().enemies;
+            CombatLogic.StartCombat();
         }
     }
 }

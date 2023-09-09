@@ -8,6 +8,7 @@ public class PlayerData : MonoBehaviour
 {
     StateManager StateManager;
     ItemData itemData;
+    SkillData SkillData;
     int Money = 0;
     public TextAsset playerData;
     public class CharacterData
@@ -27,6 +28,7 @@ public class PlayerData : MonoBehaviour
         public ItemData.Item Charm1;
         public ItemData.Item Charm2;
         public List<ItemData.Item> Pouch;
+        public List<SkillData.Skill> Skills;
         public bool InParty;
     }
 
@@ -211,6 +213,7 @@ public class PlayerData : MonoBehaviour
             {
                 CharacterData characterData;
                 characterData = new CharacterData();
+                characterData.Skills = new();
                 characterData.Name = ItemData.ParseEnum<ItemData.Character>(SplitData(saveData[lineCount++]));
                 characterData.Level = int.Parse(SplitData(saveData[lineCount++]));
                 characterData.position = int.Parse(SplitData(saveData[lineCount++]));
@@ -237,6 +240,12 @@ public class PlayerData : MonoBehaviour
                 for (int p = 0; p < Array.Length; p++)
                 {
                     characterData.Pouch.Add(itemData.GetItem(Array[p]));
+                }
+                line = SplitData(saveData[lineCount++]);
+                Array = line.Split('/');
+                for (int s = 0; s < Array.Length; s++)
+                {
+                    characterData.Skills.Add(SkillData.skillList[int.Parse(Array[s])]);
                 }
                 characters.Add(characterData);
                 Debug.Log("A character's data was loaded");
@@ -270,6 +279,8 @@ public class PlayerData : MonoBehaviour
     {
         itemData = GetComponent<ItemData>();
         StateManager = GetComponent<StateManager>();
+        SkillData = GetComponent<SkillData>();
+        SkillData.ReadSkillData();
         LoadPlayerData(playerData);
     }
 

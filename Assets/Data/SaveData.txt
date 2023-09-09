@@ -11,6 +11,7 @@ Stats(H,M,A,D,MA,MD,S):10/5/7/7/7/7/5
 CurrentHp:7
 CurrentMp:1
 PouchItems:1/0/1/1/0
+Skills:0
 Name:Susie
 Level:1
 Position:2
@@ -24,6 +25,7 @@ Stats(H,M,A,D,MA,MD,S):7/8/5/5/13/8/6
 CurrentHp:7
 CurrentMp:8
 PouchItems:0/0/0/0/0
+Skills:0
 Name:Shiana
 Level:1
 Position:3
@@ -37,6 +39,7 @@ Stats(H,M,A,D,MA,MD,S):7/8/7/7/8/7/7
 CurrentHp:7
 CurrentMp:8
 PouchItems:0/0/0/0/0
+Skills:0
 Name:Brody
 Level:1
 Position:4
@@ -50,6 +53,7 @@ Stats(H,M,A,D,MA,MD,S):16/1/16/10/1/6/10
 CurrentHp:16
 CurrentMp:1
 PouchItems:0/0/0/0/0
+Skills:0/1
 Money:0
 Items:1|5/2|3/3|2/4|2/5|3/6|3/7|1
 Flags:0/0/0

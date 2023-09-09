@@ -20,17 +20,13 @@ public class SkillData : MonoBehaviour
         public ItemData.Range range;
         public int multihit;
         public string description;
+        public ItemData.Element Element;
     }
     public enum CostMode
     {
         Interger,
         Percentage
     }
-    private void Start()
-    {
-        ReadSkillData();
-    }
-
     public void ReadSkillData()
     {
         string[] linesFromFile = Data.text.Split(Environment.NewLine);
@@ -70,6 +66,7 @@ public class SkillData : MonoBehaviour
             skill.range = ParseEnum<ItemData.Range>(dataArray[7]);
             skill.multihit = int.Parse(dataArray[8]);
             skill.description = dataArray[9];
+            skill.Element = ParseEnum<ItemData.Element>(dataArray[10]);
             skillList.Add(skill);
             lineNum++;
         }
