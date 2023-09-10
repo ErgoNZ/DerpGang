@@ -1233,7 +1233,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh24780
+  m_Name: pb_Mesh24778
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -2664,7 +2664,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 806163709331304336, guid: dae4c307f6c0bd448ad9f66944c14bbb, type: 3}
       propertyPath: Hp1
-      value: 10
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 806163709331304336, guid: dae4c307f6c0bd448ad9f66944c14bbb, type: 3}
       propertyPath: Hp2
@@ -2700,11 +2700,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 806163709331304336, guid: dae4c307f6c0bd448ad9f66944c14bbb, type: 3}
       propertyPath: Def2
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 806163709331304336, guid: dae4c307f6c0bd448ad9f66944c14bbb, type: 3}
       propertyPath: Def3
-      value: 15
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 806163709331304336, guid: dae4c307f6c0bd448ad9f66944c14bbb, type: 3}
       propertyPath: Spd1
@@ -10242,6 +10242,11 @@ MonoBehaviour:
   EmptyIco: {fileID: 21300000, guid: 418182c102aa5564caa7385ee96e448c, type: 3}
   InfoArea: {fileID: 1628396814}
   Canvas: {fileID: 485709501}
+  CharacterSprites:
+  - {fileID: 1665627711}
+  - {fileID: 365618834}
+  - {fileID: 865366578}
+  - {fileID: 195055152}
 --- !u!114 &1129673692
 MonoBehaviour:
   m_ObjectHideFlags: 0

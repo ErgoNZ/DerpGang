@@ -86,7 +86,7 @@ public class EnemyData : MonoBehaviour
                 enemy.Stats.MAtk = MAtk[i];
                 enemy.Stats.MDef = MDef[i];
                 enemy.Stats.Spd = Spd[i];
-                enemy.position = 4 + i;
+                enemy.position = 5 + i;
                 List<int> skillList = Skills[i];
                 for (int s = 0; s < skillList.Count; s++)
                 {

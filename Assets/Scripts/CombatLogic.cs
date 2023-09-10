@@ -19,6 +19,7 @@ public class CombatLogic : MonoBehaviour
     List<CharacterAction> CharacterActionList = new();
     string actionType;
     public GameObject Canvas;
+    public GameObject[] CharacterSprites = new GameObject[4];
     public struct SpeedInfo
     {
         public int Speed;
@@ -32,6 +33,7 @@ public class CombatLogic : MonoBehaviour
         public int target;
         public ItemData.Item Item;
         public int itemSlot;
+        public int position;
     }
     public enum Action
     {
@@ -170,6 +172,7 @@ public class CombatLogic : MonoBehaviour
             CharacterActions[CurrentActionBeingPicked].transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = SkillIco;
         }
         DisableFlee();
+        ActionData.position = CurrentActionBeingPicked + 1;
         CharacterActionList.Add(ActionData);
         CurrentActionBeingPicked++;
         NextCharacterAction();
@@ -191,6 +194,7 @@ public class CombatLogic : MonoBehaviour
                 }
                 Debug.Log(line);
             }
+            StartCoroutine(ExecuteAllAction());
         }
     }
     public void StartCombat()
@@ -208,25 +212,195 @@ public class CombatLogic : MonoBehaviour
         {
             CharacterActions[i].transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = EmptyIco;
         }
+        GetTurnOrder();
+        CurrentActionBeingPicked = 0;
+        NextCharacterAction();
+        FillCharacterInfo();
     }
     public void RoundEnd()
     {
         GetTurnOrder();
     }
     /// <summary>
-    /// This processes all actions taken by the player.w
+    /// This processes all actions taken by the player.
     /// Will also have enemies take their actions when their turn comes up in the turn order.
     /// </summary>
-    public void ExecuteAllAction()
+    IEnumerator ExecuteAllAction()
     {
+        //Characters who are defending at the start of the round
+        for (int i = 0; i < CharacterActionList.Count; i++)
+        {
+            if(CharacterActionList[i].action == Action.Defend)
+            {
+                CharacterSprites[i].GetComponent<Image>().sprite = DefendIco;
+                for (int c = 0; c < CharacterActionList.Count; c++)
+                {
+                    if (CharacterActionList[i].position == PData.characters[c].position)
+                    {
+                        PData.characters[c].Stats.Def = PData.characters[c].Stats.Def * 2;
+                    }
+                }
+                yield return new WaitForSecondsRealtime(1);
+            }
+        }
 
+        for (int i = 0; i < CharacterActionList.Count + enemies.Count; i++)
+        {
+            //If turn is currently a party members
+            if(TurnOrder[i].position < 5)
+            {
+                //For each character in the party who has taken an action
+                for (int a = 0; a < CharacterActionList.Count; a++)
+                {
+                    //Checks which characters turn it is
+                     if(TurnOrder[i].position == CharacterActionList[a].position)
+                    {
+                        switch (CharacterActionList[a].action)
+                        {
+                            case Action.Attack:
+                                BasicAttackOnEnemy(PData.characters[a], CharacterActionList[a].target - 1);
+                                break;
+                            case Action.Magic:
+                                //Checks whether or not the skill being used is set to interger mode or percentage mode
+                                if(CharacterActionList[a].Skill.CostMode == SkillData.CostMode.Interger)
+                                {
+                                    PData.characters[a].CurrentMp -= CharacterActionList[a].Skill.MpCost;
+                                    PData.characters[a].CurrentHp -= CharacterActionList[a].Skill.HpCost;
+                                }
+                                else
+                                {
+                                    PData.characters[a].CurrentMp -= PData.characters[a].Stats.Mp * CharacterActionList[a].Skill.MpCost / 100;
+                                    PData.characters[a].CurrentHp -= PData.characters[a].Stats.Hp * CharacterActionList[a].Skill.HpCost / 100;
+                                }
+                                MagicalAttackOnEnemy(PData.characters[a], CharacterActionList[a].target - 1, CharacterActionList[a].Skill);
+                                break;
+                            case Action.TAct:
+                                //Not implemented into the game yet
+                                break;
+                            case Action.Pouch:
+
+                                break;
+                            default:
+                                break;
+                        }
+                        yield return new WaitForSecondsRealtime(1);
+                    }
+                }
+            }
+            else
+            {
+                EnemyTakesAction(i - 4);
+                yield return new WaitForSecondsRealtime(1);
+            }
+        }
+        //Characters who are defending at end of round and are still above 0 hp
+        for (int i = 0; i < CharacterActionList.Count; i++)
+        {
+            if (CharacterActionList[i].action == Action.Defend)
+            {
+                CharacterSprites[i].GetComponent<Image>().sprite = null;
+                for (int c = 0; c < CharacterActionList.Count; c++)
+                {
+                    if (CharacterActionList[i].position == PData.characters[c].position && PData.characters[c].CurrentHp > 0)
+                    {
+                        PData.characters[c].Stats.Def = PData.characters[c].Stats.Def / 2;
+                    }
+                }
+                yield return new WaitForSecondsRealtime(1);
+            }
+        }
+        RoundStart();
+        yield break;
     }
     /// <summary>
     /// Logic for an enemy taking their turn
     /// </summary>
     /// <param name="Enemy"></param>
-    public void EnemyTakesAction(int Enemy)
+    public void EnemyTakesAction(int EnemyPos)
     {
+
+    }
+    public void BasicAttackOnEnemy(PlayerData.CharacterData character, int Target)
+    {
+        float Damage = 0f;
+        double RandomMultiplier = Random.Range(0.9f,1.1f);
+        int CritRoll = Random.Range(0, 21);
+        Damage += (character.Stats.Atk * character.Stats.Atk) / (character.Stats.Atk + enemies[Target].Stats.Def) * (float)RandomMultiplier;
+        if(CritRoll == 20)
+        {
+            Damage = Damage * 1.5f;
+            Debug.Log("Crit!");
+        }
+        Damage = Mathf.Round(Damage);
+        enemies[Target].CurrentHp -= (int)Damage;
+        Debug.Log(enemies[Target].CurrentHp + "/" + enemies[Target].Stats.Hp + "\n" + character.Name + " Dmg delt: " + Damage);
+    }
+    public void MagicalAttackOnEnemy(PlayerData.CharacterData character, int Target, SkillData.Skill skill)
+    {
+        for (int i = 0; i < skill.multihit; i++)
+        {
+            if(skill.range == ItemData.Range.Single)
+            {
+                float Damage = 0f;
+                double RandomMultiplier = Random.Range(0.9f, 1.1f);
+                int CritRoll = Random.Range(0, 21);
+                Damage += (character.Stats.Atk * character.Stats.Atk) / (character.Stats.Atk + enemies[Target].Stats.Def) * (float)RandomMultiplier * ((float)skill.PhysicalPower / 100);
+                Damage += (character.Stats.MAtk * character.Stats.MAtk) / (character.Stats.MAtk + enemies[Target].Stats.MDef) * (float)RandomMultiplier * ((float)skill.MagicalPower / 100);
+                if (CritRoll == 20)
+                {
+                    Damage = Damage * 1.5f;
+                    Debug.Log("Crit!");
+                }
+                Damage = Mathf.Round(Damage);
+                enemies[Target].CurrentHp -= (int)Damage;
+
+                Debug.Log(enemies[Target].CurrentHp + "/" + enemies[Target].Stats.Hp + "\n" + character.Name + " Dmg delt: " + Damage);
+            }
+            if(skill.range == ItemData.Range.Wide)
+            {
+                for (int e = -1; e < 2; e++)
+                {
+                    if (enemies[Target + e] != null)
+                    {
+                        float Damage = 0f;
+                        double RandomMultiplier = Random.Range(0.9f, 1.1f);
+                        int CritRoll = Random.Range(0, 21);
+                        Damage += (character.Stats.Atk * character.Stats.Atk) / (character.Stats.Atk + enemies[Target + e].Stats.Def) * (float)RandomMultiplier * ((float)skill.PhysicalPower / 100);
+                        Damage += (character.Stats.MAtk * character.Stats.MAtk) / (character.Stats.MAtk + enemies[Target + e].Stats.MDef) * (float)RandomMultiplier * ((float)skill.MagicalPower / 100);
+                        if (CritRoll == 20)
+                        {
+                            Damage = Damage * 1.5f;
+                            Debug.Log("Crit!");
+                        }
+                        Damage = Mathf.Round(Damage);
+                        enemies[Target + e].CurrentHp -= (int)Damage;
+
+                        Debug.Log(enemies[Target + e].CurrentHp + "/" + enemies[Target + e].Stats.Hp + "\n" + character.Name + " Dmg delt: " + Damage);
+                    }
+                }
+            }
+            if(skill.range == ItemData.Range.All)
+            {
+                for (int e = 0; e < enemies.Count; e++)
+                {
+                    float Damage = 0f;
+                    double RandomMultiplier = Random.Range(0.9f, 1.1f);
+                    int CritRoll = Random.Range(0, 21);
+                    Damage += (character.Stats.Atk * character.Stats.Atk) / (character.Stats.Atk + enemies[e].Stats.Def) * (float)RandomMultiplier * ((float)skill.PhysicalPower / 100);
+                    Damage += (character.Stats.MAtk * character.Stats.MAtk) / (character.Stats.MAtk + enemies[e].Stats.MDef) * (float)RandomMultiplier * ((float)skill.MagicalPower / 100);
+                    if (CritRoll == 20)
+                    {
+                        Damage = Damage * 1.5f;
+                        Debug.Log("Crit!");
+                    }
+                    Damage = Mathf.Round(Damage);
+                    enemies[e].CurrentHp -= (int)Damage;
+
+                    Debug.Log(enemies[e].CurrentHp + "/" + enemies[e].Stats.Hp + "\n" + character.Name + " Dmg delt: " + Damage);
+                }
+            }
+            
+        }
 
     }
     public void NextCharacterAction()
@@ -442,6 +616,7 @@ public class CombatLogic : MonoBehaviour
         else
         {
             ActionData.action = Action.Attack;
+            ToggleTargetMenu(false);
             ConfirmAction("Attack");
         }
     }
@@ -493,6 +668,11 @@ public class CombatLogic : MonoBehaviour
     public void SkillPicked(SkillData.Skill skill)
     {
         ActionData.Skill = skill;
+        for (int i = 0; i < SkillPrefabList.Count; i++)
+        {
+            Destroy(SkillPrefabList[i]);
+        }
+        SkillPrefabList.Clear();
         ToggleMagicMenu(false);
         if(skill.range == ItemData.Range.All)
         {
