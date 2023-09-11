@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class CombatLogic : MonoBehaviour
 {
     PlayerData PData;
     StateManager StateManager;
+    ItemData ItemData;
     public GameObject SkillPrefab;
     List<GameObject> SkillPrefabList = new();
     public GameObject[] CharacterActions = new GameObject[4];
@@ -20,6 +20,8 @@ public class CombatLogic : MonoBehaviour
     string actionType;
     public GameObject Canvas;
     public GameObject[] CharacterSprites = new GameObject[4];
+    public GameObject[] HpUpdate = new GameObject[8];
+    public int CharactersDowned = 0;
     public struct SpeedInfo
     {
         public int Speed;
@@ -42,7 +44,8 @@ public class CombatLogic : MonoBehaviour
         Defend,
         TAct,
         Pouch,
-        Flee
+        Flee,
+        Downed
     }
     public class Enemy
     {
@@ -54,12 +57,14 @@ public class CombatLogic : MonoBehaviour
         public ItemData.Element BasicAtkElement;
         public ItemData.Element Resistance;
         public ItemData.Element vulnerable;
+        public List<SkillData.Skill> skills;
     }
     // Start is called before the first frame update
     void Start()
     {
         PData = GetComponent<PlayerData>();
         StateManager = GetComponent<StateManager>();
+        ItemData = GetComponent<ItemData>();
     }
     public void PickAction(string Action)
     {
@@ -83,7 +88,6 @@ public class CombatLogic : MonoBehaviour
             case "Pouch":
                 actionType = "Pouch";
                 ToggleItemMenu(true);
-                
                 break;
             case "Flee":
                 if (CanFlee())
@@ -136,6 +140,8 @@ public class CombatLogic : MonoBehaviour
                     collectiveSpeed += PData.characters[i].Stats.Spd;
                 }
                 StartCoroutine(ActionBoxHide(0));
+                CharacterActions[i].transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = FleeIco;
+                CurrentActionBeingPicked = 3;
             }
             for (int i = 0; i < enemies.Count; i++)
             {
@@ -144,13 +150,12 @@ public class CombatLogic : MonoBehaviour
                     enemySpeed += enemies[i].Stats.Spd;
                 }
             }
-            fleeChance = collectiveSpeed / enemySpeed;
+            fleeChance = (collectiveSpeed / enemySpeed) * 100;
             double roll = Random.Range(0, 100);
             if(roll <= fleeChance)
             {
                 EndCombat(true);
             }
-
         }
         if(Action == "Pouch")
         {
@@ -173,7 +178,10 @@ public class CombatLogic : MonoBehaviour
         }
         DisableFlee();
         ActionData.position = CurrentActionBeingPicked + 1;
-        CharacterActionList.Add(ActionData);
+        if(Action != "Flee")
+        {
+            CharacterActionList.Add(ActionData);
+        }
         CurrentActionBeingPicked++;
         NextCharacterAction();
         if(CurrentActionBeingPicked == 4)
@@ -201,6 +209,10 @@ public class CombatLogic : MonoBehaviour
     {
         StateManager.State = StateManager.GameState.Combat; 
         Canvas.SetActive(true);
+        for (int i = 0; i < 4; i++)
+        {
+            CharacterActions[PData.characters[i].position - 1].transform.GetChild(0).GetComponent<Image>().color = GetPartyMemberColor(PData.characters[i].Name);
+        }
         GetTurnOrder();
         NextCharacterAction();
         FillCharacterInfo();
@@ -211,6 +223,18 @@ public class CombatLogic : MonoBehaviour
         for (int i = 0; i < PData.characters.Count; i++)
         {
             CharacterActions[i].transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = EmptyIco;
+            CharacterActions[i].transform.GetChild(6).GetComponent<Button>().interactable = true;
+            //Checking if any party members are down
+            if(PData.characters[i].CurrentHp <= 0)
+            {
+                for (int d = 0; d < 4; d++)
+                {
+                    if(PData.characters[i].position == d + 1)
+                    {
+                        CharacterActions[i].transform.GetChild(0).GetComponent<Image>().color = GetDownPartyMemberColor(PData.characters[i].Name);
+                    }
+                }
+            }
         }
         GetTurnOrder();
         CurrentActionBeingPicked = 0;
@@ -232,8 +256,7 @@ public class CombatLogic : MonoBehaviour
         {
             if(CharacterActionList[i].action == Action.Defend)
             {
-                CharacterSprites[i].GetComponent<Image>().sprite = DefendIco;
-                for (int c = 0; c < CharacterActionList.Count; c++)
+                for (int c = 0; c < PData.characters.Count; c++)
                 {
                     if (CharacterActionList[i].position == PData.characters[c].position)
                     {
@@ -244,7 +267,7 @@ public class CombatLogic : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < CharacterActionList.Count + enemies.Count; i++)
+        for (int i = 0; i < PData.characters.Count + enemies.Count; i++)
         {
             //If turn is currently a party members
             if(TurnOrder[i].position < 5)
@@ -254,11 +277,11 @@ public class CombatLogic : MonoBehaviour
                 {
                     //Checks which characters turn it is
                      if(TurnOrder[i].position == CharacterActionList[a].position)
-                    {
+                     {
                         switch (CharacterActionList[a].action)
                         {
                             case Action.Attack:
-                                BasicAttackOnEnemy(PData.characters[a], CharacterActionList[a].target - 1);
+                                yield return StartCoroutine(BasicAttackOnEnemy(PData.characters[a], CharacterActionList[a].target - 1));
                                 break;
                             case Action.Magic:
                                 //Checks whether or not the skill being used is set to interger mode or percentage mode
@@ -272,28 +295,27 @@ public class CombatLogic : MonoBehaviour
                                     PData.characters[a].CurrentMp -= PData.characters[a].Stats.Mp * CharacterActionList[a].Skill.MpCost / 100;
                                     PData.characters[a].CurrentHp -= PData.characters[a].Stats.Hp * CharacterActionList[a].Skill.HpCost / 100;
                                 }
-                                MagicalAttackOnEnemy(PData.characters[a], CharacterActionList[a].target - 1, CharacterActionList[a].Skill);
+                                yield return StartCoroutine(MagicalAttackOnEnemy(PData.characters[a], CharacterActionList[a].target - 1, CharacterActionList[a].Skill));
                                 break;
                             case Action.TAct:
                                 //Not implemented into the game yet
                                 break;
                             case Action.Pouch:
-
+                                yield return StartCoroutine(UseItemOnAlly(CharacterActionList[a].target, CharacterActionList[a].Item, CharacterActionList[a].position, CharacterActionList[a].itemSlot));
                                 break;
                             default:
                                 break;
                         }
-                        yield return new WaitForSecondsRealtime(1);
-                    }
+                     }
                 }
             }
             else
             {
-                EnemyTakesAction(i - 4);
-                yield return new WaitForSecondsRealtime(1);
+                yield return StartCoroutine(EnemyTakesAction(TurnOrder[i].position - 5));
             }
+            yield return new WaitForSeconds(0.2f);
         }
-        //Characters who are defending at end of round and are still above 0 hp
+        //Characters who are defending at end of round
         for (int i = 0; i < CharacterActionList.Count; i++)
         {
             if (CharacterActionList[i].action == Action.Defend)
@@ -301,12 +323,11 @@ public class CombatLogic : MonoBehaviour
                 CharacterSprites[i].GetComponent<Image>().sprite = null;
                 for (int c = 0; c < CharacterActionList.Count; c++)
                 {
-                    if (CharacterActionList[i].position == PData.characters[c].position && PData.characters[c].CurrentHp > 0)
+                    if (CharacterActionList[i].position == PData.characters[c].position)
                     {
                         PData.characters[c].Stats.Def = PData.characters[c].Stats.Def / 2;
                     }
                 }
-                yield return new WaitForSecondsRealtime(1);
             }
         }
         RoundStart();
@@ -316,11 +337,64 @@ public class CombatLogic : MonoBehaviour
     /// Logic for an enemy taking their turn
     /// </summary>
     /// <param name="Enemy"></param>
-    public void EnemyTakesAction(int EnemyPos)
+    IEnumerator EnemyTakesAction(int EnemyPos)
     {
-
+        int ActionBeingTaken = 1;
+        int Target;
+        switch (ActionBeingTaken)
+        {
+            //Attack
+            case 1:
+                Target = Random.Range(1, 5);
+                for (int i = 0; i < PData.characters.Count; i++)
+                {
+                    if(PData.characters[i].position == Target && PData.characters[i].CurrentHp > 0)
+                    {
+                        yield return StartCoroutine(BasicAttackOnParty(EnemyPos, i));
+                    }
+                    else if (PData.characters[i].position == Target && PData.characters[i].CurrentHp == 0)
+                    {
+                        StartCoroutine(EnemyTakesAction(EnemyPos));
+                    }
+                }
+                break;
+            //Use Skill
+            case 2:
+                Target = Random.Range(1, 5);
+                if (enemies[EnemyPos].skills != null)
+                {
+                    for (int i = 0; i < PData.characters.Count; i++)
+                    {
+                        if (PData.characters[i].position == Target && PData.characters[i].CurrentHp > 0)
+                        {
+                            yield return StartCoroutine(MagicalAttackOnParty(EnemyPos, i, enemies[EnemyPos]));
+                        }
+                        else if (PData.characters[i].position == Target && PData.characters[i].CurrentHp == 0)
+                        {
+                           StartCoroutine(EnemyTakesAction(EnemyPos));
+                        }
+                    }
+                }
+                else
+                {
+                    StartCoroutine(EnemyTakesAction(EnemyPos));
+                }
+                break;
+            //Use Item (Not implemented)
+            /*case 3:
+                break;*/
+            default:
+                break;
+        }
+        yield break;
     }
-    public void BasicAttackOnEnemy(PlayerData.CharacterData character, int Target)
+    /// <summary>
+    /// Attacks an enemy using a basic attack
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="Target"></param>
+    /// <returns></returns>
+    IEnumerator BasicAttackOnEnemy(PlayerData.CharacterData character, int Target)
     {
         float Damage = 0f;
         double RandomMultiplier = Random.Range(0.9f,1.1f);
@@ -333,9 +407,18 @@ public class CombatLogic : MonoBehaviour
         }
         Damage = Mathf.Round(Damage);
         enemies[Target].CurrentHp -= (int)Damage;
+        yield return StartCoroutine(HpUpdateAnimation(Target + 4, "Damage", (int)Damage));
         Debug.Log(enemies[Target].CurrentHp + "/" + enemies[Target].Stats.Hp + "\n" + character.Name + " Dmg delt: " + Damage);
+        yield return true;
     }
-    public void MagicalAttackOnEnemy(PlayerData.CharacterData character, int Target, SkillData.Skill skill)
+    /// <summary>
+    /// Attacks enemies using a skill/magic
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="Target"></param>
+    /// <param name="skill"></param>
+    /// <returns></returns>
+    IEnumerator MagicalAttackOnEnemy(PlayerData.CharacterData character, int Target, SkillData.Skill skill)
     {
         for (int i = 0; i < skill.multihit; i++)
         {
@@ -353,14 +436,14 @@ public class CombatLogic : MonoBehaviour
                 }
                 Damage = Mathf.Round(Damage);
                 enemies[Target].CurrentHp -= (int)Damage;
-
+                yield return StartCoroutine(HpUpdateAnimation(Target + 4, "Damage", (int)Damage));
                 Debug.Log(enemies[Target].CurrentHp + "/" + enemies[Target].Stats.Hp + "\n" + character.Name + " Dmg delt: " + Damage);
             }
             if(skill.range == ItemData.Range.Wide)
             {
                 for (int e = -1; e < 2; e++)
                 {
-                    if (enemies[Target + e] != null)
+                    if (Target + e >= 0 && Target + e < enemies.Count)
                     {
                         float Damage = 0f;
                         double RandomMultiplier = Random.Range(0.9f, 1.1f);
@@ -374,7 +457,7 @@ public class CombatLogic : MonoBehaviour
                         }
                         Damage = Mathf.Round(Damage);
                         enemies[Target + e].CurrentHp -= (int)Damage;
-
+                        yield return StartCoroutine(HpUpdateAnimation(Target+e+4, "Damage", (int)Damage));
                         Debug.Log(enemies[Target + e].CurrentHp + "/" + enemies[Target + e].Stats.Hp + "\n" + character.Name + " Dmg delt: " + Damage);
                     }
                 }
@@ -395,14 +478,184 @@ public class CombatLogic : MonoBehaviour
                     }
                     Damage = Mathf.Round(Damage);
                     enemies[e].CurrentHp -= (int)Damage;
-
+                    yield return StartCoroutine(HpUpdateAnimation(e + 4, "Damage", (int)Damage));
                     Debug.Log(enemies[e].CurrentHp + "/" + enemies[e].Stats.Hp + "\n" + character.Name + " Dmg delt: " + Damage);
                 }
-            }
-            
+            }          
         }
 
     }
+    /// <summary>
+    /// Uses an item on an ally based on the paramaters given
+    /// </summary>
+    /// <param name="Target"></param>
+    /// <param name="item"></param>
+    /// <param name="CharacterUsingItem"></param>
+    /// <param name="ItemSlot"></param>
+    /// <returns></returns>
+    IEnumerator UseItemOnAlly(int Target, ItemData.Item item, int CharacterUsingItem, int ItemSlot)
+    {
+        for (int i = 0; i < PData.characters.Count; i++)
+        {
+            if(PData.characters[i].position == Target && PData.characters[i].CurrentHp > 0)
+            {
+                PData.characters[i].CurrentHp += item.Stats.Hp;
+                if (PData.characters[i].CurrentHp > PData.characters[i].Stats.Hp)
+                {
+                    PData.characters[i].CurrentHp = PData.characters[i].Stats.Hp;
+                }
+                yield return StartCoroutine(HpUpdateAnimation(Target - 1, "Healing", item.Stats.Hp));
+                PData.characters[i].CurrentMp += item.Stats.Mp;
+                if (PData.characters[i].CurrentMp > PData.characters[i].Stats.Mp)
+                {
+                    PData.characters[i].CurrentMp = PData.characters[i].Stats.Mp;
+                }
+                for (int c = 0; c < PData.characters.Count; c++)
+                {
+                    if(PData.characters[c].position == CharacterUsingItem)
+                    {
+                        PData.characters[c].Pouch[ItemSlot] = ItemData.GetItem("0");
+                    }
+                }
+            }
+        }
+    }
+    /// <summary>
+    /// Attacks a party member using a basic attack
+    /// </summary>
+    /// <param name="EnemyPos"></param>
+    /// <param name="Target"></param>
+    /// <returns></returns>
+    IEnumerator BasicAttackOnParty(int EnemyPos, int Target)
+    {
+        float Damage = 0f;
+        double RandomMultiplier = Random.Range(0.9f, 1.1f);
+        int CritRoll = Random.Range(0, 21);
+        Damage += (enemies[EnemyPos].Stats.Atk * enemies[EnemyPos].Stats.Atk) / (enemies[EnemyPos].Stats.Atk + PData.characters[Target].Stats.Def) * (float)RandomMultiplier;
+        if (CritRoll == 20)
+        {
+            Damage = Damage * 1.5f;
+            Debug.Log("Crit!");
+        }
+        Damage = Mathf.Round(Damage);
+        PData.characters[Target].CurrentHp -= (int)Damage;
+        yield return StartCoroutine(HpUpdateAnimation(Target, "Damage", (int)Damage));
+        if(PData.characters[Target].CurrentHp < 0)
+        {
+            PData.characters[Target].CurrentHp = 0;
+        }
+        Debug.Log(PData.characters[Target].CurrentHp + "/" + PData.characters[Target].Stats.Hp + "\n" + enemies[EnemyPos].Name + " Dmg delt: " + Damage);
+    }
+    /// <summary>
+    /// Attacks party members using a skill/magic
+    /// </summary>
+    /// <param name="EnemyPos"></param>
+    /// <param name="Target"></param>
+    /// <param name="enemy"></param>
+    /// <returns></returns>
+    IEnumerator MagicalAttackOnParty(int EnemyPos, int Target, Enemy enemy)
+    {
+        List<SkillData.Skill> skillsAvaliable = new();
+        for (int i = 0; i < enemy.skills.Count; i++)
+        {
+            if(enemy.skills[i].MpCost < enemy.CurrentMp && enemy.skills[i].HpCost < enemy.CurrentHp && enemy.skills[i].CostMode == SkillData.CostMode.Interger)
+            {
+                skillsAvaliable.Add(enemy.skills[i]);
+            }
+            if(enemy.skills[i].MpCost / 100 * enemy.Stats.Mp  < enemy.CurrentMp && enemy.skills[i].HpCost / 100 * enemy.Stats.Hp < enemy.CurrentHp && enemy.skills[i].CostMode == SkillData.CostMode.Percentage)
+            {
+                skillsAvaliable.Add(enemy.skills[i]);
+            }
+        }
+        if(skillsAvaliable.Count != 0)
+        {
+            int SkillPicked = Random.Range(0, skillsAvaliable.Count);
+            SkillData.Skill PickedSkill = skillsAvaliable[SkillPicked];
+            for (int i = 0; i < PickedSkill.multihit; i++)
+            {
+                if (PickedSkill.range == ItemData.Range.Single)
+                {
+                    float Damage = 0f;
+                    double RandomMultiplier = Random.Range(0.9f, 1.1f);
+                    int CritRoll = Random.Range(0, 21);
+                    Damage += (enemy.Stats.Atk * enemy.Stats.Atk) / (enemy.Stats.Atk + PData.characters[Target].Stats.Def) * (float)RandomMultiplier * ((float)PickedSkill.PhysicalPower / 100);
+                    Damage += (enemy.Stats.MAtk * enemy.Stats.MAtk) / (enemy.Stats.MAtk + PData.characters[Target].Stats.MDef) * (float)RandomMultiplier * ((float)PickedSkill.MagicalPower / 100);
+                    if (CritRoll == 20)
+                    {
+                        Damage = Damage * 1.5f;
+                        Debug.Log("Crit!");
+                    }
+                    Damage = Mathf.Round(Damage);
+                    enemies[Target].CurrentHp -= (int)Damage;
+                    yield return StartCoroutine(HpUpdateAnimation(Target, "Damage", (int)Damage));
+                    if (PData.characters[Target].CurrentHp < 0)
+                    {
+                        PData.characters[Target].CurrentHp = 0;
+                    }
+                    Debug.Log(PData.characters[Target].CurrentHp + "/" + PData.characters[Target].Stats.Hp + "\n" + enemies[EnemyPos].Name + " Dmg delt: " + Damage);
+                }
+                if (PickedSkill.range == ItemData.Range.Wide)
+                {
+                    for (int e = -1; e < 2; e++)
+                    {
+                        if (enemies[Target + e] != null)
+                        {
+                            float Damage = 0f;
+                            double RandomMultiplier = Random.Range(0.9f, 1.1f);
+                            int CritRoll = Random.Range(0, 21);
+                            Damage += (enemy.Stats.Atk * enemy.Stats.Atk) / (enemy.Stats.Atk + PData.characters[Target].Stats.Def) * (float)RandomMultiplier * ((float)PickedSkill.PhysicalPower / 100);
+                            Damage += (enemy.Stats.MAtk * enemy.Stats.MAtk) / (enemy.Stats.MAtk + PData.characters[Target].Stats.MDef) * (float)RandomMultiplier * ((float)PickedSkill.MagicalPower / 100);
+                            if (CritRoll == 20)
+                            {
+                                Damage = Damage * 1.5f;
+                                Debug.Log("Crit!");
+                            }
+                            Damage = Mathf.Round(Damage);
+                            enemies[Target + e].CurrentHp -= (int)Damage;
+                            yield return StartCoroutine(HpUpdateAnimation(Target + e, "Damage", (int)Damage));
+                            if (PData.characters[Target + e].CurrentHp < 0)
+                            {
+                                PData.characters[Target + e].CurrentHp = 0;
+                            }
+                            Debug.Log(PData.characters[e].CurrentHp + "/" + PData.characters[e].Stats.Hp + "\n" + enemies[EnemyPos].Name + " Dmg delt: " + Damage);
+                        }
+                    }
+                }
+                if (PickedSkill.range == ItemData.Range.All)
+                {
+                    for (int e = 0; e < PData.characters.Count; e++)
+                    {
+                        float Damage = 0f;
+                        double RandomMultiplier = Random.Range(0.9f, 1.1f);
+                        int CritRoll = Random.Range(0, 21);
+                        Damage += (enemy.Stats.Atk * enemy.Stats.Atk) / (enemy.Stats.Atk + PData.characters[e].Stats.Def) * (float)RandomMultiplier * ((float)PickedSkill.PhysicalPower / 100);
+                        Damage += (enemy.Stats.MAtk * enemy.Stats.MAtk) / (enemy.Stats.MAtk + PData.characters[e].Stats.MDef) * (float)RandomMultiplier * ((float)PickedSkill.MagicalPower / 100);
+                        if (CritRoll == 20)
+                        {
+                            Damage = Damage * 1.5f;
+                            Debug.Log("Crit!");
+                        }
+                        Damage = Mathf.Round(Damage);
+                        enemies[e].CurrentHp -= (int)Damage;
+                        yield return StartCoroutine(HpUpdateAnimation(e, "Damage", (int)Damage));
+                        if (PData.characters[e].CurrentHp < 0)
+                        {
+                            PData.characters[e].CurrentHp = 0;
+                        }
+                        Debug.Log(PData.characters[e].CurrentHp + "/" + PData.characters[e].Stats.Hp + "\n" + enemies[EnemyPos].Name + " Dmg delt: " + Damage);
+                    }
+                }
+            }
+        }
+        else
+        {
+            EnemyTakesAction(EnemyPos);
+        }
+
+    }
+    /// <summary>
+    /// Scrolls to the next characters action
+    /// </summary>
     public void NextCharacterAction()
     {
         ActionData = new();
@@ -414,7 +667,21 @@ public class CombatLogic : MonoBehaviour
         {
             StartCoroutine(ActionBoxHide(CurrentActionBeingPicked - 1));
         }
+        for (int i = 0; i < 4; i++)
+        {
+            if (PData.characters[i].CurrentHp <= 0 && PData.characters[i].position == CurrentActionBeingPicked + 1)
+            {
+                FillCharacterInfo();
+                CurrentActionBeingPicked++;
+                NextCharacterAction();
+            }
+        }
     }
+    /// <summary>
+    /// Lerps the action box to be visable so the player can make a choice
+    /// </summary>
+    /// <param name="ActionBox"></param>
+    /// <returns></returns>
     IEnumerator ActionBoxShow(int ActionBox)
     {
         float timeElapsed = 0;
@@ -433,6 +700,11 @@ public class CombatLogic : MonoBehaviour
         CharacterActions[ActionBox].transform.localPosition = new Vector3(xPosition, targetYPos);
         yield break;
     }
+    /// <summary>
+    /// Lerps the action box to be hidden
+    /// </summary>
+    /// <param name="ActionBox"></param>
+    /// <returns></returns>
     IEnumerator ActionBoxHide(int ActionBox)
     {
         float timeElapsed = 0;
@@ -451,6 +723,11 @@ public class CombatLogic : MonoBehaviour
         CharacterActions[ActionBox].transform.localPosition = new Vector3(xPosition, targetYPos);
         yield break;
     }
+    /// <summary>
+    /// Toggles whether or not the info box should be seen by the player
+    /// </summary>
+    /// <param name="toggle"></param>
+    /// <returns></returns>
     IEnumerator InfoBoxToggle(bool toggle)
     {
         float timeElapsed = 0;
@@ -474,6 +751,10 @@ public class CombatLogic : MonoBehaviour
         InfoArea.transform.localPosition = new Vector3(xPosition, targetYPos);
         yield break;
     }
+    /// <summary>
+    /// Ends combat and checks whether the party fled, died or won the fight
+    /// </summary>
+    /// <param name="fledFromCombat"></param>
     public void EndCombat(bool fledFromCombat)
     {
         if(fledFromCombat == false)
@@ -514,6 +795,36 @@ public class CombatLogic : MonoBehaviour
                         {
                             //Replaces enemy names with party members names to show it targets party members
                             AttackMenu.transform.GetChild(i).transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Name + "");
+                            AttackMenu.transform.GetChild(i).GetComponent<Button>().interactable = false;
+                            if (ActionData.action == Action.Pouch && ActionData.Item.Range == ItemData.Range.Single)
+                            {
+                                if(i == CurrentActionBeingPicked)
+                                {
+                                    AttackMenu.transform.GetChild(i).GetComponent<Button>().interactable = true;
+                                }
+                            }
+                            if (ActionData.action == Action.Pouch && ActionData.Item.Range == ItemData.Range.Wide)
+                            {
+                                if (i == CurrentActionBeingPicked - 1 && CurrentActionBeingPicked -1 >= 0 && PData.characters[p].CurrentHp > 0)
+                                {
+                                    AttackMenu.transform.GetChild(i).GetComponent<Button>().interactable = true;
+                                }
+                                if (i == CurrentActionBeingPicked && PData.characters[p].CurrentHp > 0)
+                                {
+                                    AttackMenu.transform.GetChild(i).GetComponent<Button>().interactable = true;
+                                }
+                                if (i == CurrentActionBeingPicked + 1 && CurrentActionBeingPicked + 1 < 4 && PData.characters[p].CurrentHp > 0)
+                                {
+                                    AttackMenu.transform.GetChild(i).GetComponent<Button>().interactable = true;
+                                }
+                            }
+                            if(ActionData.action == Action.Pouch && ActionData.Item.Range == ItemData.Range.All)
+                            {
+                                if(PData.characters[p].CurrentHp > 0)
+                                {
+                                    AttackMenu.transform.GetChild(i).GetComponent<Button>().interactable = true;
+                                }
+                            }
                         }
                     }
                 }
@@ -522,13 +833,14 @@ public class CombatLogic : MonoBehaviour
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    if(i < enemies.Count)
+                    if(i < enemies.Count && enemies[i].CurrentHp > 0)
                     {
                         AttackMenu.transform.GetChild(i).transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(enemies[i].Name);
                     }
                     else
                     {
                         AttackMenu.transform.GetChild(i).GetComponent<Button>().interactable = false;
+                        AttackMenu.transform.GetChild(i).transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("");
                     }
                 }
             }
@@ -589,6 +901,7 @@ public class CombatLogic : MonoBehaviour
         {
             if (PData.characters[i].position == CurrentActionBeingPicked + 1)
             {
+                ActionData.action = Action.Pouch;
                 ActionData.neededCharacters = new();
                 ActionData.Item = PData.characters[i].Pouch[slot];
                 ActionData.neededCharacters.Add(PData.characters[i].Name);
@@ -677,6 +990,7 @@ public class CombatLogic : MonoBehaviour
         if(skill.range == ItemData.Range.All)
         {
             AddCharacterToNeeded();
+            ActionData.action = Action.Magic;
             ConfirmAction("Magic");
         }
         else
@@ -743,13 +1057,203 @@ public class CombatLogic : MonoBehaviour
             StartCoroutine(InfoBoxToggle(true));
             InfoArea.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("Do we even have the coordination to do this?");
         }
+        if(button == "Item1")
+        {
+            for (int i = 0; i < PData.characters.Count; i++)
+            {
+                if(PData.characters[i].position == CurrentActionBeingPicked + 1 && PData.characters[i].Pouch[0].ID != 0)
+                {
+                    string Info = "";
+                    if(PData.characters[i].Pouch[0].Stats.Hp > 0)
+                    {
+                        Info += "Hp: " + PData.characters[i].Pouch[0].Stats.Hp + "\n";
+                    }
+                    if(PData.characters[i].Pouch[0].Stats.Mp > 0)
+                    {
+                        Info += "Mp: " + PData.characters[i].Pouch[0].Stats.Mp + "\n";
+                    }
+                    Info += "Range: " + PData.characters[i].Pouch[0].Range + "\n";
+                    Info += "Element: " + PData.characters[i].Pouch[0].Element;
+                    InfoArea.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(Info);
+                }
+            }
+        }
+        if (button == "Item2")
+        {
+            for (int i = 0; i < PData.characters.Count; i++)
+            {
+                if (PData.characters[i].position == CurrentActionBeingPicked + 1 && PData.characters[i].Pouch[1].ID != 0)
+                {
+                    string Info = "";
+                    if (PData.characters[i].Pouch[1].Stats.Hp > 0)
+                    {
+                        Info += "Hp: " + PData.characters[i].Pouch[1].Stats.Hp + "\n";
+                    }
+                    if (PData.characters[i].Pouch[1].Stats.Mp > 0)
+                    {
+                        Info += "Mp: " + PData.characters[i].Pouch[1].Stats.Mp + "\n";
+                    }
+                    Info += "Range: " + PData.characters[i].Pouch[1].Range + "\n";
+                    Info += "Element: " + PData.characters[i].Pouch[1].Element;
+                    InfoArea.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(Info);
+                }
+            }
+        }
+        if (button == "Item3")
+        {
+            for (int i = 0; i < PData.characters.Count; i++)
+            {
+                if (PData.characters[i].position == CurrentActionBeingPicked + 1 && PData.characters[i].Pouch[2].ID != 0)
+                {
+                    string Info = "";
+                    if (PData.characters[i].Pouch[2].Stats.Hp > 0)
+                    {
+                        Info += "Hp: " + PData.characters[i].Pouch[2].Stats.Hp + "\n";
+                    }
+                    if (PData.characters[i].Pouch[2].Stats.Mp > 0)
+                    {
+                        Info += "Mp: " + PData.characters[i].Pouch[2].Stats.Mp + "\n";
+                    }
+                    Info += "Range: " + PData.characters[i].Pouch[2].Range + "\n";
+                    Info += "Element: " + PData.characters[i].Pouch[2].Element;
+                    InfoArea.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(Info);
+                }
+            }
+        }
+        if (button == "Item4")
+        {
+            for (int i = 0; i < PData.characters.Count; i++)
+            {
+                if (PData.characters[i].position == CurrentActionBeingPicked + 1 && PData.characters[i].Pouch[3].ID != 0)
+                {
+                    string Info = "";
+                    if (PData.characters[i].Pouch[3].Stats.Hp > 0)
+                    {
+                        Info += "Hp: " + PData.characters[i].Pouch[3].Stats.Hp + "\n";
+                    }
+                    if (PData.characters[i].Pouch[3].Stats.Mp > 0)
+                    {
+                        Info += "Mp: " + PData.characters[i].Pouch[3].Stats.Mp + "\n";
+                    }
+                    Info += "Range: " + PData.characters[i].Pouch[3].Range + "\n";
+                    Info += "Element: " + PData.characters[i].Pouch[3].Element;
+                    InfoArea.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(Info);
+                }
+            }
+        }
+        if (button == "Item5")
+        {
+            for (int i = 0; i < PData.characters.Count; i++)
+            {
+                if (PData.characters[i].position == CurrentActionBeingPicked + 1 && PData.characters[i].Pouch[4].ID != 0)
+                {
+                    string Info = "";
+                    if (PData.characters[i].Pouch[4].Stats.Hp > 0)
+                    {
+                        Info += "Hp: " + PData.characters[i].Pouch[4].Stats.Hp + "\n";
+                    }
+                    if (PData.characters[i].Pouch[4].Stats.Mp > 0)
+                    {
+                        Info += "Mp: " + PData.characters[i].Pouch[4].Stats.Mp + "\n";
+                    }
+                    Info += "Range: " + PData.characters[i].Pouch[4].Range + "\n";
+                    Info += "Element: " + PData.characters[i].Pouch[4].Element;
+                    InfoArea.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(Info);
+                }
+            }
+        }
     }
-    public void ButtonLeave()
+    public void ButtonLeave(string button)
     {
-        if(InfoArea.transform.localPosition.y > -740)
+        if(InfoArea.transform.localPosition.y > -740 && button != "Item")
         {
             StartCoroutine(InfoBoxToggle(false));
         }
         InfoArea.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("");
+    }
+    public Color32 GetPartyMemberColor(ItemData.Character character)
+    {
+        switch (character)
+        {
+            case ItemData.Character.Seth:
+                return new Color32(0, 133, 79, 255);
+            case ItemData.Character.Susie:
+                return new Color32(0, 70, 191, 255);
+            case ItemData.Character.Shiana:
+                return new Color32(191, 19, 0, 255);
+            case ItemData.Character.Brody:
+                return new Color32(131, 0, 191, 255);
+            default:
+                return new Color32(145, 145, 145, 255);
+        }
+    }
+    public Color32 GetDownPartyMemberColor(ItemData.Character character)
+    {
+        switch (character)
+        {
+            case ItemData.Character.Seth:
+                return new Color32(0, 92, 55, 255);
+            case ItemData.Character.Susie:
+                return new Color32(0, 39, 107, 255);
+            case ItemData.Character.Shiana:
+                return new Color32(117, 12, 0, 255);
+            case ItemData.Character.Brody:
+                return new Color32(72, 1, 105, 255);
+            default:
+                return new Color32(77, 77, 77, 255);
+        }
+    }
+    IEnumerator HpUpdateAnimation(int Target, string Type, int Hp)
+    {
+        float timeElapsed = 0;
+        float lerpDuration = 1f;
+        float transparency;
+        Color32 colour;
+        HpUpdate[Target].GetComponent<TMPro.TextMeshProUGUI>().SetText(Hp + "");
+        if (Type == "Damage")
+        {
+            if(Hp == 0)
+            {
+                HpUpdate[Target].GetComponent<TMPro.TextMeshProUGUI>().SetText("Miss");
+            }
+            colour = new Color32(255, 0, 0, 255);
+            HpUpdate[Target].GetComponent<TMPro.TextMeshProUGUI>().color = colour;
+        }
+        else
+        {
+            colour = new Color32(0, 255, 0, 255);
+            HpUpdate[Target].GetComponent<TMPro.TextMeshProUGUI>().color = colour;
+        }
+        while (timeElapsed < lerpDuration)
+        { 
+            transparency = Mathf.Lerp(255, 0, timeElapsed / lerpDuration);
+            colour = new Color32(colour.r, colour.g, colour.b, (byte)transparency);
+            HpUpdate[Target].GetComponent<TMPro.TextMeshProUGUI>().color = colour;
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        colour = new Color32(colour.r, colour.g, colour.b, 0);
+        HpUpdate[Target].GetComponent<TMPro.TextMeshProUGUI>().color = colour;
+        yield break;
+    }
+    public void CheckWhoIsDowned()
+    {
+        CharactersDowned = 0;
+        for (int i = 0; i < PData.characters.Count; i++)
+        {
+            if(PData.characters[i].CurrentHp <= 0)
+            {
+                CharactersDowned++;
+            }
+        }
+
+        if(CharactersDowned == 4)
+        {
+            GameOver();
+        }
+    }
+    public void GameOver()
+    {
+
     }
 }

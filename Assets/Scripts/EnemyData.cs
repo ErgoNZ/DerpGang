@@ -90,7 +90,7 @@ public class EnemyData : MonoBehaviour
                 List<int> skillList = Skills[i];
                 for (int s = 0; s < skillList.Count; s++)
                 {
-                    SkillData.GetSkill(skillList[s]);
+                    enemies[i].skills.Add(SkillData.GetSkill(skillList[s]));
                 }
                 enemies.Add(enemy);
             }

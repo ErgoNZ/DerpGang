@@ -8,7 +8,7 @@ Boots:0
 Charm1:0
 Charm2:0
 Stats(H,M,A,D,MA,MD,S):10/5/9/7/7/7/5
-CurrentHp:7
+CurrentHp:1
 CurrentMp:1
 PouchItems:1/0/1/1/0
 Skills:0
@@ -22,9 +22,9 @@ Boots:0
 Charm1:0
 Charm2:0
 Stats(H,M,A,D,MA,MD,S):7/8/5/5/13/8/6
-CurrentHp:7
+CurrentHp:1
 CurrentMp:8
-PouchItems:0/0/0/0/0
+PouchItems:1/0/0/0/0
 Skills:0
 Name:Shiana
 Level:1
@@ -36,9 +36,9 @@ Boots:0
 Charm1:0
 Charm2:0
 Stats(H,M,A,D,MA,MD,S):7/8/8/7/8/7/7
-CurrentHp:7
+CurrentHp:1
 CurrentMp:8
-PouchItems:0/0/0/0/0
+PouchItems:1/0/0/0/0
 Skills:0
 Name:Brody
 Level:1
@@ -50,9 +50,9 @@ Boots:0
 Charm1:0
 Charm2:0
 Stats(H,M,A,D,MA,MD,S):16/5/12/10/1/6/10
-CurrentHp:16
+CurrentHp:1
 CurrentMp:5
-PouchItems:0/0/0/0/0
+PouchItems:1/0/0/0/0
 Skills:0/1
 Money:0
 Items:1|5/2|3/3|2/4|2/5|3/6|3/7|1

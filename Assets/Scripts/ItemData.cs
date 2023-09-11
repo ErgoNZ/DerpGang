@@ -26,7 +26,6 @@ public class ItemData : MonoBehaviour
         public List<Element> Vulnerable;
         public List<Character> characters;
     }
-
     public enum Character
     {
         Seth,
@@ -46,14 +45,13 @@ public class ItemData : MonoBehaviour
         Gear,
         Key
     }
-
     public enum Range
     {
         Single,
         Wide,
-        All
+        All,
+        None
     }
-
     public struct EffectData
     {
         public string Name;
@@ -214,6 +212,7 @@ public class ItemData : MonoBehaviour
                 characterList.Add(ParseEnum<Character>(characters[i]));
             }
             item.characters = characterList;
+            item.Range = ParseEnum<Range>(itemData[16]);
             ItemList.Add(item);
             lineNum++;
         }

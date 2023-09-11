@@ -1,4 +1,4 @@
-Name|Type|Description|Element|Stats|Effect|Charm|Resistances|Vunlerabilities|Character that can equip   
-Chest,Chest,Placeholder item,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Shiana|Brody
-Legs,Legs,Placeholder item,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Shiana|Brody
-Boots,Boots,Placeholder item,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Shiana|Brody
+Name|Type|Description|Element|Stats|Effect|Charm|Resistances|Vunlerabilities|Character that can equip|Range 
+Chest,Chest,Placeholder item,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Shiana|Brody,None
+Legs,Legs,Placeholder item,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Shiana|Brody,None
+Boots,Boots,Placeholder item,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Shiana|Brody,None
