@@ -6,6 +6,7 @@ TagManager:
   tags:
   - RoomTransition
   - Enemy
+  - NPC
   layers:
   - Default
   - TransparentFX

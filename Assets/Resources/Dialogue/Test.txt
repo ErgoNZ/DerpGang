@@ -1,0 +1,5 @@
+Name*Name of sprite*Dialouge of npc*ChoiceText/Goestoline (Use | to make another choice)*Is This the last line?*Flagnum/Req state*LinetoSkiptoIfFlagsNotMet*FlagNum/Set it to this state
+Testing Person*TestPerson_01*Hello there travelers!*NoChoices*false*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange
+Testing Person*TestPerson_01*Isn't this a neat test for dialogue?*Yeah it is!/4|Nah it could be better/5*false*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange
+Testing Person*TestPerson_01*I'm glad you think so!*NoChoices*true*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange
+Testing Person*TestPerson_01*:(*NoChoices*true*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange 

@@ -22,6 +22,8 @@ public class CombatLogic : MonoBehaviour
     public GameObject[] CharacterSprites = new GameObject[4];
     public GameObject[] HpUpdate = new GameObject[8];
     public int CharactersDowned = 0;
+    public GameObject CombatScene;
+    public GameObject Inventory;
     public struct SpeedInfo
     {
         public int Speed;
@@ -209,6 +211,8 @@ public class CombatLogic : MonoBehaviour
     {
         StateManager.State = StateManager.GameState.Combat; 
         Canvas.SetActive(true);
+        Inventory.SetActive(false);
+        CombatScene.SetActive(true);
         for (int i = 0; i < 4; i++)
         {
             CharacterActions[PData.characters[i].position - 1].transform.GetChild(0).GetComponent<Image>().color = GetPartyMemberColor(PData.characters[i].Name);
@@ -311,9 +315,13 @@ public class CombatLogic : MonoBehaviour
             }
             else
             {
-                yield return StartCoroutine(EnemyTakesAction(TurnOrder[i].position - 5));
+                if(enemies[TurnOrder[i].position - 5].CurrentHp > 0)
+                {
+                    yield return StartCoroutine(EnemyTakesAction(TurnOrder[i].position - 5));
+                }
             }
             yield return new WaitForSeconds(0.2f);
+            FillCharacterInfo();
         }
         //Characters who are defending at end of round
         for (int i = 0; i < CharacterActionList.Count; i++)
@@ -354,6 +362,7 @@ public class CombatLogic : MonoBehaviour
                     }
                     else if (PData.characters[i].position == Target && PData.characters[i].CurrentHp == 0)
                     {
+                        CheckWhoIsDowned();
                         StartCoroutine(EnemyTakesAction(EnemyPos));
                     }
                 }
@@ -598,7 +607,7 @@ public class CombatLogic : MonoBehaviour
                 {
                     for (int e = -1; e < 2; e++)
                     {
-                        if (enemies[Target + e] != null)
+                        if (Target + e >= 0 && Target + e < PData.characters.Count)
                         {
                             float Damage = 0f;
                             double RandomMultiplier = Random.Range(0.9f, 1.1f);
@@ -1249,6 +1258,7 @@ public class CombatLogic : MonoBehaviour
 
         if(CharactersDowned == 4)
         {
+            StopAllCoroutines();
             GameOver();
         }
     }

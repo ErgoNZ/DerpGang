@@ -8,6 +8,7 @@ public class ItemData : MonoBehaviour
 {
     public List<Item> ItemList = new();
     public TextAsset Consumables, Weapons, Armour, Charms, Key;
+    StateManager StateManager;
     int ID = 0;
 
     public class Item
@@ -114,10 +115,12 @@ public class ItemData : MonoBehaviour
         LoadItems(Armour);
         LoadItems(Charms);
         LoadItems(Key);
+        StateManager = GetComponent<StateManager>();
         for (int i = 0; i < ItemList.Count; i++)
         {
             Debug.Log("ID:" + ItemList[i].ID.ToString().PadRight(10) + "Name: " + ItemList[i].Name.ToString());
         }
+        StateManager.State = StateManager.GameState.Overworld;
     }
 
     /// <summary>

@@ -7,9 +7,9 @@ Legs:0
 Boots:0
 Charm1:0
 Charm2:0
-Stats(H,M,A,D,MA,MD,S):10/5/9/7/7/7/5
-CurrentHp:1
-CurrentMp:1
+Stats(H,M,A,D,MA,MD,S):16/5/9/7/7/7/5
+CurrentHp:16
+CurrentMp:5
 PouchItems:1/0/1/1/0
 Skills:0
 Name:Susie
@@ -21,8 +21,8 @@ Legs:0
 Boots:0
 Charm1:0
 Charm2:0
-Stats(H,M,A,D,MA,MD,S):7/8/5/5/13/8/6
-CurrentHp:1
+Stats(H,M,A,D,MA,MD,S):13/8/5/5/13/8/6
+CurrentHp:13
 CurrentMp:8
 PouchItems:1/0/0/0/0
 Skills:0
@@ -35,8 +35,8 @@ Legs:0
 Boots:0
 Charm1:0
 Charm2:0
-Stats(H,M,A,D,MA,MD,S):7/8/8/7/8/7/7
-CurrentHp:1
+Stats(H,M,A,D,MA,MD,S):17/8/8/7/8/7/7
+CurrentHp:17
 CurrentMp:8
 PouchItems:1/0/0/0/0
 Skills:0
@@ -49,8 +49,8 @@ Legs:0
 Boots:0
 Charm1:0
 Charm2:0
-Stats(H,M,A,D,MA,MD,S):16/5/12/10/1/6/10
-CurrentHp:1
+Stats(H,M,A,D,MA,MD,S):25/5/12/10/1/6/10
+CurrentHp:25
 CurrentMp:5
 PouchItems:1/0/0/0/0
 Skills:0/1

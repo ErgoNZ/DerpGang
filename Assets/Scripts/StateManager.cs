@@ -12,7 +12,7 @@ public class StateManager : MonoBehaviour
     static GameObject Player;
     public GameObject Menu;
     public GameObject EventManager;
-    public GameState State;
+    public GameState State = GameState.Overworld;
     bool MenuOpen = false;
     public bool InCombat = false;
     PlayerControler PlayerControler;
@@ -36,7 +36,7 @@ public class StateManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && State != GameState.Combat && State != GameState.Talking)
         {
             MenuOpen = !MenuOpen;
             State = GameState.Overworld;
@@ -48,7 +48,7 @@ public class StateManager : MonoBehaviour
         }
         PlayerControler.enabled = true;
 
-        if (State == GameState.Menu || State == GameState.Combat)
+        if (State == GameState.Menu || State == GameState.Combat || State == GameState.Talking)
         {
             PlayerControler.enabled = false;
         }
@@ -63,6 +63,7 @@ public class StateManager : MonoBehaviour
         Victory,
         Cutscene,
         LoadingItems,
-        Menu
+        Menu,
+        Talking
     }
 }

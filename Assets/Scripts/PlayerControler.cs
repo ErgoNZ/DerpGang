@@ -79,5 +79,17 @@ public class PlayerControler : MonoBehaviour
             CombatLogic.enemies = other.gameObject.GetComponent<EnemyData>().enemies;
             CombatLogic.StartCombat();
         }
+        if(other.tag == "NPC")
+        {
+            other.GetComponent<NpcLogic>().toggleInRange(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "NPC")
+        {
+            other.GetComponent<NpcLogic>().toggleInRange(false);
+        }
     }
 }
