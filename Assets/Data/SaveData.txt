@@ -10,8 +10,8 @@ Charm2:0
 Stats(H,M,A,D,MA,MD,S):16/5/9/7/7/7/5
 CurrentHp:16
 CurrentMp:5
-PouchItems:1/0/1/1/0
-Skills:0
+PouchItems:1/0/1/1/2
+Skills:3
 Name:Susie
 Level:1
 Position:2
@@ -24,8 +24,8 @@ Charm2:0
 Stats(H,M,A,D,MA,MD,S):13/8/5/5/13/8/6
 CurrentHp:13
 CurrentMp:8
-PouchItems:1/0/0/0/0
-Skills:0
+PouchItems:1/0/0/2/0
+Skills:3
 Name:Shiana
 Level:1
 Position:3
@@ -38,8 +38,8 @@ Charm2:0
 Stats(H,M,A,D,MA,MD,S):17/8/8/7/8/7/7
 CurrentHp:17
 CurrentMp:8
-PouchItems:1/0/0/0/0
-Skills:0
+PouchItems:1/0/2/0/0
+Skills:4
 Name:Brody
 Level:1
 Position:4
@@ -52,8 +52,8 @@ Charm2:0
 Stats(H,M,A,D,MA,MD,S):25/5/12/10/1/6/10
 CurrentHp:25
 CurrentMp:5
-PouchItems:1/0/0/0/0
-Skills:0/1
+PouchItems:1/0/0/0/2
+Skills:0
 Money:0
 Items:1|5/2|3/3|2/4|2/5|3/6|3/7|1
 Flags:0/0/0

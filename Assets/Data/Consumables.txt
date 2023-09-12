@@ -1,3 +1,4 @@
 Name|Type|Description|Element|Stats|Effect|Charm|Resistances|Vunlerabilities|Character that can equip|Range
 None,Consumable,You shouldn't be able to see this. Are you looking through my code?,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie,all
-Testing Item,Consumable,This is a test item for debug info!,Restore,5, 2, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Brody|Shiana,Wide
+Mana potion,Consumable,A small bottle of drinkable mana. Restores some of your magical energy,Restore,0, 5, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Brody|Shiana,Wide
+Health potion,Consumable,A small bottle of liquidfied bitter herbs. Dispite the taste it restores your energy.,Restore,8, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Brody|Shiana,Wide

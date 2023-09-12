@@ -1,3 +1,6 @@
 Name|Mp Cost|Hp Cost|Cost Mode|Physical Power|Magical Power|Effect data (Name|Element|Duration|Damage|MpDamage)|Range|Multihit|Description|Element
 Dual-Slash,3,0,Interger,80,0,NULL,Single,2,A quick double slash towards a target at the sacrifice of some power.,None
 Tri-Slash,8,0,Interger,60,0,NULL,Single,3,A lightning quick triple slash at a target for nearly half the power behind each swing.,None
+Healing elixer,2,0,Interger,0,80,NULL,Single,1,Seth swiftly creates a healing elixer to keep everyone in the fight!,Restore
+Magic Bolt,3,0,Interger,0,80,NULL,Single,1,A lightning quick bolt of magic to catch your enemies off gaurd!,None
+Flaming Hands,5,0,Interger,0,70,NULL,Wide,1,Use your hands like a flamethrower! It's cheaper to use as well!,Fire

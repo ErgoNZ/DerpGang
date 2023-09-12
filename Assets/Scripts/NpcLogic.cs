@@ -8,9 +8,9 @@ public class NpcLogic : MonoBehaviour
     public TextAsset data;
     public GameObject inputShow;
     string[] unprocessedLines;
-    List<LineData> lines = new();
+    public List<LineData> lines;
     bool playerInRange;
-    DialougeHandler DialougeHandler;
+    DialogueHandler DialogueHandler;
     StateManager StateManager;
     public struct LineData
     {
@@ -35,18 +35,20 @@ public class NpcLogic : MonoBehaviour
     }
     private void Start()
     {
+        //Loads all dialogue data into the Npc's memory and grabs scripts relevant to Npc handling
         LoadDialogue();
-        DialougeHandler = GameObject.Find("GameManager").GetComponent<DialougeHandler>();
+        DialogueHandler = GameObject.Find("GameManager").GetComponent<DialogueHandler>();
         StateManager = GameObject.Find("GameManager").GetComponent<StateManager>();
     }
     private void Update()
     {
+        //If player is in range and not talking to anyone they can press E to start talking to the Npc
         if (playerInRange)
         {
             if (Input.GetKey(KeyCode.E) && StateManager.State == StateManager.GameState.Overworld)
             {
-                DialougeHandler.lines = lines;
-                DialougeHandler.StartDialogue();
+                DialogueHandler.lines = lines;
+                DialogueHandler.StartDialogue();
             }
             if(StateManager.State == StateManager.GameState.Talking)
             {
@@ -54,11 +56,15 @@ public class NpcLogic : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// Looks through targeted text file and loads all data into the Npc's memory
+    /// </summary>
     public void LoadDialogue()
     {
         LineData lineData;
         Choice choice;
         FlagInfo flagInfo;
+        lines = new();
         unprocessedLines = data.text.Split(Environment.NewLine);
         int lineCount = 1;
         string[] processingArray;
@@ -87,6 +93,13 @@ public class NpcLogic : MonoBehaviour
                     lineData.choices.Add(choice);
                 }
             }
+            else
+            {
+                choice = new();
+                choice.choiceText = "null";
+                choice.goTo = -1;
+                lineData.choices.Add(choice);
+            }
             lineData.lastLine = bool.Parse(processingArray[4]);
             //processes all of the flagData
             lineData.skipTo = -1;
@@ -113,11 +126,21 @@ public class NpcLogic : MonoBehaviour
                 flagInfo.state = int.Parse(Processor[1]);
                 lineData.setFlag = flagInfo;
             }
+            else
+            {
+                flagInfo = new();
+                flagInfo.flag = -1;
+                flagInfo.state = -1;
+                lineData.setFlag = flagInfo;
+            }
             lines.Add(lineData);
             lineCount++;
         }
     }
-
+    /// <summary>
+    /// A toggle for when the player is in range of the Npc and shows the player they can interact
+    /// </summary>
+    /// <param name="toggle"></param>
     public void toggleInRange(bool toggle)
     {
         inputShow.SetActive(toggle);

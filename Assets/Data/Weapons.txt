@@ -1,2 +1,5 @@
 Name|Type|Description|Element|Stats|Effect|Charm|Resistances|Vunlerabilities|Character that can equip|Range  
-Knife,Weapon,Placeholder item,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Shiana|Brody,None
+Seth's Knife,Weapon,It's Seth's knife. He uses it for cutting ingredients while brewing potions for his shop.,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth,None
+Susie's Staff,Weapon,A staff that has been overcharged to the point of becoming unstable. Is it even safe to use normally?,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Susie,None
+Shiana's Wand,Weapon,A makeshift wand made of a collection of metals from something old.,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Shiana,None
+Brody's Sword,Weapon,A sword blessed with magic that protects it's wielder from magical attacks.,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Brody,None

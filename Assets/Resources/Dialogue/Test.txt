@@ -1,5 +1,8 @@
-Name*Name of sprite*Dialouge of npc*ChoiceText/Goestoline (Use | to make another choice)*Is This the last line?*Flagnum/Req state*LinetoSkiptoIfFlagsNotMet*FlagNum/Set it to this state
+Name*Name of sprite*Dialouge of npc*ChoiceText/Goestoline (Use | to make another choice, MAX 4)*Is This the last line?*Flagnum/Req state*LinetoSkiptoIfFlagsNotMet*FlagNum/Set it to this state
+Testing Person*TestPerson_01*You're not very nice, go away!*NoChoices*true*0/1*1*NoFlagsToChange
+Testing Person*TestPerson_01*It's nice that you think this is neat too.*NoChoices*true*0/2*2*NoFlagsToChange
 Testing Person*TestPerson_01*Hello there travelers!*NoChoices*false*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange
-Testing Person*TestPerson_01*Isn't this a neat test for dialogue?*Yeah it is!/4|Nah it could be better/5*false*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange
-Testing Person*TestPerson_01*I'm glad you think so!*NoChoices*true*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange
-Testing Person*TestPerson_01*:(*NoChoices*true*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange 
+Testing Person*TestPerson_01*Isn't this a neat test for dialogue?*NoChoices*false*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange
+Testing Person*TestPerson_01*Options exist*Yeah it is!/5|Nah it could be better./6*false*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange
+Testing Person*TestPerson_01*I'm glad you think so!*NoChoices*true*NoFlagReq*NoFlagtoSkipLines*0/2
+Testing Person*TestPerson_01*:(*NoChoices*true*NoFlagReq*NoFlagtoSkipLines*0/1

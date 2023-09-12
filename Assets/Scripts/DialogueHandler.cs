@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialougeHandler : MonoBehaviour
+public class DialogueHandler : MonoBehaviour
 {
     PlayerData PData;
     public List<NpcLogic.LineData> lines;
@@ -12,14 +12,20 @@ public class DialougeHandler : MonoBehaviour
     public GameObject PersonTalkIcon;
     public GameObject Canvas;
     public GameObject Inventory;
+    public GameObject ChoiceHolder;
+    public GameObject[] Choices = new GameObject[4];
+    TMPro.TextMeshProUGUI Text;
     StateManager StateManager;
     bool waitingForPlayerInput;
     int currentLine;
     bool allFlagsMet;
+    bool pickingAnOption;
+    bool clickedWhileAtEnd;
     private void Start()
     {
         PData = GetComponent<PlayerData>();
         StateManager = GetComponent<StateManager>();
+        Text = MainText.GetComponent<TMPro.TextMeshProUGUI>();
     }
     public void StartDialogue()
     {
@@ -32,37 +38,63 @@ public class DialougeHandler : MonoBehaviour
     }
     private void Update()
     {
-        if (waitingForPlayerInput)
+        if (waitingForPlayerInput && !pickingAnOption)
         {
+
             if(Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.E) || Input.GetMouseButton(0))
             {
-                StartCoroutine(ProgressDialogue());
+                if (currentLine + 1 > lines.Count || lines[currentLine].lastLine == true)
+                {
+                    EndDialogue();
+                }
+                else if(!lines[currentLine].lastLine)
+                {
+                    waitingForPlayerInput = false;
+                    StartCoroutine(ProgressDialogue());
+                }
+            }
+        }
+        else if (pickingAnOption)
+        {
+            if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.E) || Input.GetMouseButton(0))
+            {
+                MainText.SetActive(false);
+                ChoiceHolder.SetActive(true);
             }
         }
     }
+    //Writes the dialogue out 1 character at a time
     IEnumerator WriteDialogue(string dialogue)
     {
         string currentLineBeingSpoken = "";
         for (int i = 0; i < dialogue.Length; i++)
         {
             currentLineBeingSpoken += dialogue[i];
-            MainText.GetComponent<TMPro.TextMeshProUGUI>().SetText(currentLineBeingSpoken);
+            Text.SetText(currentLineBeingSpoken);
             yield return new WaitForSecondsRealtime(0.025f);
         }
         waitingForPlayerInput = true;
         yield break;
     }
+    //Ends the current dialogue with the Npc.
     public void EndDialogue()
     {
         StateManager.State = StateManager.GameState.Overworld;
         MainTextHolder.SetActive(false);
         Canvas.SetActive(false);
         Inventory.SetActive(true);
+        waitingForPlayerInput = false;
         MainText.GetComponent<TMPro.TextMeshProUGUI>().SetText("");
     }
+    /// <summary>
+    /// Progresses the dialogue along with the help of flags and choices.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator ProgressDialogue()
     {
         allFlagsMet = true;
+        pickingAnOption = false;
+        //Checks if all flags for the current line to be spoken are met otherwise it skips that line to the specified line given
         if(lines[currentLine].skipTo != -1)
         {
             int flagsMet = 0;
@@ -75,21 +107,41 @@ public class DialougeHandler : MonoBehaviour
                     flagsMet++;
                 }
             }
-            if(flagsMet - 1 != lines[currentLine].flagsRequired.Count)
+            if(flagsMet != lines[currentLine].flagsRequired.Count)
             {
                 allFlagsMet = false;
             }
             
         }
-        if (lines[currentLine].lastLine)
+        //Checks all choices and the options avaliable
+        if(lines[currentLine].choices[0].goTo != -1)
         {
-            EndDialogue();
+            pickingAnOption = true;
+            for (int i = 0; i < Choices.Length; i++)
+            {
+                Choices[i].SetActive(false);
+            }
+            for (int i = 0; i < lines[currentLine].choices.Count; i++)
+            {
+                Choices[i].SetActive(true);
+                Choices[i].GetComponentInChildren<TMPro.TextMeshProUGUI>().SetText(lines[currentLine].choices[i].choiceText);
+            }
             yield break;
         }
+        //These check the ending conditions from checking everything beforehand. (Look at code above comment)
         if (allFlagsMet)
         {
+            //Changes any flags as needed
+            if(lines[currentLine].setFlag.flag != -1)
+            {
+                PData.Flags[lines[currentLine].setFlag.flag] = lines[currentLine].setFlag.state;
+            }
+            PersonTalkingName.GetComponent<TMPro.TextMeshProUGUI>().SetText(lines[currentLine].name);
             yield return StartCoroutine(WriteDialogue(lines[currentLine].dialouge));
-            currentLine++;
+            if (!lines[currentLine].lastLine)
+            {
+                currentLine++;
+            }
         }
         else
         {
@@ -97,5 +149,13 @@ public class DialougeHandler : MonoBehaviour
             yield return StartCoroutine(ProgressDialogue());
         }
         yield break;
+    }
+
+    public void ChoicePicked(int Choice)
+    {
+        currentLine = lines[currentLine].choices[Choice].goTo;        
+        MainText.SetActive(true);
+        ChoiceHolder.SetActive(false);
+        StartCoroutine(ProgressDialogue());
     }
 }
