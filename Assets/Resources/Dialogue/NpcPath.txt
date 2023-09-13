@@ -1,0 +1,3 @@
+Name*Name of sprite*Dialouge of npc*ChoiceText/Goestoline (Use | to make another choice, MAX 4)*Is This the last line?*Flagnum/Req state*LinetoSkiptoIfFlagsNotMet*FlagNum/Set it to this state
+Stranger*TestPerson_01*Please be careful this little town already has enough accidents as is.*NoChoices*true*0/1*1*NoFlagsToChange
+Stranger*TestPerson_01*This path leads to the wind-wisp forest. If you plan on going in there watch out for the wildlife!*NoChoices*true*NoFlagReq*NoFlagtoSkipLines*0/1

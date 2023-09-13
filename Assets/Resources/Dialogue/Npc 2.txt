@@ -1,0 +1,2 @@
+Name*Name of sprite*Dialouge of npc*ChoiceText/Goestoline (Use | to make another choice, MAX 4)*Is This the last line?*Flagnum/Req state*LinetoSkiptoIfFlagsNotMet*FlagNum/Set it to this state
+Teenager*TestPerson_01*...What are you looking at?*NoChoices*true*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange

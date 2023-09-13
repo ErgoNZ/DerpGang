@@ -1,0 +1,10 @@
+Name*Name of sprite*Dialouge of npc*ChoiceText/Goestoline (Use | to make another choice, MAX 4)*Is This the last line?*Flagnum/Req state*LinetoSkiptoIfFlagsNotMet*FlagNum/Set it to this state
+Seth(Dev)*TestPerson_01*There isn't much else to see here. You can be on your way now. (Maybe you could go kill the enemies down the staircase?)*NoChoices*true*1/1*1*NoFlagsToChange
+Seth(Dev)*TestPerson_01*Hi there. It seems you managed to reach me. Sorry about there not being much to go explore or interact with.*NoChoices*false*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange
+Seth(Dev)*TestPerson_01*I did what I could with the time I had left, so I think this showcase of what I managed to get done is good enough.*NoChoices*false*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange
+Seth(Dev)*TestPerson_01*So... What do you think of what I have got so far?*NoChoices*false*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange
+Seth(Dev)*TestPerson_01*Choices avaliable.*I think it was pretty neat!/5|It was alright/6|It could be better/7|I don't think this showcase was very good/8*false*NoFlagReq*NoFlagtoSkipLines*NoFlagsToChange
+Seth(Dev)*TestPerson_01*That's good to hear. I'm hoping to continue this as a passion project or something like that. So I might end up making a fully fledged game someday.*NoChoices*true*NoFlagReq*NoFlagtoSkipLines*1/1
+Seth(Dev)*TestPerson_01*Yeah, I know this game concept showcase is very rough around the edges, but I'm hoping to possiblely make a proper game out of this someday.*NoChoices*true*NoFlagReq*NoFlagtoSkipLines*1/1
+Seth(Dev)*TestPerson_01*I would agree with you, this could of been better but time slipped by and I didn't realise how much I had to get done in such a short amount of time.*NoChoices*true*NoFlagReq*NoFlagtoSkipLines*1/1
+Seth(Dev)*TestPerson_01*Honestly, thats pretty fair. There has been no polish done to anything and the visuals are all barebones. I don't blame you for thinking that.*NoChoices*true*NoFlagReq*NoFlagtoSkipLines*1/1

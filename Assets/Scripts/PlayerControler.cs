@@ -60,7 +60,6 @@ public class PlayerControler : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("collided!");
         if (other.tag == "RoomTransition")
         {
             RoomTransitionLogic roomTransitionLogic;
@@ -79,12 +78,14 @@ public class PlayerControler : MonoBehaviour
             CombatLogic.enemies = other.gameObject.GetComponent<EnemyData>().enemies;
             CombatLogic.StartCombat();
         }
-        if(other.tag == "NPC")
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "NPC")
         {
             other.GetComponent<NpcLogic>().toggleInRange(true);
         }
     }
-
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "NPC")

@@ -20,7 +20,6 @@ public class DialogueHandler : MonoBehaviour
     int currentLine;
     bool allFlagsMet;
     bool pickingAnOption;
-    bool clickedWhileAtEnd;
     private void Start()
     {
         PData = GetComponent<PlayerData>();
@@ -40,8 +39,8 @@ public class DialogueHandler : MonoBehaviour
     {
         if (waitingForPlayerInput && !pickingAnOption)
         {
-
-            if(Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.E) || Input.GetMouseButton(0))
+            //Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.E) || This was here but caused issues
+            if (Input.GetMouseButton(0))
             {
                 if (currentLine + 1 > lines.Count || lines[currentLine].lastLine == true)
                 {
@@ -56,7 +55,8 @@ public class DialogueHandler : MonoBehaviour
         }
         else if (pickingAnOption)
         {
-            if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.E) || Input.GetMouseButton(0))
+            //Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.E) || here as well
+            if (Input.GetMouseButton(0))
             {
                 MainText.SetActive(false);
                 ChoiceHolder.SetActive(true);

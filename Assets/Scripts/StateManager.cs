@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.IO;
-using System;
-using UnityEngine.Diagnostics;
 
 public class StateManager : MonoBehaviour
 {
@@ -16,7 +11,6 @@ public class StateManager : MonoBehaviour
     bool MenuOpen = false;
     public bool InCombat = false;
     PlayerControler PlayerControler;
-
     private void Awake()
     {
         if (Instance != null)
@@ -33,10 +27,9 @@ public class StateManager : MonoBehaviour
         State = GameState.LoadingItems;
         PlayerControler = Player.GetComponent<PlayerControler>();
     }
-
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && State != GameState.Combat && State != GameState.Talking)
+        if (Input.GetKeyDown(KeyCode.Escape) && State != GameState.Combat && State != GameState.Talking && State != GameState.MainMenu)
         {
             MenuOpen = !MenuOpen;
             State = GameState.Overworld;
@@ -48,14 +41,11 @@ public class StateManager : MonoBehaviour
         }
         PlayerControler.enabled = true;
 
-        if (State == GameState.Menu || State == GameState.Combat || State == GameState.Talking)
+        if (State == GameState.Menu || State == GameState.Combat || State == GameState.Talking || State == GameState.MainMenu)
         {
             PlayerControler.enabled = false;
         }
     }
-
-    
-
     public enum GameState{
         Overworld,
         Combat,
@@ -64,6 +54,11 @@ public class StateManager : MonoBehaviour
         Cutscene,
         LoadingItems,
         Menu,
-        Talking
+        Talking,
+        MainMenu
+    }
+    public void ResetPlayerPos()
+    {
+        Player.transform.position = new(-2, 2, 0);
     }
 }

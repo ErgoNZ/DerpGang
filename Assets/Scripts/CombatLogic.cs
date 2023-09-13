@@ -22,8 +22,10 @@ public class CombatLogic : MonoBehaviour
     public GameObject[] CharacterSprites = new GameObject[4];
     public GameObject[] HpUpdate = new GameObject[8];
     public int CharactersDowned = 0;
+    public int enemiesDowned = 0;
     public GameObject CombatScene;
     public GameObject Inventory;
+    public GameObject GameOverScreen;
     public struct SpeedInfo
     {
         public int Speed;
@@ -209,13 +211,19 @@ public class CombatLogic : MonoBehaviour
     }
     public void StartCombat()
     {
-        StateManager.State = StateManager.GameState.Combat; 
+        StateManager.State = StateManager.GameState.Combat;
+        CurrentActionBeingPicked = 0;
+        enemiesDowned = 0;
+        CharactersDowned = 0;
+        CharacterActionList.Clear();
+        InfoArea.transform.position = new(InfoArea.transform.position.x, -740f);
         Canvas.SetActive(true);
         Inventory.SetActive(false);
         CombatScene.SetActive(true);
         for (int i = 0; i < 4; i++)
         {
             CharacterActions[PData.characters[i].position - 1].transform.GetChild(0).GetComponent<Image>().color = GetPartyMemberColor(PData.characters[i].Name);
+            CharacterActions[i].transform.localPosition = new(CharacterActions[i].transform.localPosition.x, -740f);
         }
         GetTurnOrder();
         NextCharacterAction();
@@ -256,6 +264,7 @@ public class CombatLogic : MonoBehaviour
     IEnumerator ExecuteAllAction()
     {
         //Characters who are defending at the start of the round
+        enemiesDowned = 0;
         for (int i = 0; i < CharacterActionList.Count; i++)
         {
             if(CharacterActionList[i].action == Action.Defend)
@@ -319,6 +328,15 @@ public class CombatLogic : MonoBehaviour
                 {
                     yield return StartCoroutine(EnemyTakesAction(TurnOrder[i].position - 5));
                 }
+                else
+                {
+                    enemiesDowned++;
+                }
+            }
+            if(enemiesDowned == enemies.Count)
+            {
+                EndCombat(false);
+                yield break;
             }
             yield return new WaitForSeconds(0.2f);
             FillCharacterInfo();
@@ -349,51 +367,58 @@ public class CombatLogic : MonoBehaviour
     {
         int ActionBeingTaken = 1;
         int Target;
-        switch (ActionBeingTaken)
+        if(CharactersDowned < 4)
         {
-            //Attack
-            case 1:
-                Target = Random.Range(1, 5);
-                for (int i = 0; i < PData.characters.Count; i++)
-                {
-                    if(PData.characters[i].position == Target && PData.characters[i].CurrentHp > 0)
-                    {
-                        yield return StartCoroutine(BasicAttackOnParty(EnemyPos, i));
-                    }
-                    else if (PData.characters[i].position == Target && PData.characters[i].CurrentHp == 0)
-                    {
-                        CheckWhoIsDowned();
-                        StartCoroutine(EnemyTakesAction(EnemyPos));
-                    }
-                }
-                break;
-            //Use Skill
-            case 2:
-                Target = Random.Range(1, 5);
-                if (enemies[EnemyPos].skills != null)
-                {
+            switch (ActionBeingTaken)
+            {
+                //Attack
+                case 1:
+                    Target = Random.Range(1, 5);
                     for (int i = 0; i < PData.characters.Count; i++)
                     {
                         if (PData.characters[i].position == Target && PData.characters[i].CurrentHp > 0)
                         {
-                            yield return StartCoroutine(MagicalAttackOnParty(EnemyPos, i, enemies[EnemyPos]));
+                            yield return StartCoroutine(BasicAttackOnParty(EnemyPos, i));
                         }
                         else if (PData.characters[i].position == Target && PData.characters[i].CurrentHp == 0)
                         {
-                           StartCoroutine(EnemyTakesAction(EnemyPos));
+                            CheckWhoIsDowned();
+                            StartCoroutine(EnemyTakesAction(EnemyPos));
                         }
                     }
-                }
-                else
-                {
-                    StartCoroutine(EnemyTakesAction(EnemyPos));
-                }
-                break;
-            //Use Item (Not implemented)
-            /*case 3:
-                break;*/
-            default:
-                break;
+                    break;
+                //Use Skill
+                case 2:
+                    Target = Random.Range(1, 5);
+                    if (enemies[EnemyPos].skills != null)
+                    {
+                        for (int i = 0; i < PData.characters.Count; i++)
+                        {
+                            if (PData.characters[i].position == Target && PData.characters[i].CurrentHp > 0)
+                            {
+                                yield return StartCoroutine(MagicalAttackOnParty(EnemyPos, i, enemies[EnemyPos]));
+                            }
+                            else if (PData.characters[i].position == Target && PData.characters[i].CurrentHp == 0)
+                            {
+                                StartCoroutine(EnemyTakesAction(EnemyPos));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        StartCoroutine(EnemyTakesAction(EnemyPos));
+                    }
+                    break;
+                //Use Item (Not implemented)
+                /*case 3:
+                    break;*/
+                default:
+                    break;
+            }
+        }
+        else if(CharactersDowned >= 4)
+        {
+            GameOver();
         }
         yield break;
     }
@@ -766,7 +791,11 @@ public class CombatLogic : MonoBehaviour
     /// <param name="fledFromCombat"></param>
     public void EndCombat(bool fledFromCombat)
     {
-        if(fledFromCombat == false)
+        for (int i = 0; i < HpUpdate.Length; i++)
+        {
+            HpUpdate[i].GetComponent<TMPro.TextMeshProUGUI>().color = new Color32(255, 0, 0, 0);
+        }
+        if (fledFromCombat == false)
         {
 
         }
@@ -1264,6 +1293,32 @@ public class CombatLogic : MonoBehaviour
     }
     public void GameOver()
     {
-
+        for (int i = 0; i < HpUpdate.Length; i++)
+        {
+            HpUpdate[i].GetComponent<TMPro.TextMeshProUGUI>().color = new Color32(255, 0, 0, 0);
+        }
+        StartCoroutine(GameOverAnimation());
+        EndCombat(false);
+    }
+    IEnumerator GameOverAnimation()
+    {
+        float timeElapsed = 0;
+        float lerpDuration = 2.5f;
+        float transparency;
+        Color32 colour;
+        colour = new Color32(255, 255, 255, 255);
+        GameOverScreen.SetActive(true);
+        Image image = GameOverScreen.GetComponent<Image>();
+        while (timeElapsed < lerpDuration)
+        {
+            transparency = Mathf.Lerp(0, 255, timeElapsed / lerpDuration);
+            colour = new Color32(colour.r, colour.g, colour.b, (byte)transparency);
+            image.color = colour;
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        colour = new Color32(colour.r, colour.g, colour.b, 255);
+        image.color = colour;
+        yield break;
     }
 }

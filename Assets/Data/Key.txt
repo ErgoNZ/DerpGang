@@ -1,2 +1,2 @@
 Name|Type|Description|Element|Stats|Effect|Charm|Resistances|Vunlerabilities|Character that can equip|Range
-Odd Orb,Key,This orb glimmers with a purple aura.<br><br>"Is this made out of pure magic?" -Seth,None,0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,None,None
+Scroll,Key,A scroll that you don't remember placing in your bag. <br> It reads: Hi there! Thanks for playing my game in its currently very unfinished state. I was planning on adding more content but ran out of time but I still do have something to show for my efforts. So I hope you enjoy what is actually here. ,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Brody|Shiana|Susie,None

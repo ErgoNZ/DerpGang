@@ -31,7 +31,6 @@ public class PlayerData : MonoBehaviour
         public List<SkillData.Skill> Skills;
         public bool InParty;
     }
-
     public List<int> Flags = new();
     public List<CharacterData> characters = new();
     public List<ItemData.Item> Inventory = new();
@@ -201,11 +200,14 @@ public class PlayerData : MonoBehaviour
     /// This loads in all of the player data from their save file
     /// </summary>
     /// <param name="Path"></param>
-    void LoadPlayerData(TextAsset Data)
+    public void LoadPlayerData()
     {
+        Flags = new();
+        characters = new();
+        Inventory = new();
         try
         {
-            string[] saveData = Data.text.Split(Environment.NewLine);
+            string[] saveData = playerData.text.Split(Environment.NewLine);
             int lineCount = 0;
             string line;
             string[] Array;
@@ -281,7 +283,7 @@ public class PlayerData : MonoBehaviour
         StateManager = GetComponent<StateManager>();
         SkillData = GetComponent<SkillData>();
         SkillData.ReadSkillData();
-        LoadPlayerData(playerData);
+        LoadPlayerData();
     }
 
     /// <summary>

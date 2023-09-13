@@ -120,7 +120,6 @@ public class ItemData : MonoBehaviour
         {
             Debug.Log("ID:" + ItemList[i].ID.ToString().PadRight(10) + "Name: " + ItemList[i].Name.ToString());
         }
-        StateManager.State = StateManager.GameState.Overworld;
     }
 
     /// <summary>

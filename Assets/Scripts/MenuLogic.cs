@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MenuLogic : MonoBehaviour
 {
@@ -37,6 +38,12 @@ public class MenuLogic : MonoBehaviour
     public GameObject Pouch3;
     public GameObject Pouch4;
     public GameObject Pouch5;
+    [Header("MainMenu/Combat")]
+    public GameObject MainMenu;
+    public GameObject HowToPlayScreen;
+    public GameObject Menu;
+    public GameObject GameOver;
+    public GameObject CombatMenu;
     RectTransform InvRect;
     Vector3 PartyPos, InvPos, MapPos, InsightsPos;
     PlayerData PData;
@@ -49,6 +56,7 @@ public class MenuLogic : MonoBehaviour
     public ItemData.Item SelectedItem;
     public int SelectedChar = 1;
     ItemData.Item Placeholder = new();
+    StateManager StateManager;
     // Start is called before the first frame update
     private void Start()
     {
@@ -59,19 +67,17 @@ public class MenuLogic : MonoBehaviour
         MapPos = Map.transform.localPosition;
         InsightsPos = Insights.transform.localPosition;
         MenuSwitch("Party");
-        Canvas.SetActive(false);
+        //Canvas.SetActive(false);
     }
-
     private void Awake()
     {
         PData = GetComponent<PlayerData>();
+        StateManager = GetComponent<StateManager>();
     }
-
     int GetSortedSize()
     {
         return SortedInv.Count;
     }
-
     void SortInv(ItemData.Catagory Filter)
     {
         Filter = InvFilter;
@@ -108,7 +114,6 @@ public class MenuLogic : MonoBehaviour
         InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
         DrawSortInv();
     }
-
     void DrawSortInv()
     {
         QuickCharInfo.SetActive(false);
@@ -127,7 +132,6 @@ public class MenuLogic : MonoBehaviour
             itemBtnLogic.FillInfo(SortedInv[i].Amount.ToString(), SortedInv[i].Name, SortedInv[i]);
         }
     }
-
     public void MenuSwitch(string Menu)
     {
         UseItem.SetActive(false);
@@ -218,7 +222,6 @@ public class MenuLogic : MonoBehaviour
                 break;
         }
     }
-
     public void QuickInfoShow(int CharPos)
     {
         SelectedChar = CharPos;
@@ -294,7 +297,6 @@ public class MenuLogic : MonoBehaviour
             }
         }
     }
-
     public void EnableEquipBtns()
     {
         ItemData.Catagory Type = SelectedItem.Type;
@@ -318,7 +320,6 @@ public class MenuLogic : MonoBehaviour
                 break;
         }
     }
-
     public void EquipItem(int Slot)
     {
         if(SelectedItem.Type == ItemData.Catagory.Charm)
@@ -379,7 +380,6 @@ public class MenuLogic : MonoBehaviour
         GameObject.Find("EquipItemOnChar").transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("Equip Item on character");
         SortInv(InvFilter);
     }
-
     public void UseHealItem()
     {
         PData.UseHealingItem(SelectedItem,SelectedChar);
@@ -487,7 +487,6 @@ public class MenuLogic : MonoBehaviour
             }
         }
     }
-
     public Color32 GetPartyMemberColor(ItemData.Character character)
     {
         switch (character)
@@ -504,7 +503,6 @@ public class MenuLogic : MonoBehaviour
                 return new Color32(145, 145, 145, 255);
         }
     }
-
     public void SetupCharInfo(int position)
     {
         for (int i = 0; i < PData.characters.Count; i++)
@@ -534,6 +532,40 @@ public class MenuLogic : MonoBehaviour
                 CharacterInfoPanel.transform.GetChild(6).GetComponent<TMPro.TextMeshProUGUI>().SetText("Hp: " + PData.characters[i].CurrentHp + " / " + PData.characters[i].Stats.Hp);
                 CharacterInfoPanel.transform.GetChild(7).GetComponent<TMPro.TextMeshProUGUI>().SetText("Mp: " + PData.characters[i].CurrentMp + " / " + PData.characters[i].Stats.Mp);
             }
+        }
+    }
+    public void MainMenuInput(string button)
+    {
+        switch (button)
+        {
+            case "Play":
+                MainMenu.SetActive(false);
+                Canvas.SetActive(false);
+                Menu.SetActive(true);
+                GameOver.SetActive(false);
+                CombatMenu.SetActive(false);
+                PData.LoadPlayerData();
+                StateManager.State = StateManager.GameState.Overworld;
+                SceneManager.LoadScene("Default");
+                StateManager.ResetPlayerPos();
+                break;
+            case "HowToPlay":
+                HowToPlayScreen.SetActive(true);
+                break;
+            case "Quit":
+                Application.Quit();
+                break;
+            case "Back":
+                HowToPlayScreen.SetActive(false);
+                break;
+            case "GameOver":
+                MainMenu.SetActive(true);
+                Canvas.SetActive(true);
+                Menu.SetActive(false);
+                StateManager.State = StateManager.GameState.MainMenu;
+                break;
+            default:
+                break;
         }
     }
 }

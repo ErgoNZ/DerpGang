@@ -1,4 +1,6 @@
 Name|Type|Description|Element|Stats|Effect|Charm|Resistances|Vunlerabilities|Character that can equip|Range 
-Chest,Chest,Placeholder item,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Shiana|Brody,None
-Legs,Legs,Placeholder item,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Shiana|Brody,None
-Boots,Boots,Placeholder item,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth|Susie|Shiana|Brody,None
+Mage robes,Chest,These robes are made out of enchanted cotten fibers. Increasing the magic one can achive.,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Susie|Shiana,None
+Gathers top,Chest,A shirt worn by foragers who intend to go out on long gathering periods to maximise the herbs they can gather.,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Seth,None
+Padded shirt,Chest,A noraml shirt padded with small amount of chainmail and tough hide. Good for some protection and keeping the user nimble.,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Brody,None
+Pants,Legs,While there are multiple types of pants that are considered casual but none really provide much protection.,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Susie|Shiana|Seth|Brody,None
+Shoes,Boots,While there are multiple types of shoes that are considered casual but none really provide much protection.,None, 0, 0, 0, 0, 0, 0, 0,NULL,NULL,None,None,Susie|Shiana|Seth|Brody,None
