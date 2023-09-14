@@ -8,17 +8,19 @@ public class StateManager : MonoBehaviour
     public GameObject Menu;
     public GameObject EventManager;
     public GameState State = GameState.Overworld;
-    bool MenuOpen = false;
-    public bool InCombat = false;
+    bool menuOpen = false;
+    public bool inCombat = false;
     PlayerControler PlayerControler;
     private void Awake()
     {
+        //This just makes sure that only one of this script can ever be active at a time
         if (Instance != null)
         {
             Destroy(gameObject);
             return;
         }
 
+        //Setting things up so required data persists between scenes
         Instance = this;
         Player = Instantiate(PlayerPrefab);
         DontDestroyOnLoad(gameObject);
@@ -29,18 +31,20 @@ public class StateManager : MonoBehaviour
     }
     private void Update()
     {
+        //Opens the inventory menu
         if (Input.GetKeyDown(KeyCode.Escape) && State != GameState.Combat && State != GameState.Talking && State != GameState.MainMenu)
         {
-            MenuOpen = !MenuOpen;
+            menuOpen = !menuOpen;
             State = GameState.Overworld;
-            Menu.SetActive(MenuOpen);
-            if (MenuOpen == true)
+            Menu.SetActive(menuOpen);
+            if (menuOpen == true)
             {
                 State = GameState.Menu;
             }
         }
         PlayerControler.enabled = true;
 
+        //Stops the player from moving when they shouldn't be able to
         if (State == GameState.Menu || State == GameState.Combat || State == GameState.Talking || State == GameState.MainMenu)
         {
             PlayerControler.enabled = false;
@@ -57,6 +61,9 @@ public class StateManager : MonoBehaviour
         Talking,
         MainMenu
     }
+    /// <summary>
+    /// Does what the function is called
+    /// </summary>
     public void ResetPlayerPos()
     {
         Player.transform.position = new(-2, 2, 0);

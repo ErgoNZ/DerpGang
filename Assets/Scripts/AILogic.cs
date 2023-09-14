@@ -5,7 +5,11 @@ using UnityEngine.AI;
 
 public class AILogic : MonoBehaviour
 {
-
+    //
+    //
+    //I didn't think of any of this code that is in this file! Credit goes to Dave/GameDevelopment from Youtube. Video:https://www.youtube.com/watch?v=UjkSFoLxesw
+    //
+    //
     public NavMeshAgent agent;
 
     public Transform player;

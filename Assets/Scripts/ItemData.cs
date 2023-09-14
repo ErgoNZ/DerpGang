@@ -8,9 +8,10 @@ public class ItemData : MonoBehaviour
 {
     public List<Item> ItemList = new();
     public TextAsset Consumables, Weapons, Armour, Charms, Key;
-    StateManager StateManager;
-    int ID = 0;
-
+    int id = 0;
+    /// <summary>
+    /// All structs and enums go towards making up all of the data used for 1 item.
+    /// </summary>
     public class Item
     {
         public int ID;
@@ -106,16 +107,17 @@ public class ItemData : MonoBehaviour
         CombatStart
     }
     /// <summary>
-    /// When this is awoken it loads all items into memory and list the items added
+    /// When this is awoken it loads all items into memory and list the items added.
     /// </summary>
     private void Awake()
     {
+        //Loads all the items from each file type for the data for items.
         LoadItems(Consumables);
         LoadItems(Weapons);
         LoadItems(Armour);
         LoadItems(Charms);
         LoadItems(Key);
-        StateManager = GetComponent<StateManager>();
+        //print the id and name of all items loaded into memory.
         for (int i = 0; i < ItemList.Count; i++)
         {
             Debug.Log("ID:" + ItemList[i].ID.ToString().PadRight(10) + "Name: " + ItemList[i].Name.ToString());
@@ -138,6 +140,7 @@ public class ItemData : MonoBehaviour
         string[] characters;
         string[] processingArray;
         int lineNum = 1;
+        //Read lines until the end of the file
         while (lineNum < linesFromFile.Length)
         {
             Item item = new();
@@ -147,8 +150,9 @@ public class ItemData : MonoBehaviour
             CharmData charmData;
             List<Character> characterList = new();
             line = linesFromFile[lineNum];
+            //Splits data into smaller pieces so they are easier to use
             itemData = line.Split(',');
-            item.ID = ID++;
+            item.ID = id++;
             item.Name = itemData[0];
             item.Type = ParseEnum<Catagory>(itemData[1]);
             item.Description = itemData[2];
@@ -171,6 +175,7 @@ public class ItemData : MonoBehaviour
                 for (int i = 0; i < effData.Length; i++)
                 {
                     effectData = new EffectData();
+                    //Split the data to make it easier to use
                     processingArray = effData[i].Split('~');
                     effectData.Name = processingArray[0];
                     effectData.Element = ParseEnum<Element>(processingArray[1]);
@@ -184,10 +189,12 @@ public class ItemData : MonoBehaviour
 
             if (itemData[12] != "NULL")
             {
+                //Splits again if there is multiple pieces of charm data the item contains
                 chrmData = itemData[12].Split('|');
                 for (int i = 0; i < chrmData.Length; i++)
                 {
                     charmData = new CharmData();
+                    //Split the data to make it easier to use
                     processingArray = chrmData[i].Split('~');
                     charmData.Name = processingArray[0];
                     charmData.CheckingFor = processingArray[1];
@@ -196,38 +203,53 @@ public class ItemData : MonoBehaviour
                 }
             }
 
+            //Splits the data again if there are multiple of them
             resistance = itemData[13].Split('|');
+            //Adds all of the data to the item
             for (int i = 0; i < resistance.Length; i++)
             {
                 item.Resistance.Add(ParseEnum<Element>(resistance[i]));
             }
 
+            //Splits the data again if there are multiple of them
             vunlerabilities = itemData[14].Split('|');
+            //Adds all of the data to the item
             for (int i = 0; i < vunlerabilities.Length; i++)
             {
                 item.Vulnerable.Add(ParseEnum<Element>(vunlerabilities[i]));
             }
-
+            //Splits the data again if there are multiple of them
             characters = itemData[15].Split('|');
+            //Adds all of the data to the item
             for (int i = 0; i < characters.Length; i++)
             {
                 characterList.Add(ParseEnum<Character>(characters[i]));
             }
             item.characters = characterList;
             item.Range = ParseEnum<Range>(itemData[16]);
+            //Add the item to the list and go to the next line of the text assest
             ItemList.Add(item);
             lineNum++;
         }
     }
-
+    /// <summary>
+    /// Custom parse method that converts strings into enums.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
     public static T ParseEnum<T>(string value)
     {
         return (T)Enum.Parse(typeof(T), value, true);
     }
-
-    public Item GetItem(string IDstring)
+    /// <summary>
+    /// Returns with the data for an item to the script that called on the method.
+    /// </summary>
+    /// <param name="idString"></param>
+    /// <returns></returns>
+    public Item GetItem(string idString)
     {
-        int ID = int.Parse(IDstring);
-        return ItemList[ID];
+        int id = int.Parse(idString);
+        return ItemList[id];
     }
 }

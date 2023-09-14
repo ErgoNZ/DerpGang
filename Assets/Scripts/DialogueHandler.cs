@@ -22,21 +22,28 @@ public class DialogueHandler : MonoBehaviour
     bool pickingAnOption;
     private void Start()
     {
+        //Gets needed scripts and objects
         PData = GetComponent<PlayerData>();
         StateManager = GetComponent<StateManager>();
         Text = MainText.GetComponent<TMPro.TextMeshProUGUI>();
     }
+    /// <summary>
+    /// Starts the dialogue with the npc
+    /// </summary>
     public void StartDialogue()
     {
+        //Sets everything to default
         currentLine = 0;
         StateManager.State = StateManager.GameState.Talking;
         Inventory.SetActive(false);
+        //Shows dialogue menu and starts the dialogue
         MainTextHolder.SetActive(true);
         Canvas.SetActive(true);
         StartCoroutine(ProgressDialogue());
     }
     private void Update()
     {
+        //If no option is being picked and game is waiting for the player to continue the dialogue
         if (waitingForPlayerInput && !pickingAnOption)
         {
             //Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.E) || This was here but caused issues
@@ -53,6 +60,7 @@ public class DialogueHandler : MonoBehaviour
                 }
             }
         }
+        //if the player is picking an option show the options avaliable to the player
         else if (pickingAnOption)
         {
             //Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.E) || here as well
@@ -63,7 +71,11 @@ public class DialogueHandler : MonoBehaviour
             }
         }
     }
-    //Writes the dialogue out 1 character at a time
+    /// <summary>
+    /// Writes out dialogue 1 character at a time until the whole string has been written
+    /// </summary>
+    /// <param name="dialogue"></param>
+    /// <returns></returns>
     IEnumerator WriteDialogue(string dialogue)
     {
         string currentLineBeingSpoken = "";
@@ -73,12 +85,16 @@ public class DialogueHandler : MonoBehaviour
             Text.SetText(currentLineBeingSpoken);
             yield return new WaitForSecondsRealtime(0.025f);
         }
+        //Waits for player input once finished
         waitingForPlayerInput = true;
         yield break;
     }
-    //Ends the current dialogue with the Npc.
+    /// <summary>
+    /// Ends the current dialogue with the npc
+    /// </summary>
     public void EndDialogue()
     {
+        //Sets everything back to how it was before interacting with the npc
         StateManager.State = StateManager.GameState.Overworld;
         MainTextHolder.SetActive(false);
         Canvas.SetActive(false);
@@ -145,17 +161,22 @@ public class DialogueHandler : MonoBehaviour
         }
         else
         {
+            //If no flags are met skip to the line specified and look through that line's data
             currentLine = lines[currentLine].skipTo;
             yield return StartCoroutine(ProgressDialogue());
         }
         yield break;
     }
-
+    /// <summary>
+    /// Based on what button is pressed the dialogue continues differently by sending you to another line specified by the choice
+    /// </summary>
+    /// <param name="Choice"></param>
     public void ChoicePicked(int Choice)
     {
         currentLine = lines[currentLine].choices[Choice].goTo;        
         MainText.SetActive(true);
         ChoiceHolder.SetActive(false);
+        //Continues dialogue from the new line the player has been sent to based on their choice
         StartCoroutine(ProgressDialogue());
     }
 }

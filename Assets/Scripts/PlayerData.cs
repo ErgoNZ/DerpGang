@@ -6,10 +6,8 @@ using System;
 
 public class PlayerData : MonoBehaviour
 {
-    StateManager StateManager;
     ItemData itemData;
     SkillData SkillData;
-    int Money = 0;
     public TextAsset playerData;
     public class CharacterData
     {
@@ -186,11 +184,6 @@ public class PlayerData : MonoBehaviour
                 {
                     characters[i].CurrentMp = characters[i].Stats.Mp;
                 }
-
-                if (StateManager.InCombat)
-                {
-                    //Combat specific stuff goes here
-                }
                 DelItem(HealingItem.ID, 1);
             }
         }
@@ -251,8 +244,7 @@ public class PlayerData : MonoBehaviour
                 }
                 characters.Add(characterData);
                 Debug.Log("A character's data was loaded");
-            }
-            Money = int.Parse(SplitData(saveData[lineCount++]));
+            }            
             line = SplitData(saveData[lineCount++]);
             Array = line.Split('/');
             for (int i = 0; i < Array.Length; i++)
@@ -280,7 +272,6 @@ public class PlayerData : MonoBehaviour
     private void Start()
     {
         itemData = GetComponent<ItemData>();
-        StateManager = GetComponent<StateManager>();
         SkillData = GetComponent<SkillData>();
         SkillData.ReadSkillData();
         LoadPlayerData();
@@ -294,6 +285,7 @@ public class PlayerData : MonoBehaviour
     /// <returns></returns>
     string SplitData(string line)
     {
+        //Split remove garbage data that is just used to make editing the save file easier
         string[] Array = line.Split(':');
         line = Array[1];
         return line;

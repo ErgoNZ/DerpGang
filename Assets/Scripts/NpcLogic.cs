@@ -42,14 +42,17 @@ public class NpcLogic : MonoBehaviour
     }
     private void Update()
     {
-        //If player is in range and not talking to anyone they can press E to start talking to the Npc
+        //If player is in range and not talking to anyone they can press E to start talking to the Npc.
         if (playerInRange)
         {
             if (Input.GetKey(KeyCode.E) && StateManager.State == StateManager.GameState.Overworld)
             {
+                //Gives the dialogue handler the lines of dialogue to read from and the data contained in them.
                 DialogueHandler.lines = lines;
+                //Starts the dialogue with the npc.
                 DialogueHandler.StartDialogue();
             }
+            //If the player is currently talking to someone they cannot interact with them again and sets them to be "outside" of the npc's range.
             if(StateManager.State == StateManager.GameState.Talking)
             {
                 toggleInRange(false);
@@ -65,16 +68,20 @@ public class NpcLogic : MonoBehaviour
         Choice choice;
         FlagInfo flagInfo;
         lines = new();
+        //Splits the text file based on where the new lines start
         unprocessedLines = data.text.Split(Environment.NewLine);
         int lineCount = 1;
         string[] processingArray;
         string[] Processor;
         string[] array;
+        //Continue until the end of the file
         while(lineCount < unprocessedLines.Length)
         {
+            //Reset everything
             lineData = new();
             lineData.choices = new();
             lineData.flagsRequired = new();
+            //Split the line up into smaller pieces that can actually be used to make up the line data
             processingArray = unprocessedLines[lineCount].Split('*');
             lineData.name = processingArray[0];
             lineData.charIconPath = processingArray[1];
@@ -95,6 +102,7 @@ public class NpcLogic : MonoBehaviour
             }
             else
             {
+                //If there is no choices to add
                 choice = new();
                 choice.choiceText = "null";
                 choice.goTo = -1;
@@ -109,6 +117,7 @@ public class NpcLogic : MonoBehaviour
                 Processor = processingArray[5].Split('|');
                 for (int i = 0; i < Processor.Length; i++)
                 {
+                    //Add all of the flag info
                     flagInfo = new();
                     array = Processor[i].Split('/');
                     flagInfo.flag = int.Parse(array[0]);
@@ -128,11 +137,13 @@ public class NpcLogic : MonoBehaviour
             }
             else
             {
+                //If there are no flags to change use negitive values so they are never used
                 flagInfo = new();
                 flagInfo.flag = -1;
                 flagInfo.state = -1;
                 lineData.setFlag = flagInfo;
             }
+            //Adds the line of dialogue and all of its data to the characters dialogue list and goes to the next line of dialouge data to add to the list.
             lines.Add(lineData);
             lineCount++;
         }
@@ -143,6 +154,7 @@ public class NpcLogic : MonoBehaviour
     /// <param name="toggle"></param>
     public void toggleInRange(bool toggle)
     {
+        //Shows the button prompt if the player is in range
         inputShow.SetActive(toggle);
         playerInRange = toggle;
     }

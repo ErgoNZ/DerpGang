@@ -7,6 +7,7 @@ public class EventSignleton : MonoBehaviour
     public static GameObject Instance;
     private void Awake()
     {
+        //This just makes sure there cannot be more than one event handler.
         if (Instance != null)
         {
             Destroy(gameObject);

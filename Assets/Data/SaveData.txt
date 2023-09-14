@@ -54,6 +54,5 @@ CurrentHp:25
 CurrentMp:5
 PouchItems:1/0/0/0/2
 Skills:0
-Money:0
 Items:1|5/2|3/13|1
 Flags:0/0/0

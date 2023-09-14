@@ -7,6 +7,7 @@ public class CombatLogic : MonoBehaviour
     PlayerData PData;
     StateManager StateManager;
     ItemData ItemData;
+    PlayerControler PlayerControler;
     public GameObject SkillPrefab;
     List<GameObject> SkillPrefabList = new();
     public GameObject[] CharacterActions = new GameObject[4];
@@ -69,6 +70,7 @@ public class CombatLogic : MonoBehaviour
         PData = GetComponent<PlayerData>();
         StateManager = GetComponent<StateManager>();
         ItemData = GetComponent<ItemData>();
+        PlayerControler = GameObject.Find("Player(Clone)").GetComponent<PlayerControler>();
     }
     public void PickAction(string Action)
     {
@@ -220,10 +222,14 @@ public class CombatLogic : MonoBehaviour
         Canvas.SetActive(true);
         Inventory.SetActive(false);
         CombatScene.SetActive(true);
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < CharacterActions.Length; i++)
         {
             CharacterActions[PData.characters[i].position - 1].transform.GetChild(0).GetComponent<Image>().color = GetPartyMemberColor(PData.characters[i].Name);
             CharacterActions[i].transform.localPosition = new(CharacterActions[i].transform.localPosition.x, -740f);
+        }
+        for (int i = 0; i < PData.characters.Count; i++)
+        {
+            CharacterActions[i].transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = EmptyIco;
         }
         GetTurnOrder();
         NextCharacterAction();
@@ -247,6 +253,19 @@ public class CombatLogic : MonoBehaviour
                     }
                 }
             }
+        }
+        enemiesDowned = 0;
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            if(enemies[i].CurrentHp < 1)
+            {
+                enemiesDowned++;
+            }
+        }
+        if(enemiesDowned == enemies.Count)
+        {
+            EndCombat(false);
+            return;
         }
         GetTurnOrder();
         CurrentActionBeingPicked = 0;
@@ -388,7 +407,7 @@ public class CombatLogic : MonoBehaviour
                     }
                     break;
                 //Use Skill
-                case 2:
+  /*              case 2:
                     Target = Random.Range(1, 5);
                     if (enemies[EnemyPos].skills != null)
                     {
@@ -410,7 +429,7 @@ public class CombatLogic : MonoBehaviour
                     }
                     break;
                 //Use Item (Not implemented)
-                /*case 3:
+                *//*case 3:
                     break;*/
                 default:
                     break;
@@ -587,7 +606,8 @@ public class CombatLogic : MonoBehaviour
     /// <param name="Target"></param>
     /// <param name="enemy"></param>
     /// <returns></returns>
-    IEnumerator MagicalAttackOnParty(int EnemyPos, int Target, Enemy enemy)
+    /// This function isn't used due to time constraints
+    /*IEnumerator MagicalAttackOnParty(int EnemyPos, int Target, Enemy enemy)
     {
         List<SkillData.Skill> skillsAvaliable = new();
         for (int i = 0; i < enemy.skills.Count; i++)
@@ -686,7 +706,7 @@ public class CombatLogic : MonoBehaviour
             EnemyTakesAction(EnemyPos);
         }
 
-    }
+    }*/
     /// <summary>
     /// Scrolls to the next characters action
     /// </summary>
@@ -799,6 +819,12 @@ public class CombatLogic : MonoBehaviour
         {
 
         }
+        for (int i = 0; i < HpUpdate.Length; i++)
+        {
+            HpUpdate[i].GetComponent<TMPro.TextMeshProUGUI>().color = new Color32(255, 0, 0, 0);
+        }
+        CombatScene.SetActive(false);
+        StateManager.State = StateManager.GameState.Overworld;
     }
     public void ToggleTargetMenu(bool toggle)
     {
@@ -834,11 +860,24 @@ public class CombatLogic : MonoBehaviour
                             //Replaces enemy names with party members names to show it targets party members
                             AttackMenu.transform.GetChild(i).transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText(PData.characters[i].Name + "");
                             AttackMenu.transform.GetChild(i).GetComponent<Button>().interactable = false;
-                            if (ActionData.action == Action.Pouch && ActionData.Item.Range == ItemData.Range.Single)
+                            if(ActionData.action == Action.Pouch)
                             {
-                                if(i == CurrentActionBeingPicked)
+                                if(ActionData.Item.Range == ItemData.Range.Single)
                                 {
-                                    AttackMenu.transform.GetChild(i).GetComponent<Button>().interactable = true;
+                                    if (i == CurrentActionBeingPicked)
+                                    {
+                                        AttackMenu.transform.GetChild(i).GetComponent<Button>().interactable = true;
+                                    }
+                                }
+                            }
+                            if (ActionData.action == Action.Magic)
+                            {
+                                if (ActionData.Skill.range == ItemData.Range.Single)
+                                {
+                                    if (i == CurrentActionBeingPicked)
+                                    {
+                                        AttackMenu.transform.GetChild(i).GetComponent<Button>().interactable = true;
+                                    }
                                 }
                             }
                             if (ActionData.action == Action.Pouch && ActionData.Item.Range == ItemData.Range.Wide)

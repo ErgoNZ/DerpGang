@@ -8,12 +8,15 @@ public class ItemBtnLogic : MonoBehaviour
     GameObject ItemDesc, ItemHp, ItemAtk, ItemMp, ItemSpd, ItemMAtk, ItemMDef, ItemUseable, ItemAmount, ItemAtkEffect, ItemDefEffect, ItemDef, ItemType, ItemName, UseItem;
     string content;
     MenuLogic MenuLogic;
-
+    /// <summary>
+    /// When the button is clicked changes all of the data in the item info section to the item data stored in the button
+    /// </summary>
     public void clicked()
     {
         MenuLogic = GameObject.Find("GameManager").GetComponent<MenuLogic>();
         //The description can hold ~400 characters worth of text.
         ItemDesc = GameObject.Find("Description");
+        //Changes all of the text areas to the info stored in the item data given so the player can easily see all of the data laid out nicely
         ItemHp = GameObject.Find("HpStat");
         ItemMp = GameObject.Find("MpStat");
         ItemAtk = GameObject.Find("AtkStat");
@@ -64,6 +67,12 @@ public class ItemBtnLogic : MonoBehaviour
             UseItem.GetComponent<Button>().interactable = true;
         }
     }
+    /// <summary>
+    /// This method is called to fill in the text for the button so the player can see what item the button is associated with and how much of it they have
+    /// </summary>
+    /// <param name="ItemAmount"></param>
+    /// <param name="ItemName"></param>
+    /// <param name="itemInfo"></param>
     public void FillInfo(string ItemAmount, string ItemName, ItemData.Item itemInfo)
     {
         Name.GetComponent<TMPro.TextMeshProUGUI>().SetText(ItemName);
