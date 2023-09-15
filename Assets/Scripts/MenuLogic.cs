@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class MenuLogic : MonoBehaviour
 {
+    //Set up of all objects and variables
     [Header("General GUI")]
     public GameObject Party;
     public GameObject Inv;
@@ -13,6 +14,7 @@ public class MenuLogic : MonoBehaviour
     public GameObject Insights;
     public GameObject Journal;
     public GameObject Canvas;
+    public GameObject UnderConstruction;
     [Header("InventoryGUI")]
     public GameObject InvContent;
     public GameObject QuickCharInfo;
@@ -44,6 +46,7 @@ public class MenuLogic : MonoBehaviour
     public GameObject Menu;
     public GameObject GameOver;
     public GameObject CombatMenu;
+    public GameObject Title;
     RectTransform InvRect;
     Vector3 PartyPos, InvPos, MapPos, InsightsPos;
     PlayerData PData;
@@ -74,16 +77,27 @@ public class MenuLogic : MonoBehaviour
         PData = GetComponent<PlayerData>();
         StateManager = GetComponent<StateManager>();
     }
+    /// <summary>
+    /// This returns with the length of the sorted list.
+    /// </summary>
+    /// <returns></returns>
     int GetSortedSize()
     {
         return SortedInv.Count;
     }
+    /// <summary>
+    /// Sorts the items from the inventory and adds the items that matches the filter to a new list
+    /// </summary>
+    /// <param name="Filter"></param>
     void SortInv(ItemData.Catagory Filter)
     {
         Filter = InvFilter;
+        //Empties the old sorted list
         SortedInv.Clear();
+        //Tells the button that you click to do stuff with items to not be useable
         UseItem.SetActive(true);
         UseItem.GetComponent<Button>().interactable = false;
+        //Reads through every item in the inventory and if it matches the filter and is not of id 0 it is sorted into the new list
         for (int i = 0; i < PData.Inventory.Count; i++)
         {
             if(PData.Inventory[i].Type == Filter && PData.Inventory[i].ID != 0)
@@ -111,17 +125,23 @@ public class MenuLogic : MonoBehaviour
                 }
             }
         }
+        //Resizes the size of the content for the scroll menu to fit the items
         InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
         DrawSortInv();
     }
+    /// <summary>
+    /// Resets the item button prefabs and creates new ones based on the sorted inventory and pass them the data they require to hold
+    /// </summary>
     void DrawSortInv()
     {
         QuickCharInfo.SetActive(false);
+        //Deletes all previous prefab instances of the item buttons
         for (int i = 0; i < ItemPrefabList.Count; i++)
         {
             Destroy(ItemPrefabList[i]);
         }
         ItemPrefabList.Clear();
+        //Sets up each item button prefab instance and gives them the item data they need
         for (int i = 0; i < GetSortedSize(); i++)
         {
             ItemPrefabList.Add(Instantiate(InventoryItemPrefab));
@@ -132,6 +152,10 @@ public class MenuLogic : MonoBehaviour
             itemBtnLogic.FillInfo(SortedInv[i].Amount.ToString(), SortedInv[i].Name, SortedInv[i]);
         }
     }
+    /// <summary>
+    /// Switches between the menus based on the button clicked
+    /// </summary>
+    /// <param name="Menu"></param>
     public void MenuSwitch(string Menu)
     {
         UseItem.SetActive(false);
@@ -148,6 +172,7 @@ public class MenuLogic : MonoBehaviour
                 Inv.transform.localPosition = InvPos;
                 Map.transform.localPosition = MapPos;
                 Insights.transform.localPosition = InsightsPos;
+                UnderConstruction.SetActive(false);
                 PartyPanel.SetActive(true);
                 CharacterInfoPanel.SetActive(true);
                 SetupPartyInfo();
@@ -159,6 +184,7 @@ public class MenuLogic : MonoBehaviour
                 Inv.transform.localPosition = InvPos;
                 Map.transform.localPosition = MapPos;
                 Insights.transform.localPosition = InsightsPos;
+                UnderConstruction.SetActive(false);
                 SortInv(InvFilter);
                 InvRect.sizeDelta = new(InvRect.sizeDelta.x, 50 * GetSortedSize());
                 InvPanel.SetActive(true);
@@ -172,6 +198,7 @@ public class MenuLogic : MonoBehaviour
                 Inv.transform.localPosition = new Vector3(InvPos.x - 172.80f * 3, InvPos.y);
                 Map.transform.localPosition = MapPos;
                 Insights.transform.localPosition = InsightsPos;
+                UnderConstruction.SetActive(true);
                 break;
             case "Insights":
                 Debug.LogWarning("Insights");
@@ -179,6 +206,7 @@ public class MenuLogic : MonoBehaviour
                 Inv.transform.localPosition = new Vector3(InvPos.x - 172.80f * 3, InvPos.y);
                 Map.transform.localPosition = new Vector3(MapPos.x - 172.80f * 5, MapPos.y);
                 Insights.transform.localPosition = InsightsPos;
+                UnderConstruction.SetActive(true);
                 break;
             case "Journal":
                 Debug.LogWarning("Journal");
@@ -186,35 +214,41 @@ public class MenuLogic : MonoBehaviour
                 Inv.transform.localPosition = new Vector3(InvPos.x - 172.80f * 3, InvPos.y);
                 Map.transform.localPosition = new Vector3(MapPos.x - 172.80f * 5, MapPos.y);
                 Insights.transform.localPosition = new Vector3(InsightsPos.x - 172.80f * 7, InsightsPos.y);
+                UnderConstruction.SetActive(true);
                 break;
             case "Item":
                 InvFilter = ItemData.Catagory.Consumable;
                 SortInv(InvFilter);
                 InvPanel.SetActive(true);
                 ItemPanel.SetActive(true);
+                UnderConstruction.SetActive(false);
                 break;
             case "Gear":
                 InvFilter = ItemData.Catagory.Gear;
                 SortInv(InvFilter);
                 InvPanel.SetActive(true);
                 ItemPanel.SetActive(true);
+                UnderConstruction.SetActive(false);
                 break;
             case "Charm":
                 InvFilter = ItemData.Catagory.Charm;
                 SortInv(InvFilter);
                 InvPanel.SetActive(true);
                 ItemPanel.SetActive(true);
+                UnderConstruction.SetActive(false);
                 break;
             case "Key":
                 InvFilter = ItemData.Catagory.Key;
                 SortInv(InvFilter);
                 InvPanel.SetActive(true);
                 ItemPanel.SetActive(true);
+                UnderConstruction.SetActive(false);
                 break;
             case "EquipItem":
                 QuickCharInfo.SetActive(true);
                 InvPanel.SetActive(true);
                 ItemPanel.SetActive(true);
+                UnderConstruction.SetActive(false);
                 QuickInfoShow(0);
                 break;
             default:
@@ -222,6 +256,10 @@ public class MenuLogic : MonoBehaviour
                 break;
         }
     }
+    /// <summary>
+    /// Displays and updates all of the info on the quick info object
+    /// </summary>
+    /// <param name="CharPos"></param>
     public void QuickInfoShow(int CharPos)
     {
         SelectedChar = CharPos;
@@ -297,6 +335,9 @@ public class MenuLogic : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// Enables equip buttons based on type of item
+    /// </summary>
     public void EnableEquipBtns()
     {
         ItemData.Catagory Type = SelectedItem.Type;
@@ -304,22 +345,26 @@ public class MenuLogic : MonoBehaviour
         {
             case ItemData.Catagory.Charm:
                 GameObject.Find("EquipItemOnChar").transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("Which charm slot?");
-                Charm1.GetComponent<Button>().enabled = true;
-                Charm2.GetComponent<Button>().enabled = true;
+                Charm1.GetComponent<Button>().interactable = true;
+                Charm2.GetComponent<Button>().interactable = true;
                 break;
             case ItemData.Catagory.Consumable:
                 GameObject.Find("EquipItemOnChar").transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("Which pouch slot?");
-                Pouch1.GetComponent<Button>().enabled = true;
-                Pouch2.GetComponent<Button>().enabled = true;
-                Pouch3.GetComponent<Button>().enabled = true;
-                Pouch4.GetComponent<Button>().enabled = true;
-                Pouch5.GetComponent<Button>().enabled = true;
+                Pouch1.GetComponent<Button>().interactable = true;
+                Pouch2.GetComponent<Button>().interactable = true;
+                Pouch3.GetComponent<Button>().interactable = true;
+                Pouch4.GetComponent<Button>().interactable = true;
+                Pouch5.GetComponent<Button>().interactable = true;
                 break;
             default:
                 EquipItem(0);
                 break;
         }
     }
+    /// <summary>
+    /// Calls gear swap method based on the type of weapon and selected character and resets everything on the quick info object
+    /// </summary>
+    /// <param name="Slot"></param>
     public void EquipItem(int Slot)
     {
         if(SelectedItem.Type == ItemData.Catagory.Charm)
@@ -370,16 +415,19 @@ public class MenuLogic : MonoBehaviour
             GameObject.Find("ItemType").GetComponent<TMPro.TextMeshProUGUI>().SetText("Type: ");
             GameObject.Find("ItemName").GetComponent<TMPro.TextMeshProUGUI>().SetText("");
         }
-        Pouch1.GetComponent<Button>().enabled = false;
-        Pouch2.GetComponent<Button>().enabled = false;
-        Pouch3.GetComponent<Button>().enabled = false;
-        Pouch4.GetComponent<Button>().enabled = false;
-        Pouch5.GetComponent<Button>().enabled = false;
-        Charm1.GetComponent<Button>().enabled = false;
-        Charm2.GetComponent<Button>().enabled = false;
+        Pouch1.GetComponent<Button>().interactable = false;
+        Pouch2.GetComponent<Button>().interactable = false;
+        Pouch3.GetComponent<Button>().interactable = false;
+        Pouch4.GetComponent<Button>().interactable = false;
+        Pouch5.GetComponent<Button>().interactable = false;
+        Charm1.GetComponent<Button>().interactable = false;
+        Charm2.GetComponent<Button>().interactable = false;
         GameObject.Find("EquipItemOnChar").transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().SetText("Equip Item on character");
         SortInv(InvFilter);
     }
+    /// <summary>
+    /// Calls use healing item method from Pdata and if that was the last one of an item and resets all of the GUI elements related to the item info
+    /// </summary>
     public void UseHealItem()
     {
         PData.UseHealingItem(SelectedItem,SelectedChar);
@@ -405,6 +453,9 @@ public class MenuLogic : MonoBehaviour
         }
         SortInv(InvFilter);
     }
+    /// <summary>
+    /// Shows character info in the party tab for each character
+    /// </summary>
     public void SetupPartyInfo()
     {
         for (int i = 0; i < PData.characters.Count; i++)
@@ -487,6 +538,11 @@ public class MenuLogic : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// Returns a colour based on the character that has been passed to the method
+    /// </summary>
+    /// <param name="character"></param>
+    /// <returns></returns>
     public Color32 GetPartyMemberColor(ItemData.Character character)
     {
         switch (character)
@@ -503,6 +559,10 @@ public class MenuLogic : MonoBehaviour
                 return new Color32(145, 145, 145, 255);
         }
     }
+    /// <summary>
+    /// Sets up all of the character info based on what character info has been clicked and updates the GUI based on that character's data
+    /// </summary>
+    /// <param name="position"></param>
     public void SetupCharInfo(int position)
     {
         for (int i = 0; i < PData.characters.Count; i++)
@@ -534,10 +594,15 @@ public class MenuLogic : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// Code for the main menu based on what button is clicked
+    /// </summary>
+    /// <param name="button"></param>
     public void MainMenuInput(string button)
     {
         switch (button)
         {
+            //Starts the game
             case "Play":
                 MainMenu.SetActive(false);
                 Canvas.SetActive(false);
@@ -549,15 +614,19 @@ public class MenuLogic : MonoBehaviour
                 SceneManager.LoadScene("Default");
                 StateManager.ResetPlayerPos();
                 break;
+                //Shows the how to play screen
             case "HowToPlay":
                 HowToPlayScreen.SetActive(true);
                 break;
+                //Quits the gaem
             case "Quit":
                 Application.Quit();
                 break;
+                //Goes baack to main menu
             case "Back":
                 HowToPlayScreen.SetActive(false);
                 break;
+                //If the player reached a game over it sends them back to the main menu screen
             case "GameOver":
                 MainMenu.SetActive(true);
                 Canvas.SetActive(true);

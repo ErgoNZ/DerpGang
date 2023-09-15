@@ -11,7 +11,7 @@ Stats(H,M,A,D,MA,MD,S):16/5/9/7/7/7/5
 CurrentHp:16
 CurrentMp:5
 PouchItems:1/0/1/1/2
-Skills:2
+Skills:0
 Name:Susie
 Level:1
 Position:2

@@ -34,56 +34,64 @@ public class SkillData : MonoBehaviour
     /// </summary>
     public void ReadSkillData()
     {
-        //Takes the data from the skill text assest and splits them all into lines based on when a new line is started in the file.
-        string[] linesFromFile = Data.text.Split(Environment.NewLine);
-        string[] dataArray;
-        string[] effectArray;
-        //lineNum is set to 1 to skip the line that contains the template/header guide for making a skill.
-        int lineNum = 1;
-        //While there are still lines left in the text Assest file for all of the skills.
-        while (lineNum < linesFromFile.Length)
+        try
         {
-            Skill skill;
-            skill.effects = new();
-            //Splits the line into more useful chunks of information.
-            dataArray = linesFromFile[lineNum].Split(',');
-            //Pulls all of the data from the dataArray to create the skill's data.
-            skill.Name = dataArray[0];
-            skill.ID = lineNum;
-            skill.MpCost = int.Parse(dataArray[1]);
-            skill.HpCost = int.Parse(dataArray[2]);
-            skill.CostMode = ParseEnum<CostMode>(dataArray[3]);
-            skill.PhysicalPower = int.Parse(dataArray[4]);
-            skill.MagicalPower = int.Parse(dataArray[5]);
-            //Refer to ItemData for an explanation on how effects are added but the example is still below
-            //Name~Element~Duration~Damage~MpDamage~Chance| Next effect...
-            if (dataArray[6] != "NULL")
+            //Takes the data from the skill text assest and splits them all into lines based on when a new line is started in the file.
+            string[] linesFromFile = Data.text.Split(Environment.NewLine);
+            string[] dataArray;
+            string[] effectArray;
+            //lineNum is set to 1 to skip the line that contains the template/header guide for making a skill.
+            int lineNum = 1;
+            //While there are still lines left in the text Assest file for all of the skills.
+            while (lineNum < linesFromFile.Length)
             {
-                //Splits again if there is more than one effect associated with a skill
-                effectArray = dataArray[6].Split('|');
-                for (int i = 0; i < effectArray.Length; i++)
+                Skill skill;
+                skill.effects = new();
+                //Splits the line into more useful chunks of information.
+                dataArray = linesFromFile[lineNum].Split(',');
+                //Pulls all of the data from the dataArray to create the skill's data.
+                skill.Name = dataArray[0];
+                skill.ID = lineNum;
+                skill.MpCost = int.Parse(dataArray[1]);
+                skill.HpCost = int.Parse(dataArray[2]);
+                skill.CostMode = ParseEnum<CostMode>(dataArray[3]);
+                skill.PhysicalPower = int.Parse(dataArray[4]);
+                skill.MagicalPower = int.Parse(dataArray[5]);
+                //Refer to ItemData for an explanation on how effects are added but the example is still below
+                //Name~Element~Duration~Damage~MpDamage~Chance| Next effect...
+                if (dataArray[6] != "NULL")
                 {
-                    ItemData.EffectData effect;
-                    //Splits the effect data where the '~' character is present. Makes the data split into more useful pieces.
-                    string[] effectInfo = effectArray[i].Split('~');
-                    //Assign all of the useful data from the line to make up the effect and adds it to the effect list for the skill
-                    effect.Name = effectInfo[0];
-                    effect.Element = ParseEnum<ItemData.Element>(effectInfo[1]);
-                    effect.Duration = int.Parse(effectInfo[2]);
-                    effect.Damage = int.Parse(effectInfo[3]);
-                    effect.MpDamage = int.Parse(effectInfo[4]);
-                    effect.Chance = int.Parse(effectInfo[5]);
-                    skill.effects.Add(effect);
+                    //Splits again if there is more than one effect associated with a skill
+                    effectArray = dataArray[6].Split('|');
+                    for (int i = 0; i < effectArray.Length; i++)
+                    {
+                        ItemData.EffectData effect;
+                        //Splits the effect data where the '~' character is present. Makes the data split into more useful pieces.
+                        string[] effectInfo = effectArray[i].Split('~');
+                        //Assign all of the useful data from the line to make up the effect and adds it to the effect list for the skill
+                        effect.Name = effectInfo[0];
+                        effect.Element = ParseEnum<ItemData.Element>(effectInfo[1]);
+                        effect.Duration = int.Parse(effectInfo[2]);
+                        effect.Damage = int.Parse(effectInfo[3]);
+                        effect.MpDamage = int.Parse(effectInfo[4]);
+                        effect.Chance = int.Parse(effectInfo[5]);
+                        skill.effects.Add(effect);
+                    }
                 }
+                skill.range = ParseEnum<ItemData.Range>(dataArray[7]);
+                skill.multihit = int.Parse(dataArray[8]);
+                skill.description = dataArray[9];
+                skill.Element = ParseEnum<ItemData.Element>(dataArray[10]);
+                //Adds the skill to the list and goes to the next line of data in the text assest file for skills.
+                skillList.Add(skill);
+                lineNum++;
             }
-            skill.range = ParseEnum<ItemData.Range>(dataArray[7]);
-            skill.multihit = int.Parse(dataArray[8]);
-            skill.description = dataArray[9];
-            skill.Element = ParseEnum<ItemData.Element>(dataArray[10]);
-            //Adds the skill to the list and goes to the next line of data in the text assest file for skills.
-            skillList.Add(skill);
-            lineNum++;
         }
+        catch(Exception ex)
+        {
+            Debug.LogError(ex);
+        }
+        
     }
     /// <summary>
     /// This returns a skill's data based on the id requested.

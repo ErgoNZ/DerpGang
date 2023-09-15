@@ -130,107 +130,114 @@ public class ItemData : MonoBehaviour
     /// <param name="path"></param>
     private void LoadItems(TextAsset data)
     {
-        string[] linesFromFile = data.text.Split(Environment.NewLine);
-        string line;
-        string[] itemData;
-        string[] effData;
-        string[] chrmData;
-        string[] resistance;
-        string[] vunlerabilities;
-        string[] characters;
-        string[] processingArray;
-        int lineNum = 1;
-        //Read lines until the end of the file
-        while (lineNum < linesFromFile.Length)
+        try
         {
-            Item item = new();
-            item.Resistance = new List<Element>();
-            item.Vulnerable = new List<Element>();
-            EffectData effectData;
-            CharmData charmData;
-            List<Character> characterList = new();
-            line = linesFromFile[lineNum];
-            //Splits data into smaller pieces so they are easier to use
-            itemData = line.Split(',');
-            item.ID = id++;
-            item.Name = itemData[0];
-            item.Type = ParseEnum<Catagory>(itemData[1]);
-            item.Description = itemData[2];
-            item.Element = ParseEnum<Element>(itemData[3]);
-            item.Stats.Hp = int.Parse(itemData[4]);
-            item.Stats.Mp = int.Parse(itemData[5]);
-            item.Stats.Atk = int.Parse(itemData[6]);
-            item.Stats.Def = int.Parse(itemData[7]);
-            item.Stats.MAtk = int.Parse(itemData[8]);
-            item.Stats.MDef = int.Parse(itemData[9]);
-            item.Stats.Spd = int.Parse(itemData[10]);
-
-            if (itemData[11] != "NULL")
+            string[] linesFromFile = data.text.Split(Environment.NewLine);
+            string line;
+            string[] itemData;
+            string[] effData;
+            string[] chrmData;
+            string[] resistance;
+            string[] vunlerabilities;
+            string[] characters;
+            string[] processingArray;
+            int lineNum = 1;
+            //Read lines until the end of the file
+            while (lineNum < linesFromFile.Length)
             {
-                //This is confusing to visualize so an example is given below
-                //Name~Element~Duration~Damage~MpDamage~Chance|Name~Element~Duration~Damage etc
-                //When a '|' character is used it signifies a new effect and the '~' character is what splits the data for that effect
-                //This could probably be implemented better but I'm not really going to do much about it unless it annoys me
-                effData = itemData[11].Split('|');
-                for (int i = 0; i < effData.Length; i++)
+                Item item = new();
+                item.Resistance = new List<Element>();
+                item.Vulnerable = new List<Element>();
+                EffectData effectData;
+                CharmData charmData;
+                List<Character> characterList = new();
+                line = linesFromFile[lineNum];
+                //Splits data into smaller pieces so they are easier to use
+                itemData = line.Split(',');
+                item.ID = id++;
+                item.Name = itemData[0];
+                item.Type = ParseEnum<Catagory>(itemData[1]);
+                item.Description = itemData[2];
+                item.Element = ParseEnum<Element>(itemData[3]);
+                item.Stats.Hp = int.Parse(itemData[4]);
+                item.Stats.Mp = int.Parse(itemData[5]);
+                item.Stats.Atk = int.Parse(itemData[6]);
+                item.Stats.Def = int.Parse(itemData[7]);
+                item.Stats.MAtk = int.Parse(itemData[8]);
+                item.Stats.MDef = int.Parse(itemData[9]);
+                item.Stats.Spd = int.Parse(itemData[10]);
+
+                if (itemData[11] != "NULL")
                 {
-                    effectData = new EffectData();
-                    //Split the data to make it easier to use
-                    processingArray = effData[i].Split('~');
-                    effectData.Name = processingArray[0];
-                    effectData.Element = ParseEnum<Element>(processingArray[1]);
-                    effectData.Duration = int.Parse(processingArray[2]);
-                    effectData.Damage = int.Parse(processingArray[3]);
-                    effectData.MpDamage = int.Parse(processingArray[4]);
-                    effectData.Chance = int.Parse(processingArray[5]);
-                    item.Effects.Add(effectData);
+                    //This is confusing to visualize so an example is given below
+                    //Name~Element~Duration~Damage~MpDamage~Chance|Name~Element~Duration~Damage etc
+                    //When a '|' character is used it signifies a new effect and the '~' character is what splits the data for that effect
+                    //This could probably be implemented better but I'm not really going to do much about it unless it annoys me
+                    effData = itemData[11].Split('|');
+                    for (int i = 0; i < effData.Length; i++)
+                    {
+                        effectData = new EffectData();
+                        //Split the data to make it easier to use
+                        processingArray = effData[i].Split('~');
+                        effectData.Name = processingArray[0];
+                        effectData.Element = ParseEnum<Element>(processingArray[1]);
+                        effectData.Duration = int.Parse(processingArray[2]);
+                        effectData.Damage = int.Parse(processingArray[3]);
+                        effectData.MpDamage = int.Parse(processingArray[4]);
+                        effectData.Chance = int.Parse(processingArray[5]);
+                        item.Effects.Add(effectData);
+                    }
                 }
-            }
 
-            if (itemData[12] != "NULL")
-            {
-                //Splits again if there is multiple pieces of charm data the item contains
-                chrmData = itemData[12].Split('|');
-                for (int i = 0; i < chrmData.Length; i++)
+                if (itemData[12] != "NULL")
                 {
-                    charmData = new CharmData();
-                    //Split the data to make it easier to use
-                    processingArray = chrmData[i].Split('~');
-                    charmData.Name = processingArray[0];
-                    charmData.CheckingFor = processingArray[1];
-                    charmData.Trigger = ParseEnum<Trigger>(processingArray[2]);
-                    item.CharmEffects.Add(charmData);
+                    //Splits again if there is multiple pieces of charm data the item contains
+                    chrmData = itemData[12].Split('|');
+                    for (int i = 0; i < chrmData.Length; i++)
+                    {
+                        charmData = new CharmData();
+                        //Split the data to make it easier to use
+                        processingArray = chrmData[i].Split('~');
+                        charmData.Name = processingArray[0];
+                        charmData.CheckingFor = processingArray[1];
+                        charmData.Trigger = ParseEnum<Trigger>(processingArray[2]);
+                        item.CharmEffects.Add(charmData);
+                    }
                 }
-            }
 
-            //Splits the data again if there are multiple of them
-            resistance = itemData[13].Split('|');
-            //Adds all of the data to the item
-            for (int i = 0; i < resistance.Length; i++)
-            {
-                item.Resistance.Add(ParseEnum<Element>(resistance[i]));
-            }
+                //Splits the data again if there are multiple of them
+                resistance = itemData[13].Split('|');
+                //Adds all of the data to the item
+                for (int i = 0; i < resistance.Length; i++)
+                {
+                    item.Resistance.Add(ParseEnum<Element>(resistance[i]));
+                }
 
-            //Splits the data again if there are multiple of them
-            vunlerabilities = itemData[14].Split('|');
-            //Adds all of the data to the item
-            for (int i = 0; i < vunlerabilities.Length; i++)
-            {
-                item.Vulnerable.Add(ParseEnum<Element>(vunlerabilities[i]));
+                //Splits the data again if there are multiple of them
+                vunlerabilities = itemData[14].Split('|');
+                //Adds all of the data to the item
+                for (int i = 0; i < vunlerabilities.Length; i++)
+                {
+                    item.Vulnerable.Add(ParseEnum<Element>(vunlerabilities[i]));
+                }
+                //Splits the data again if there are multiple of them
+                characters = itemData[15].Split('|');
+                //Adds all of the data to the item
+                for (int i = 0; i < characters.Length; i++)
+                {
+                    characterList.Add(ParseEnum<Character>(characters[i]));
+                }
+                item.characters = characterList;
+                item.Range = ParseEnum<Range>(itemData[16]);
+                //Add the item to the list and go to the next line of the text assest
+                ItemList.Add(item);
+                lineNum++;
             }
-            //Splits the data again if there are multiple of them
-            characters = itemData[15].Split('|');
-            //Adds all of the data to the item
-            for (int i = 0; i < characters.Length; i++)
-            {
-                characterList.Add(ParseEnum<Character>(characters[i]));
-            }
-            item.characters = characterList;
-            item.Range = ParseEnum<Range>(itemData[16]);
-            //Add the item to the list and go to the next line of the text assest
-            ItemList.Add(item);
-            lineNum++;
         }
+        catch(Exception ex)
+        {
+            Debug.LogError(ex);
+        }     
     }
     /// <summary>
     /// Custom parse method that converts strings into enums.

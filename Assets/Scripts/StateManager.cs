@@ -7,6 +7,7 @@ public class StateManager : MonoBehaviour
     static GameObject Player;
     public GameObject Menu;
     public GameObject EventManager;
+    public GameObject OverWorldUI;
     public GameState State = GameState.Overworld;
     bool menuOpen = false;
     public bool inCombat = false;
@@ -37,6 +38,7 @@ public class StateManager : MonoBehaviour
             menuOpen = !menuOpen;
             State = GameState.Overworld;
             Menu.SetActive(menuOpen);
+            OverWorldUI.SetActive(menuOpen);
             if (menuOpen == true)
             {
                 State = GameState.Menu;
